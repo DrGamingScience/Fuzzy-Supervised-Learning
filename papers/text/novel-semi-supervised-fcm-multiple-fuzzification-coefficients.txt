@@ -1,0 +1,846 @@
+              algorithms
+Article
+A Novel Semi-Supervised Fuzzy C-Means Clustering
+Algorithm Using Multiple Fuzzification Coefficients
+Tran Dinh Khang 1, * , Manh-Kien Tran 2                      and Michael Fowler 2
+
+                                          1   Department of Information Systems, Hanoi University of Science and Technology, Hanoi 10000, Vietnam
+                                          2   Department of Chemical Engineering, University of Waterloo, Waterloo, ON N2L 3G1, Canada;
+                                              kmtran@uwaterloo.ca (M.-K.T.); mfowler@uwaterloo.ca (M.F.)
+                                          *   Correspondence: khangtd@soict.hust.edu.vn
+
+
+                                          Abstract: Clustering is an unsupervised machine learning method with many practical applications
+                                          that has gathered extensive research interest. It is a technique of dividing data elements into clusters
+                                          such that elements in the same cluster are similar. Clustering belongs to the group of unsupervised
+                                          machine learning techniques, meaning that there is no information about the labels of the elements.
+                                          However, when knowledge of data points is known in advance, it will be beneficial to use a semi-
+                                          supervised algorithm. Within many clustering techniques available, fuzzy C-means clustering (FCM)
+                                          is a common one. To make the FCM algorithm a semi-supervised method, it was proposed in
+                                          the literature to use an auxiliary matrix to adjust the membership grade of the elements to force
+                                          them into certain clusters during the computation. In this study, instead of using the auxiliary
+                                          matrix, we proposed to use multiple fuzzification coefficients to implement the semi-supervision
+                                          component. After deriving the proposed semi-supervised fuzzy C-means clustering algorithm with
+                                          multiple fuzzification coefficients (sSMC-FCM), we demonstrated the convergence of the algorithm
+                                and validated the efficiency of the method through a numerical example.
+         
+
+Citation: Khang, T.D.; Tran, M.-K.;       Keywords: clustering technique; fuzzy C-means clustering; semi-supervised clustering; fuzzification
+Fowler, M. A Novel Semi-Supervised        coefficient; objective function
+Fuzzy C-Means Clustering Algorithm
+Using Multiple Fuzzification
+Coefficients. Algorithms 2021, 14, 258.
+https://doi.org/10.3390/a14090258         1. Introduction
+                                                Data clustering is a method that divides the elements of a data set into clusters such
+Academic Editor: Frank Werner
+                                          that data elements in the same cluster have similar properties, and data elements in different
+                                          clusters have different properties [1,2]. Data clustering is an important pre-processing
+Received: 13 July 2021
+Accepted: 27 August 2021
+                                          step to produce initial knowledge, supporting the decision-making for the next processing
+Published: 29 August 2021
+                                          steps. In the current clustering methods, Fuzzy C-means clustering (FCM) algorithm gives
+                                          relatively good results, taking advantage of the flexible nature of fuzzy logic [3]. In FCM,
+Publisher’s Note: MDPI stays neutral
+                                          a data element can flexibly choose a cluster to belong to, characterized by the membership
+with regard to jurisdictional claims in
+                                          grade of the element in the cluster [4]. Specifically, the membership grade Uik of element i
+published maps and institutional affil-   belonging to cluster k has a value in the range from 0 to 1, and the larger the Uik value, the
+iations.                                  more likely element i belongs to cluster k [5,6].
+                                                Clustering belongs to the class of unsupervised learning methods in which there is
+                                          no given information about the labels of the data elements, dissimilar to classification
+                                          methods. However, there are also cases in which knowledge of certain data can be known
+Copyright: © 2021 by the authors.
+                                          in advance; then, it becomes semi-supervised fuzzy clustering. For a semi-supervised
+Licensee MDPI, Basel, Switzerland.
+                                          clustering problem, there are often two goals: (i) clustering and labeling the data, and (ii)
+This article is an open access article
+                                          improving the quality of clustering based on the existing knowledge about the data [7–11].
+distributed under the terms and           The first goal is clustering, as defining cluster labels for the data remains the primary goal.
+conditions of the Creative Commons        With semi-supervision, the structure of the clusters and the cluster centers must still be
+Attribution (CC BY) license (https://     clearly distinguished. The second goal is to improve the clustering quality based on the
+creativecommons.org/licenses/by/          existing knowledge. The clustering quality can be evaluated from the clustering label. Of
+4.0/).                                    the two objectives, if more attention goes toward clustering labeling, then more supervisory
+
+
+
+Algorithms 2021, 14, 258. https://doi.org/10.3390/a14090258                                             https://www.mdpi.com/journal/algorithms
+Algorithms 2021, 14, 258                                                                                            2 of 12
+
+
+
+
+                           knowledge needs to be introduced, and the clustering results will be expected to be better.
+                           The disadvantage of this method is that certain measures of “similarity” may not be better,
+                           but this is acceptable when there are data points that are “shaped” by the knowledge;
+                           hence, the ability to update the cluster center is also improved [12]. There is knowledge
+                           about data that can be considered to be relatively accurate. It will be known to a degree in
+                           advance if a data element should or should not belong to a certain cluster. Such factors are
+                           dependent on the related expertise of the person conducting the clustering [13].
+                                 Yasunori et al. [14] proposed to improve the FCM algorithm by adding an auxiliary
+                           supervisory matrix, representing the supervised membership grade, into the objective
+                           function. Although the authors did not outline a specific method to determine the value of
+                           the supervisory matrix, the study made it clear that semi-supervised fuzzy clustering is
+                           completely feasible. The authors called this algorithm semi-supervised standard Fuzzy
+                           C-means clustering (sSFCM). This algorithm is mainly based on the approach that the
+                           supervised data point must belong to a certain cluster. The membership grade on that
+                           cluster then must be larger than the value in other unsupervised clusters.
+                                 The FCM method uses an exponential parameter m, also known as the fuzzification
+                           coefficient, in the objective function, which adjusts the membership grade Uik of element
+                           i belonging to cluster k. In the standard FCM algorithm, the value of parameter m is
+                           selected from the beginning, for example, m = 2. In recent years, there have been studies
+                           that extended the selection of parameter m as an interval [m1 , m2 ] or a fuzzy value that,
+                           when reducing the type, would essentially be the selection of different m ∈ [m1 , m2 ] values,
+                           applied to each iteration [15]. The extension to use multiple fuzzification coefficients m
+                           instead of only one value in FCM was presented in [16]. When assigning each data point an
+                           appropriate fuzzification coefficient m based on the density of that point to the surrounding
+                           points, the clustering quality was improved.
+                                 This study is based on the concept of utilizing multiple fuzzification coefficients to
+                           apply to semi-supervised fuzzy clustering. When placing a supervised element i into cluster
+                           k, the appropriate fuzzification coefficient mik can be selected, which will be different from
+                           other fuzzification coefficients. This affects the calculation of Uik which increases, and at
+                           the same time, Uik ˆmik changing also affects the determination of cluster k center. Similarly,
+                           when preventing a supervised element i from being in cluster k, its parameter mik will be
+                           different from other mij values. The adjustment of the fuzzification coefficient is similar
+                           to using the auxiliary matrix similar to other semi-supervised clustering methods, and it
+                           is also needed to ensure the convergence of the clustering algorithm. The contribution
+                           of this study is the proposal of a novel semi-supervised FCM algorithm using multiple
+                           fuzzification coefficients (sSMC-FCM) as well as the method to determine the appropriate
+                           fuzzification coefficient values for semi-supervision.
+                                 Section 2 of the paper outlines the FCM algorithm and the semi-supervised fuzzy
+                           clustering algorithm using auxiliary matrices. Section 3 presents the novel sSMC-FCM
+                           algorithm. Section 4 shows a numerical example using the proposed method and the
+                           subsequent results, while Section 5 presents concluding remarks.
+
+                           2. Preliminaries
+                           2.1. Standard Fuzzy C-Means Clustering (FCM) Algorithm
+                                The standard FCM algorithm attempts to divide a finite number of N data ele-
+                           ments X = { X1 , X2 , . . . , X N } into C clusters based on some given criteria. Each element
+                           Xi ∈ X, i = 1, 2, . . . , N, is a vector with D dimensions. The elements in X are divided into
+                           C clusters with cluster centers V1 , V2 , . . . , VC in the centroid set V.
+                                In FCM algorithm, U is a matrix that represents the membership of each element into
+                           each cluster. Matrix U has certain characteristics as below:
+                           •    Uik is the membership grade of an element Xi in the cluster k with center Vk , where
+                                1 ≤ i ≤ N; 1 ≤ k ≤ C;
+                           •    0 ≤ Uik ≤ 1, 1 ≤ i ≤ N; 1 ≤ k ≤ C and ∑Cj=1 Uij = 1, for each Xi ;
+                           •    The larger Uik is, the more element Xi belongs in cluster k.
+Algorithms 2021, 14, 258                                                                                                3 of 12
+
+
+
+
+                                An objective function is defined such that the clustering algorithm must minimize the
+                           objective function (1):
+                                                                      N     C
+                                                         J (U, V ) = ∑i=1 ∑k=1 Uik m Dik 2 ,                       (1)
+                           where Dik 2 = Xi − Vk 2 is the distance between two vectors Xi and Vk , and m is the
+                           fuzzification coefficient of the algorithm.
+                                Summary of steps for the standard FCM algorithm:
+                                Input: the dataset X = { X1 , X2 , . . . , X N }.
+                                Output: the partition of X into C clusters.
+                           •    Step 1: Initialize value for V, let l = 0, set ε > 0 and m > 1.
+                           •    Step 2: At the l − th loop, update U according to the formula:
+                                                                                    ! 2  −1
+                                                                           C          m −1
+                                                                                D
+                                                               Uik =  ∑          ik                                      (2)
+                                                                         j =1
+                                                                                D ij
+
+                           •    Step 3: Update V for the next step (l + 1), according to the formula:
+                                                                             ∑iN=1 Uik m Xi
+                                                                     Vk =                                                  (3)
+                                                                              ∑iN=1 Uik m
+                           •    Step 4: If V (l ) − V (l +1) < ε , then go to Step 5; otherwise, let l := l + 1, and return
+                                to Step 2.
+                           •    Step 5: End.
+
+                           2.2. Semi-Supervised Standard Fuzzy C-Means Clustering (sSFCM) Algorithms
+                                The semi-supervised fuzzy clustering method in [14] added a supervisory matrix U
+                           that represents the supervision of an element forced to belong or to not belong in a cluster.
+                           U ik > 0 when the supervised element i is placed into cluster k, and U ik = 0 when there
+                           is no supervision. This additional supervised membership grade U ik was added to the
+                           objective function to be minimized, and is shown as follows:
+                                                                     N       C                   m
+                                                       J (U, V ) = ∑i=1 ∑k=1 Uik − U ik               2
+                                                                                                     Dik ,                 (4)
+                           where ∑Cj=1 Uij = 1, ∑Cj=1 U ij ≤ 1, 0 ≤ Uik ≤ 1, for all 1 ≤ i ≤ N and 1 ≤ k ≤ C. The
+                           sSFCM algorithm, shown below, works to minimize J (U, V ) through many iterations.
+                               Summary of steps for the sSFCM algorithm:
+                               Input: the dataset X = { X1 , X2 , . . . , X N }, and the supervised membership grade U.
+                               Output: the partition of X into C clusters.
+                           •    Step 1: Initialize value for V, let l = 0, set ε > 0 and m > 1.
+                           •    Step 2: At the l − th loop, update U according to the formula:
+                                                                                 !           ! 2  −1
+                                                                           C           C       m −1
+                                                                                          Dik
+                                                     Uik = U ik + 1 − ∑ U ij  ∑                                          (5)
+                                                                         j =1        j =1
+                                                                                          Dij
+
+                           •    Step 3: Update V for the next step (l + 1), according to the formula:
+                                                                                            m
+                                                                         ∑iN=1 Uik − U ik       Xi
+                                                                 Vk =                      m                               (6)
+                                                                          ∑iN=1 Uik − U ik
+                           •    Step 4: If V (l ) − V (l +1) < ε , then go to Step 5; otherwise, let l := l + 1, and return
+                                to Step 2.
+                           •    Step 5: End.
+                                A numerical example of the sSFCM algorithm [14]:
+                                A data set with 20 elements X = { X1 , X2 , . . . , X20 }, Xi ∈ R2 , as seen in Table 1, is to
+                           be divided into two clusters. Implement the sSFCM algorithm with m = 2 for 3 cases:
+Algorithms 2021, 14, 258                                                                                                              4 of 12
+
+
+
+
+                           Table 1. Sample data set.
+
+                                i        (Xi1 , Xi2 )       i    (Xi1 , Xi2 )         i         (Xi1 , Xi2 )       i            (Xi1 , Xi2 )
+                                1         (0, 4.5)          6    (3.5, 5.5)          11              (9, 0)        16            (10, 0)
+                                2         (0, 5.5)          7    (5.25, 4.5)         12          (9, 2.5)          17           (10, 2.5)
+                                3        (1.75, 4.5)        8    (5.25, 5.5)         13              (9, 5)        18            (10, 5)
+                                4        (1.75, 5.5)        9        (7, 4.5)        14          (9, 7.5)          19           (10, 7.5)
+                                5        (3.5, 4.5)         10       (7, 5.5)        15          (9, 10)           20            (10, 10)
+
+
+                           •    Case 1: unsupervised, U ik = 0, for all 1 ≤ i ≤ 20, 1 ≤ k ≤ 2 (standard FCM algorithm).
+                           •    Case 2: semi-supervised, attempting to place data points 9 and 10 into cluster 1,
+                                U 9,1 = U 10,1 = 0.3, otherwise, U ik = 0.
+                           •    Case 3: semi-supervised, attempting to place data points 9 and 10 into cluster 1,
+                                U 9,1 = U 10,1 = 0.6, otherwise, U ik = 0.
+                                After clustering, we obtain matrices U for all 3 cases, as shown in Table 2.
+
+                           Table 2. The resulting membership U for the 3 cases using the sSFCM algorithm.
+
+                                                                                ¯      ¯                                ¯       ¯
+                                    i      Unsupervised          i              U9,1 = U10,1 = 0.3            i         U9,1 = U10,1 = 0.6
+                                    1        (0.91, 0.09)        1               (0.92, 0.08)                 1             (0.92, 0.08)
+                                    2        (0.91, 0.09)        2               (0.92, 0.08)                 2             (0.92, 0.08)
+                                    3        (0.98, 0.02)        3               (0.98, 0.02)                 3             (0.98, 0.02)
+                                    4        (0.98, 0.02)        4               (0.98, 0.02)                 4             (0.98, 0.02)
+                                    5        (0.97, 0.03)        5               (0.97, 0.03)                 5             (0.97, 0.03)
+                                    6        (0.97, 0.03)        6               (0.97, 0.03)                 6             (0.97, 0.03)
+                                    7        (0.68, 0.32)        7               (0.70, 0.30)                 7             (0.72, 0.28)
+                                    8        (0.68, 0.32)        8               (0.70, 0.30)                 8             (0.72, 0.28)
+                                    9        (0.19, 0.81)        9               (0.45, 0.55)                 9             (0.69, 0.31)
+                                 10          (0.19, 0.81)        10              (0.45, 0.55)                 10            (0.69, 0.31)
+                                 11          (0.28, 0.72)        11              (0.28, 0.72)                 11            (0.28, 0.72)
+                                 12          (0.12, 0.88)        12              (0.12, 0.88)                 12            (0.12, 0.88)
+                                 13          (0.00, 1.00)        13              (0.00, 1.00)                 13            (0.00, 1.00)
+                                 14          (0.12, 0.88)        14              (0.12, 0.88)                 14            (0.12, 0.88)
+                                 15          (0.28, 0.72)        15              (0.28, 0.72)                 15            (0.28, 0.72)
+                                 16          (0.25, 0.75)        16              (0.25, 0.75)                 16            (0.25, 0.75)
+                                 17          (0.11, 0.89)        17              (0.10, 0.90)                 17            (0.10, 0.90)
+                                 18          (0.02, 0.98)        18              (0.01, 0.99)                 18            (0.01, 0.99)
+                                 19          (0.11, 0.89)        19              (0.10, 0.90)                 19            (0.10, 0.90)
+                                 20          (0.25, 0.75)        20              (0.25, 0.75)                 20            (0.25, 0.75)
+
+
+                                 The clustering results indicate that sample points 9 and 10 belong to cluster 2 in case 1
+                           and case 2 and to cluster 1 in case 3, showing the impact of the added semi-supervised com-
+                           ponent in the sSFCM algorithm through the supervised membership grade U. Although in
+                           case 2, the attempt to place points 9 and 10 in cluster 1 was not successful, the points were
+                           much closer to cluster 1 compared to case 1.
+                                 In this study, instead of using the matrix U, we propose the use of multiple fuzzi-
+                           fication coefficients as the mean to make the original unsupervised FCM algorithm a
+                           semi-supervised one.
+Algorithms 2021, 14, 258                                                                                                 5 of 12
+
+
+
+
+                           3. Semi-Supervised Fuzzy C-Means Clustering Algorithm with Multiple Fuzzification
+                           Coefficients (sSMC-FCM)
+                           3.1. Derivation of the Proposed sSMC-FCM Algorithm
+                                In this sub-section, we show the derivation of the proposed sSMC-FCM algorithm.
+                           Each membership Uik can receive different fuzzification coefficients mik . The supervision
+                           of element i to belong to cluster k is performed through adjusting mik . A formula for mik
+                           can be given as follows, with exponential parameters M, M0 > 1:
+                           •    mij = M for all 1 ≤ j ≤ C, for unsupervised elements i.
+                           •    mik = M0 , and mij = M for all j 6= k, for supervised elements i to belong to cluster k.
+                                The approach to determine the exponential parameters M and M0 is discussed
+                           in Section 3.2.
+                                The objective function to be minimized in the sSMC-FCM algorithm is formulated
+                           as follows,                                N C
+                                                          J (U, V ) = ∑ ∑ Uik mik Dik 2                     (7)
+                                                                              i =1 k =1
+                           where X = { X1 , X2 , . . . , X N } is the dataset, N is the number of elements, C is the number
+                           of clusters, Uik is the membership grade of an element Xi in the cluster k with center Vk ,
+                           0 ≤ Uik ≤ 1, 1 ≤ i ≤ N, 1 ≤ k ≤ C, ∑Cj=1 Uij = 1, ∑iN=1 Uik > 0, mik > 1 is the fuzzification
+                           coefficient of Xi in cluster k, and Dik 2 = Xi − Vk 2 is the distance between two vectors Xi
+                           and Vk .
+                                Let Y ⊂ {1, 2, . . . , N } × {1, 2, . . . , C } be the set of supervised elements, we have:
+                                                               
+                                                                M ,                 ∀k : (i, k) ∈
+                                                                                                 /Y
+                                                         mij =      M0 ,               (i, j) ∈ Y                           (8)
+                                                                     M , ∃k : (i, k) ∈ Y ∧ j 6= k
+                                                               
+
+                               To solve the optimization problem shown in Equation (7), we utilize the Lagrange
+                           multiplier method. Let
+                                                                                          !
+                                                      N   C                                N      C
+                                                L = ∑ ∑ Uik mik || Xi − Vk ||2 − ∑ λi            ∑ Uik − 1                  (9)
+                                                     i =1 k =1                            i =1   k =1
+                                Moreover, with            (
+                                                               ∂L
+                                                              ∂Uik = 0,   1 ≤ i ≤ N, 1 ≤ k ≤ C
+                                                              ∂L
+                                                              ∂Vk = 0,    1≤k≤C
+                           we can obtain Vk using
+                                           h                           i
+                                   ∂L     ∂ ∑iN=1 Uik mik ( Xi − Vk )2       N
+                                       =                                 = ∑i=1 Uik mik ∗ 2 ∗ ( Xi − Vk ) ∗ (−1) = 0,
+                                   ∂Vk                ∂Vk
+                           hence, we have
+                                                              N                N
+                                                           ∑i=1 Uik mik Xi = ∑i=1 Uik mik Vk ,
+                           or
+                                                                          ∑iN=1 Uik mik Xi
+                                                                   Vk =                                                   (10)
+                                                                           ∑iN=1 Uik mik
+                                And next, we calculate Uik using
+                                                            ∂L
+                                                                = mik Uik mik −1 Dik 2 − λi = 0,                          (11)
+                                                           ∂Uik
+                           which implies the following:
+                                                                             1
+                                                                      λi       mik −1
+                                                           Uik =           2
+                                                                                                               (12)
+                                                                   mik Dik
+                                Combining with ∑Cj=1 Uij = 1, we consider the two following cases:
+                                Case 1:
+                                For unsupervised elements i, mij = M for all 1 ≤ j ≤ C, Equation (12) becomes:
+Algorithms 2021, 14, 258                                                                                                                                                                   6 of 12
+
+
+
+
+                                                                 1                        1                   1                          1                   2
+                                                         λi        M −1               λi       M −1        1            M −1             λi         M −1        1          M −1
+                                            Uik =                             =                                                =                                                            (13)
+                                                        MDik 2                        M                   Dik 2                          M                     Dik
+                                                                                                      1                                 1                               1
+                                                                                                          M −1                  
+                                                                                                                                             M −1                            M −1
+                                       Since ∑Cj=1 Uij = 1, we have ∑Cj=1                    λi
+                                                                                            MDij 2
+                                                                                                                  = 1, or           λi
+                                                                                                                                    M               ∑Cj=1           1
+                                                                                                                                                                   Dij 2
+                                                                                                                                                                                      = 1, or
+
+                                                                   1
+                                                              λi    M −1                          1                                      1
+                                                                              =                            1         =                         2                                          (14)
+                                                              M                               
+                                                                                                           M −1
+                                                                                                                                    
+                                                                                                                                                M −1
+                                                                                  ∑Cj=1            1                      ∑Cj=1           1
+                                                                                                                                         Dij
+                                                                                                  Dij 2
+
+                                       Replacing (14) into (13), we obtain
+                                                                                                                                ! 2  −1
+                                                                                                                  C               M −1
+                                                                                      1                                   Dik
+                                                           Uik =                             2         = ∑                                                                               (15)
+                                                                                  
+                                                                                      Dik      M −1                       Dij
+                                                                       ∑Cj=1          Dij
+                                                                                                                 j =1
+
+
+                                     Case 2:
+                                     For supervised elements i to belong to cluster k, mik = M0 and mij = M for j 6= k,
+                                 Equation (11) becomes:
+                                                                      0
+                                                           (
+                                                              M0 Uik M −1 Dik 2 = λi , and
+                                                                              MUij M−1 Dij 2 = λi ,                           j 6= k
+                                 or
+                                               0                          0                                               0                                                 0
+                                      M0 Uik M −1 Dik 2 = M0 Ui1 M −1 Di1 2 = . . . = M0 Uij M −1 Dij 2 = . . . = M0 UiC M −1 DiC 2
+                                     Combining with ∑Cj=1 Uij = 1, to calculate Uij , we need to solve the following:
+                         M0 −1 D 2 = MU M −1 D 2 = . . . = MU M −1 D 2 = . . . = MU M −1 D 2 , j 6 = k
+                 
+                    0
+                  M Uik
+                               ik     i1     i1              ij       ij              iC      iC
+                     C                                                                                                                                                                      (16)
+                  ∑ Uij = 1
+                                                                                                                                                     f or all i
+                    j =1
+                                      The steps to solve Equation (16) are shown through Equations (17)–(20) below. To
+                                 make the presentation of the derivation seamless, we first give the calculation formulas,
+                                 and the proof that this solution can solve Equation (16) will be presented in Section 3.2
+                                 with Proposition 1.                         
+                                      Specifically, we calculate dmin = min Dij , then:
+                                                                                            j=1,...,C
+
+                                             Dij
+                                       dij =      , ∀ j = 1, . . . , C                                                                                                                      (17)
+                                            dmin
+                                                                      ! 1
+                                                                       M −1
+                                                               1
+                                       Calculate µij =                      for all j 6= k                                                                                                  (18)
+                                                           Mdij 2
+                                                                                                                                                                                  1
+                                                                                                                        µik                                      1                M 0 −1
+                                       Calculate µik which is a variable in                                                         M00− M =                  0
+                                                                                                                                                               M dik 2
+                                                                                                                                                                                            (19)
+                                                                                                   µik + ∑Cj=1,j6=k µij                  M −1
+
+
+                                                                             µij
+                                       Then normalize : Uij =              C
+                                                                                                                                                                                            (20)
+                                                                          ∑l =1 µil
+                                     From there, we have the sSMC-FCM algorithm as follows.
+                                     Summary of steps for the proposed sSMC-FCM algorithm:
+                                     Input: the dataset X = { X1 , . . . , X N }, the fuzzification coefficients M > 1 and
+                                 M0 > M, and the set of supervised elements Y ⊂ {1, 2, . . . , N } × {1, 2, . . . , C }.
+                                     Output: the partition of X into C clusters.
+                                 •     Step 1: Initialize value for V, let l = 0, and set ε > 0.
+                                 •     Step 2: At the l − th loop, update U according to Equation (15) for unsupervised
+                                       elements, or according to Equations (17)–(20) for supervised elements.
+Algorithms 2021, 14, 258                                                                                                                             7 of 12
+
+
+
+
+                           •    Step 3: Update V for the next step (l + 1), according to Equation (10), with mik
+                                calculated using Equation (8).
+                           •    Step 4: If V (l ) − V (l +1) < ε , then go to Step 5; otherwise, let l := l + 1, and return
+                                to Step 2.
+                           •    Step 5: End.
+                                The sSMC-FCM algorithm has similar steps to the FCM and sSFCM algorithms, but it
+                           uses Equations (15) and (17)–(20) in Step 2 and Equations (8) and (10) in Step 3.
+
+                           3.2. Determination of the Fuzzification Coefficients for Supervised Elements
+                                In the proposed sSMC-FCM algorithm, when an element i is to be supervised, Uij will
+                           be calculated according to Equations (17)–(20) in Step 2 of the algorithm. In this sub-section,
+                           we will discuss these formulas in more detail, as well as how to determine the exponential
+                           parameter M0 for the supervised elements.
+
+                           Proposition 1. Uij calculated from Equations (17)–(20) satisfies Equation (16).
+
+                           Proof of Proposition 1. From Equation (20), taking the sum of Uij , we can see that it
+                           satisfies the condition of ∑Cj=1 Uij = 1 in Equation (16). 
+
+                                                                    0
+                                 Next, we calculate M0 Uij M −1 Dij 2 by gradually replacing from the formulas (20), (19),
+                           (18), (17), as follows:
+                                                                                  M 0 −1
+                                                           0
+                                                   M0 Uik M −1 Dik 2 = M0    C
+                                                                              µik
+                                                                                           (dik dmin )2
+                                                                                                      ∑l =1 µil
+                                                                        1                                   M0 − M
+                                                                                                                            M 0 −1
+                                                                        M 0 −1
+                                                                   
+                                                           1                         µik +∑Cj=1,j6=k µij          M 0 −1
+                                                        M0 dik 2
+                                            = M0                                                                                     (dik dmin )2
+                                                                                                                          
+                                                                                     ∑C
+                                                                                                                           
+                                                                                      l =1 µil
+
+                                                                                  1                      M0 − M
+                                                                                                                       M 0 −1                        (21)
+                                                                                  M 0 −1
+                                                                              
+                                                                 1
+                                                                                               ∑Cj=1 µij     M 0 −1
+                                                              M0 dik 2
+                                                = M0                                                                             dik 2 dmin 2
+                                                                                                                     
+                                                                                         ∑C
+                                                                                                                      
+                                                                                          l =1 µil
+
+                                                                                          M0 − M
+                                                             1
+                                                                            ∑Cj=1 µij
+                                                 =M     0 M0 dik 2                                   dik 2 dmin 2 =                dmin 2
+                                                                             M 0 −1                                             C         M −1
+                                                              (    ∑C
+                                                                    l =1 µil         )                                     (   ∑l =1 µil
+                                                                                                                                       )
+                                Similarly, calculate MUij M−1 Dij 2 for all j 6= k
+                                                                                                               M −1
+                                                                                                                           (dij dmin )2
+                                                                                                       µij
+                                                    MUij M−1 Dij 2 = M
+                                                                                                ∑C µil
+                                                                            !    1
+                                                                                            M −1 l =1
+                                                                                 M −1
+                                                               1                                                                                      (22)
+                                                              Mdij 2
+                                                                                          
+                                                                                                                                   dmin 2
+                                                 = M                                                 dij 2 dmin 2 =
+                                                                                          
+                                                                                                                                            M −1
+                                                                ∑C                                                          (∑Cl=1 µil )
+                                                                                           
+                                                                l =1 µil                  
+
+                                                                                                                      0
+                               From (21) and (22), it can be seen that M0 Uik M −1 Dik 2 = MUi1 M−1 Di1 2 = . . . =
+                           MUij M−1 Dij 2 = . . . = MUiC M−1 DiC 2 for all j 6= k. Therefore, combining with ∑Cj=1 Uij = 1,
+                           Equation (16) is satisfied, and Proposition 1 is proven.
+                               We can hence apply Equations (17)–(20) in Step 2 of the proposed algorithm.
+                               Next, we investigate how to determine the exponential parameter M0 . We will utilize
+                           Proposition 2 after proving it.
+
+                                                                                          1
+                                                                                     1       x −1
+                           Proposition 2. The function f ( x ) =                     ax              with a ≥ 1 is an increasing function when x > 1.
+Algorithms 2021, 14, 258                                                                                                                                                         8 of 12
+
+
+
+
+                                                                                               1                   1
+                                                                                                                 1 x −1     1      1
+                                                                                                1 x −1
+                           Proof of Proposition 2. Consider the function f ( x ) = ax                   = eln(( ax ) ) = e x−1 ln( ax ) ,
+                           Calculate its derivative:
+                                                                              0                0 
+                                                             1 ln( 1 )
+                                               0
+                                              f ( x ) = e x−1 ax .            1       1          1         1
+                                                                            x −1 ln ax + x −1 ln ax
+                                                                                                   0 
+                                                      1 ln( 1 )
+                                                                                           
+                                               = e x−1 ax .           − 1                      1    1    1
+                                                                          2 (−1)ln( ax ) +   x −1   1    ax
+                                                                ( x −1)                          ax
+                                                   1     1                                 1     1
+                                             = e x−1 ln( ax ) . ln(ax)2 − x(x1−1) = e x−1 ln( ax ) . xln(ax)− x2+1
+                                                                              ( x −1)                                                 x ( x −1)
+                                                                                                   1        1
+                                 For x > 1, a ≥ 1, in f 0 ( x ), we have e x−1 ln( ax ) > 0, xln( ax ) − x + 1 ≥ xlnx − x + 1,
+                           and x ( x − 1)2 > 0. For g( x ) = xlnx − x + 1, we have g0 ( x ) = lnx + xx − 1 = lnx > 0
+                           for all x > 1. Therefore, g( x ) is an increasing function in the range [1, +∞), and thus,
+                           g( x ) > g(1) = 0, and hence, xln( ax ) − x + 1 ≥ xlnx − x + 1 > 0. Overall, all the
+                           components of f 0 ( x ) are greater than 0. Therefore, f 0 ( x ) > 0, or f ( x ) is an increasing
+                           function, for all x > 1. 
+
+                                Applying Proposition 2 to the following formula used to calculate M0 for the super-
+                                                            01
+                           vised elements, f ( M0 ) = M01d 2 M −1 , where dik 2 ≥ 1, M0 > 1, we see that this function is
+                                                                         ik
+                           an increasing function. Therefore, as M0 increases, the membership grade Uik increases. Set-
+                           ting the supervision for an element corresponds to selecting a larger fuzzification coefficient
+                           M0 for that element compared to other fuzzification coefficients.
+                                 Then, Proposition 3 is utilized to guide the determination of parameter M0 .
+
+                           Proposition 3. Let Uik be the membership grade of element Xi in its semi-supervise placement
+                           into cluster k according to Equations (17)–(20) with a given parameter M and a to-be-determined
+                           parameter M0 . Let U 0 ik be the membership grade of element Xi in its unsupervised placement into
+                           cluster k according to Equation (15). With α ∈ (0, 1), we have Uik ≥ α if the following equation
+                           is satisfied:                                               ! M −1
+                                                               0 M 0 −1         1−α
+                                                             Mα         ≤M      1
+                                                                                                                         (23)
+                                                                              U0 − 1                       ik
+
+
+                           Proof of Proposition 3. From Equation (15), we have
+
+                                                        1                                          1                                                        1
+                                 U 0 ik =                     2     =             2                                   2     =                                        2
+                                                        Dik    M −1           Dik    M −1                           Dik    M −1                                      Dik    M −1
+                                            ∑Cj=1       Dij                   Dik           + ∑Cj=1,j6=k            Dij               1 + ∑Cj=1,j6=k                 Dij
+
+
+                                  From Equation (17), we have ddik = D ik        0
+                                                                     D , hence, Uik =
+                                                                                                                                            1
+                                                                                                                                                           2     .
+                                                                                     ij       ij                                                     
+                                                                                                                                                          M −1
+                                                                                                                                                dik
+                                                                                                                             1+∑Cj=1,j6=k       dij
+
+                                  Substitute into (23), we have the equivalent
+                                               0                      M (1 − α ) M −1                                           (1 − α ) M −1
+                                      M 0 α M −1 ≤                                    =
+                                                                            2  M −1                                                      1 ! M −1
+                                                                              dik    M −1                                                              M −1
+                                                               ∑Cj=1,j6=k     dij                           dik 2 ∑Cj=1,j6=k               1
+                                                                                                                                          Mdij 2
+
+
+                           or,
+                                                                                  0
+                                                                                                                            ! 1  M −1
+                                                                                                                              M −1
+                                                              1                α M −1
+                                                                                   ∑
+                                                                                                       C
+                                                                                                                     1
+                                                                     ≥                                                             
+                                                            M0 dik 2   (1 − α) M−1 j=1,j6=k                         Mdij 2
+
+                                                                                                                                      0                                    M −1
+                                                                                                                                   α M −1
+                                  Substitute in µij from Equation (18), we have M01d 2 ≥                                                            ∑Cj=1,j6=k µij                  .
+                                                                                                                      ik        (1 − α ) M −1
+                                  Substitute M01d 2 in the above with Equation (19), we have
+                                                 ik
+Algorithms 2021, 14, 258                                                                                                                                         9 of 12
+
+
+
+
+                                                                         0                                0
+                                                                                                                                       ! M −1
+                                                               µik M −1                               α M −1              C
+                                                                               M0 − M ≥                                  ∑      µij                               (24)
+                                                                                                   (1 − α ) M −1
+                                                 
+                                                     µik + ∑Cj=1,j6=k µij                                             j=1,j6=k
+
+                                                                                                                     µik                       µik
+                                 Next, from Equation (20), we have Uik                                        =                =                            ,    hence
+                                                                                                                  ∑Cj=1 µij             µik +∑Cj=1,j6=k µij
+
+                           ∑Cj=1,j6=k µij = Uikik − µik , which is substituted into Equation (24) to have
+                                            µ
+
+                                                                     0                         0                               M −1
+                                                          µik M −1                       α M −1           µik (1 − Uik )
+                                                                                                      
+                                                           M0 − M ≥
+                                                           µik                      (1 − α ) M −1              Uik
+                                                           Uik
+                                                                                                                                        0                         M −1
+                                                                                                                                   α M −1 µik M−1
+                                                                                                                      0
+                                                                                                                                                     
+                                                                                                                                                         1−Uik
+                                 Since M0 > M, and from the above, we have µik M−1 Uik M − M ≥                                                                            .
+                                                                                                                                     (1 − α ) M −1        Uik
+                                  Since µik is to be solved in Equation (19), µik > 0, and the above can be simplified into
+                                0
+                           Uik M − M Uik M−1       M 0 −1
+                                             ≥ α M−1 or
+                             (1−Uik ) M−1       (1− α )
+                                                                                     0                        0
+                                                                             Uik M −1                     α M −1
+                                                                                             M −1
+                                                                                                  ≥                                                                (25)
+                                                           (1 − Uik )          (1 − α ) M −1
+                                 Therefore, if Equation (23) is satisfied, then Equation (25) is also satisfied.
+                                                                                         0
+                                                                                  x M −1
+                                 Consider the function f ( x ) =                             with x ∈ (0, 1) we have its derivative
+                                                                               (1 − x ) M −1
+                                                                                0                         0
+                                                                     ( M0 −1) x M −2 (1− x ) M−1 − x M −1 ( M−1)(1− x ) M−2 (−1)
+                                                       f 0 (x) =
+                                                                                                (1 − x )2( M −1)
+                                                                                         0
+                                                                        (1− x ) M−2 x M −2 (( M0 −1)(1− x )+ x ( M−1))
+                                                                    =
+                                                                                           (1 − x )2( M −1)
+                                                                                      0 −2
+                                                                                   M       ( M0 − M0 x + Mx −1)
+                                                                             = x
+                                                                                              (1− x ) M
+                                 Since M0 > M, and from the above derivative, with x ∈ (0, 1), we have
+                             M0 − M0 x + Mx − 1 ≥ M0 − M0 x + Mx − M = M0 (1 − x ) − M(1 − x ) = M0 − M (1 − x ) > 0
+                                                                                                       
+
+                                             0
+                                Since x M −2 > 0 and (1 − x ) M > 0, hence, f 0 ( x ) > 0, and therefore, f 0 ( x ) is an
+                           increasing function. Equation (25) has the form of f (Uik ) ≥ f (α), so then Uik ≥ α. 
+
+                                 From Proposition 3, Equation (23) demonstrates an approach to determine parameter
+                           M0 . The right-hand side of (23) is a value that can be calculated knowing M, α, and the
+                           distances, while the left-hand side of (23) is a decreasing function as M0 increases. From
+                           this, we can start at M0 = M, and then increase M0 value and check simultaneously until
+                           Equation (23) is satisfied to solve for M0 .
+                                 Example: Given the data set from Table 1, the element X9 has U91 = 0.189, with
+                           M = 2. If we want to apply supervision such that U91 ≥ 0.5 to put X9 into cluster 1, then
+                                                                                                         0
+                           from Equation (20), we need to determine M0 such that the condition 0.5 M −1 M0 ≤ 0.233 is
+                                                        0
+                           satisfied. For M0 = 2, 0.5 M −1 M0 = 1, and hence it does not satisfy the condition. We will
+                                                                                           0
+                           have to increase the value of M0 to decrease the value of 0.5 M −1 M0 to satisfy the condition.
+                                                                                         0
+                           Through certain iterations, we obtain M0 = 5.582, and 0.5 M −1 M0 = 0.233, which satisfies
+                           the condition, and effectively places X9 into cluster 1.
+                                 A point that can be further discussed is that in Step 2 of the sSMC-FCM algorithm,
+                           it is necessary to solve Equation (19) to obtain µik . In Equation (19), its right-hand side
+                                                                                              0−M
+                           has a value in the range [0,1]. Set A = ∑Cj=1,j6=k µij , b = M    M0 −1 , with b < 1, the left-
+                                                                                     x
+                           hand side of this equation has the form of f ( x ) =         b , which has the derivative of
+                                                                                                           ( x + A)
+                                             b               b −1
+                                     ( x + A) − xb( x + A)                                 (1− b ) x + A
+                           f 0 (x) =                                = x+ A−bxb           =                > 0 for x > 0. From this, we can see
+                                             ( x + A)2b               ( x + A ) +1         ( x + A ) b +1
+                           that the left-hand side of Equation (19) is an increasing function, while the right-hand side
+                           has a value in the range [0,1]. Therefore, we can use an approximation method to obtain
+                           µik , starting from µik = 0, and then increasing gradually to determine the solution.
+Algorithms 2021, 14, 258                                                                                                  10 of 12
+
+
+
+
+                           4. Numerical Examples
+                                 To evaluate the proposed algorithm, we use the same numerical example shown in
+                           Section 2.2. A data set with 20 elements X = { X1 , X2 , . . . , X20 }, Xi ∈ R2 , as seen in Table 1,
+                           is to be divided into two clusters. Implement the sSMC-FCM algorithms with M = 2 for
+                           the following 3 cases:
+                           •    Case 1: unsupervised, M0 = M = 2 (standard FCM algorithm).
+                           •    Case 2: semi-supervised, attempting to place data points 9 and 10 into cluster 1,
+                                M0 = 4, M = 2.
+                           •    Case 3: semi-supervised, attempting to place data points 9 and 10 into cluster 1,
+                                M0 = 8, M = 2.
+                               The Euclidian distance was used in the calculations and results in this work. Table 3
+                           shows membership matrices U for each case, as the results of clustering.
+
+                           Table 3. The resulting membership U for the 3 cases using the sSMC-FCM algorithm.
+                                                                                     0                                0
+                                   i         Unsupervised           i              M =4               i             M =8
+                                  1           (0.91, 0.09)          1           (0.92, 0.08)         1           (0.92, 0.08)
+                                  2           (0.91, 0.09)          2           (0.92, 0.08)         2           (0.92, 0.08)
+                                  3           (0.98, 0.02)          3           (0.98, 0.02)         3           (0.98, 0.02)
+                                  4           (0.98, 0.02)          4           (0.98, 0.02)         4           (0.98, 0.02)
+                                  5           (0.97, 0.03)          5           (0.98, 0.02)         5           (0.98, 0.02)
+                                  6           (0.97, 0.03)          6           (0.98, 0.02)         6           (0.98, 0.02)
+                                  7           (0.68, 0.32)          7           (0.71, 0.29)         7           (0.71, 0.29)
+                                  8           (0.68, 0.32)          8           (0.71, 0.29)         8           (0.71, 0.29)
+                                  9           (0.19, 0.81)          9           (0.43, 0.57)         9           (0.60, 0.40)
+                                  10          (0.19, 0.81)         10           (0.43, 0.57)         10          (0.60, 0.40)
+                                  11          (0.28, 0.72)         11           (0.28, 0.72)         11          (0.28, 0.72)
+                                  12          (0.12, 0.88)         12           (0.12, 0.88)         12          (0.12, 0.88)
+                                  13          (0.00, 1.00)         13           (0.00, 1.00)         13          (0.00, 1.00)
+                                  14          (0.12, 0.88)         14           (0.12, 0.88)         14          (0.12, 0.88)
+                                  15          (0.28, 0.72)         15           (0.28, 0.72)         15          (0.28, 0.72)
+                                  16          (0.25, 0.75)         16           (0.25, 0.75)         16          (0.25, 0.75)
+                                  17          (0.11, 0.89)         17           (0.11, 0.89)         17          (0.10, 0.90)
+                                  18          (0.02, 0.98)         18           (0.01, 0.99)         18          (0.01, 0.99)
+                                  19          (0.11, 0.89)         19           (0.11, 0.89)         19          (0.10, 0.90)
+                                  20          (0.25, 0.75)         20           (0.25, 0.75)         20          (0.25, 0.75)
+
+
+                                From the results in Table 3, we have the following observations:
+                           •    As M0 increases, the membership grades of the supervised elements increase. Initially,
+                                with no supervision, data points 9 and 10 were placed into cluster 2. With supervision
+                                and M0 = 4, their membership grades increased but not enough to move into cluster
+                                1, while with M0 = 8, these two data points were successfully placed into cluster 1;
+                           •    In general, the sSMC-FCM algorithm converges after a similar number of iterations
+                                to the standard FCM algorithm. For instance, with ε = 10−3 , it required about
+                                10 iterations;
+                           •    When M0 is changed, the cluster centers change to suit the supervised elements. For
+                                instance, case 1 has cluster centers V1 = (2.719, 5.000), V2 = (9.018, 5.000), case 2 has
+                                cluster centers V1 = (2.735, 5.000), V2 = (9.200, 5.000), and case 3 has cluster centers
+Algorithms 2021, 14, 258                                                                                                       11 of 12
+
+
+
+
+                                       V1 = (2.714, 5.000), V2 = (9.303, 5.000). We can observe that, from case 1 to 2, the
+                                       cluster center V2 moves further away from data points 9 and 10;
+                                  •    Compared to the sSFCM algorithm, we can see that the matrices U in the case of
+                                       M0 = 4, M = 2 using the sSMC-FCM algorithm shown in Table 3 are similar to the
+                                       corresponding matrices U in the case of U 9,1 = U 10,1 = 0.3 using the sSFCM algorithm
+                                       shown in Table 2. Both cases were able to increase the membership grade of the points
+                                       to belong to cluster 1 but were not successfully in moving the points into cluster 1;
+                                  •    In future works, it is possible to expand on other different representations for the
+                                       fuzzification coefficients, combining with hedge algebra [17–19] in new representations
+                                       and calculations.
+
+                                  5. Conclusions
+                                        In this study, we developed a novel clustering algorithm, called sSMC-FCM, based
+                                  on the standard FCM algorithm, adding the semi-supervision aspect through the use of
+                                  multiple fuzzification coefficients or also known as exponential parameters. In the sSMC-
+                                  FCM algorithm, we allow the data elements to have different fuzzification coefficients,
+                                  instead of only one such as in the standard FCM method. The expansion from hard
+                                  clustering to fuzzy clustering involves the addition of fuzzification coefficients; hence, the
+                                  determination of the fuzzification coefficient values is an interesting topic to be further
+                                  researched. In this study, we derived the novel sSMC-FCM algorithm and proved three
+                                  propositions to show the convergence of the algorithm and to explain how to determine the
+                                  fuzzification coefficients and demonstrated the efficiency of the algorithm using a numerical
+                                  example. The proposed algorithm added supervision in the normally unsupervised FCM
+                                  clustering algorithm. This method can be applied in practical problems such as remote
+                                  sensing image segmentation, when knowing an image is certainly of an image type such
+                                  as a lake, but due to image noises and the unsupervised approach, the attribute features
+                                  may cause that image to be perceived as another image type, such as clouds, leading to
+                                  undesirable results. With the proposed semi-supervised method, we should be able to
+                                  place the image into the knowingly correct image type as desired.
+
+                                  Author Contributions: Conceptualization, T.D.K.; methodology, T.D.K. and M.-K.T.; software, T.D.K.;
+                                  validation, T.D.K., M.-K.T., and M.F.; formal analysis, T.D.K.; writing—original draft preparation,
+                                  T.D.K. and M.-K.T.; writing—review and editing, M.F.; supervision, T.D.K. and M.F. All authors have
+                                  read and agreed to the published version of the manuscript.
+                                  Funding: This research was funded by the Vietnam National Foundation for Science and Technology
+                                  Development (NAFOSTED) under Grant Number 102.05–2018.02.
+                                  Institutional Review Board Statement: Not application.
+                                  Informed Consent Statement: Not application.
+                                  Data Availability Statement: Not application.
+                                  Conflicts of Interest: The authors declare no conflict of interest.
+
+References
+1.    Arora, J.; Khatter, K.; Tushir, M. Fuzzy c-Means Clustering Strategies: A Review of Distance Measures. Softw. Eng. 2018, 153–162.
+2.    Everitt, B.S.; Landau, S.; Leese, M.; Stahl, D. Cluster Analysis, 5th ed.; John Wiley & Sons, Ltd.: Hoboken, NJ, USA, 2011.
+3.    Havens, T.C.; Bezdek, J.C.; Leckie, C.; Hall, L.O.; Palaniswami, M. Fuzzy c-Means Algorithms for Very Large Data. IEEE Trans.
+      Fuzzy Syst. 2012, 20, 1130–1146. [CrossRef]
+4.    Gosain, A.; Dahiya, S. Performance Analysis of Various Fuzzy Clustering Algorithms: A Review. Procedia Comput. Sci. 2016, 79,
+      100–111. [CrossRef]
+5.    Ruspini, E.H.; Bezdek, J.C.; Keller, J.M. Fuzzy Clustering: A Historical Perspective. IEEE Comput. Intell. Mag. 2019, 14, 45–55.
+      [CrossRef]
+6.    Vendramin, L.; Campello, R.J.G.B.; Hruschka, E.R. Relative Clustering Validity Criteria: A Comparative Overview. Stat. Anal.
+      Data Min. 2010, 3, 209–235. [CrossRef]
+7.    Casalino, G.; Castellano, G.; Mencar, C. Data stream classification by dynamic incremental semi-supervised fuzzy clustering. Int.
+      J. Artif. Intell. Tools 2019, 28, 1960009. [CrossRef]
+Algorithms 2021, 14, 258                                                                                                         12 of 12
+
+
+
+
+8.    Gan, H.; Fan, Y.; Luo, Z.; Huang, R.; Yang, Z. Confidence-weighted safe semi-supervised clustering. Eng. Appl. Artif. Intell. 2019,
+      81, 107–116. [CrossRef]
+9.    Mai, S.D.; Ngo, L.T. Multiple kernel approach to semi-supervised fuzzy clustering algorithm for land-cover classification. Eng.
+      Appl. Artif. Intell. 2018, 68, 205–213. [CrossRef]
+10.   Komori, O.; Eguchi, S. A Unified Formulation of k-Means, Fuzzy c-Means and Gaussian Mixture Model by the Kolmogorov–
+      Nagumo Average. Entropy 2021, 23, 518. [CrossRef] [PubMed]
+11.   Son, L.H.; Tuan, T.M. Dental segmentation from X-ray images using semi-supervised fuzzy clustering with spatial constraints.
+      Eng. Appl. Artif. Intell. 2017, 59, 186–195. [CrossRef]
+12.   Maraziotis, I.A. A semi-supervised fuzzy clustering algorithm applied to gene expression data. Pattern Recognit. 2012, 45, 637–648.
+      [CrossRef]
+13.   Śmieja, M.; Struski, Ł.; Figueiredo, M.A. A classification-based approach to semi-supervised clustering with pairwise constraints.
+      Neural Netw. 2020, 127, 193–203. [CrossRef] [PubMed]
+14.   Yasunori, E.; Yukihiro, H.; Makito, Y.; Yasunori, M.S. On semi-supervised fuzzy c-means clustering. In Proceedings of the IEEE
+      International Conference on Fuzzy Systems, Jeju Island, Korea, 20–24 August 2009.
+15.   Hwang, C.; Rhee, F.C.-H. Uncertain Fuzzy Clustering: Interval Type-2 Fuzzy Approach to C-Means. IEEE Trans. Fuzzy Syst. 2007,
+      15, 107–120. [CrossRef]
+16.   Khang, T.D.; Vuong, N.D.; Tran, M.-K.; Fowler, M. Fuzzy C-Means Clustering Algorithm with Multiple Fuzzification Coefficients.
+      Algorithms 2020, 13, 158. [CrossRef]
+17.   Khang, T.D.; Phong, P.A.; Dong, D.K.; Trang, C.M. Hedge Algebraic Type-2 Fuzzy Sets. In Proceedings of the Conference:
+      FUZZ-IEEE 2010, IEEE International Conference on Fuzzy Systems, Barcelona, Spain, 18–23 July 2010.
+18.   Nguyen, C.H.; Tran, D.K.; Nam, H.V.; Nguyen, H.C. Hedge Algebras, Linguistic-Valued Logic and Their Application to Fuzzy
+      Reasoning. Int. J. Uncertain. Fuzziness Knowl.-Based Syst. 1999, 7, 347–361. [CrossRef]
+19.   Phong, P.A.; Khang, T.D.; Dong, D.K. A fuzzy rule-based classification system using Hedge Algebraic Type-2 Fuzzy Sets. In
+      Proceedings of the Annual Conference of the North American Fuzzy Information Processing Society (NAFIPS), El Paso, TX, USA,
+      31 October–4 November 2016; pp. 265–270.
+

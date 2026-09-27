@@ -1,0 +1,1746 @@
+               Relative Clustering Validity Criteria: A Comparative Overview
+                          Lucas Vendramin, Ricardo J. G. B. Campello∗ and Eduardo R. Hruschka
+
+       Department of Computer Sciences of the University of São Paulo at São Carlos, C.P. 668, São Carlos, Brazil
+
+
+                            Received 23 October 2009; revised 30 April 2010; accepted 8 May 2010
+                                                   DOI:10.1002/sam.10080
+                      Published online 30 June 2010 in Wiley InterScience (www.interscience.wiley.com).
+
+
+
+    Abstract: Many different relative clustering validity criteria exist that are very useful in practice as quantitative measures for
+    evaluating the quality of data partitions, and new criteria have still been proposed from time to time. These criteria are endowed
+    with particular features that may make each of them able to outperform others in specific classes of problems. In addition, they
+    may have completely different computational requirements. Then, it is a hard task for the user to choose a specific criterion when
+    he or she faces such a variety of possibilities. For this reason, a relevant issue within the field of clustering analysis consists
+    of comparing the performances of existing validity criteria and, eventually, that of a new criterion to be proposed. In spite of
+    this, the comparison paradigm traditionally adopted in the literature is subject to some conceptual limitations. The present paper
+    describes an alternative, possibly complementary methodology for comparing clustering validity criteria and uses it to make an
+    extensive comparison of the performances of 40 criteria over a collection of 962,928 partitions derived from five well-known
+    clustering algorithms and 1080 different data sets of a given class of interest. A detailed review of the relative criteria under
+    investigation is also provided that includes an original comparative asymptotic analysis of their computational complexities.
+    This work is intended to be a complement of the classic study reported in 1985 by Milligan and Cooper as well as a thorough
+    extension of a preliminary paper by the authors themselves.  2010 Wiley Periodicals, Inc. Statistical Analysis and Data Mining 3:
+    209–235, 2010
+
+    Keywords:       clustering; validation; relative criteria
+
+
+
+                    1. INTRODUCTION                                     partition of a data set X = { x1 , . . . , xN }, composed of
+                                                                        n-dimensional feature or attribute vectors xj , is a collec-
+   Data clustering is a fundamental conceptual problem in               tion C = {C1 , . . . , Ck } of k nonoverlapping data subsets
+data mining, in which one aims at determining a finite set              Ci (clusters) such that C1 ∪ C2 ∪ . . . ∪ Ck = X, Ci = ,
+of categories to describe a data set according to similari-             and Ci ∩ Cl =  for i = l. Overlapping techniques search
+ties among its objects [1–3]. The solution to this problem              for soft or fuzzy partitions by somehow relaxing the mutual
+often constitutes the final goal of the mining procedure—               disjointness constraints Ci ∩ Cl = .
+having broad applicability in areas that range from image                  The literature on data clustering is extensive. Several
+and market segmentation to document categorization and                  clustering algorithms with different characteristics and for
+bioinformatics (e.g. see refs [2,4,5])—but solving a clus-              different purposes have been proposed and investigated
+tering problem may also help solving other related prob-
+                                                                        over the past four decades or so [4,5,8,9]. Despite the out-
+lems, such as pattern classification and rule extraction from
+                                                                        standing evolution of this area and all the achievements
+data [6].
+                                                                        obtained during this period of time, a critical issue that is
+   Clustering techniques can be broadly divided into three
+                                                                        still on the agenda regarding the estimation of the number
+main types [7]: overlapping, partitional, and hierarchical.
+                                                                        of clusters contained in data. Most of the clustering algo-
+The last two are related to each other in that a hierarchical
+                                                                        rithms, in particular the most traditional and popular ones,
+clustering is a nested sequence of hard partitional cluster-
+ings, each of which represents a partition of the data set              require that the number of clusters be defined either a priori
+into a different number of mutually disjoint subsets. A hard            or a posteriori by the user. Examples are the well-known
+                                                                        k-means [7,10], EM (expectation maximization) [11,12],
+                                                                        and hierarchical clustering algorithms [2,7]. This is quite
+   Additional Supporting Information may be found in the online
+                                                                        restrictive in practice since the number of clusters is gen-
+version of this article.
+   Correspondence to: Ricardo J. G. B. Campello                         erally unknown, especially for n-dimensional data, where
+(campello@icmc.usp.br)                                                  visual inspection is prohibitive for “large” n [2,7]. A widely
+
+
+ 2010 Wiley Periodicals, Inc.
+210                                      Statistical Analysis and Data Mining, Vol. 3 (2010)
+
+
+known and simple approach to get around this drawback                               160
+consists of getting a set of data partitions with different
+                                                                                    140
+numbers of clusters and then selecting that particular par-
+tition that provides the best result according to a specific                        120
+quality criterion [7]. Such a set of partitions may result
+directly from a hierarchical clustering dendrogram or, alter-                       100
+
+
+
+
+                                                                      attribute 2
+natively, from multiple runs of a partitional algorithm (e.g.
+                                                                                    80
+k-means) starting from different numbers and initial posi-
+tions of cluster prototypes.                                                        60
+    Many different clustering validity measures exist that
+are very useful in practice as quantitative criteria for                            40
+evaluating the quality of data partitions—e.g. see refs
+                                                                                    20
+[13,14] and references therein. Some of the most well-
+known validity measures, also referred to as relative valid-                         0
+ity (or quality) criteria, are possibly the Davies–Bouldin                                0   20   40       60        80   100     120
+
+index [7,15], the variance ratio criterion—VRC (so-called                                               attribute 1
+
+Calinski–Harabasz index) [2,16], Dunn’s index [17,18], and           Fig. 1 Unnatural partitioning of the Ruspini data set into four
+the silhouette width criterion (SWC) [1,2,19], just to men-          clusters: circles, diamonds, triangles, and squares.
+tion a few. It is a hard task for the user, however, to choose
+a specific measure when he or she faces such a variety of                           160
+possibilities. To make things even worse, new measures
+have still been proposed from time to time. For this rea-                           140
+son, a problem that has been of interest over more than two
+decades consists of comparing the performances of existing                          120
+
+clustering validity measures and, eventually, that of a new                         100
+measure to be proposed. Indeed, various researchers have
+                                                                      attribute 2
+
+
+
+
+undertaken the task of comparing performances of cluster-                            80
+ing validity measures since the 1980s. A cornerstone in
+this area is the work by Milligan and Cooper [14], who                               60
+
+compared 30 different measures through an extensive set                              40
+of experiments involving several labeled data sets. Twenty
+four years later, that seminal, outstanding work is still used                       20
+and cited by many authors who deal with clustering valid-
+ity criteria. In spite of this, the comparison methodology                            0
+                                                                                          0   20   40       60        80   100     120
+adopted by Milligan and Cooper is subject to three con-                                                 attribute 1
+ceptual problems. First, it relies on the assumption that the
+                                                                     Fig. 2 Partitioning of the Ruspini data into five clusters.
+accuracy of a criterion can be quantified by the number of
+times it indicates as the best partition (among a set of can-
+didates), a partition with the right number of clusters for          the clusters displayed in Fig. 1 are far away from those
+a specific data set, over many different data sets for which         expected natural clusters. On the other hand, there may exist
+such a number is known in advance—e.g. by visual inspec-             numerous partitions of a data set into the wrong number of
+tion of 2D/3D data or by labeling synthetically generated            clusters, but clusters that exhibit a high degree of com-
+data. This assumption has also been implicitly made by               patibility with the spatial distribution of the data—e.g. the
+other authors who worked on more recent papers involving             natural clusters except for some outliers separated apart as
+the comparison of clustering validity criteria (e.g. see refs        independent small clusters or singletons. An example using
+[13,20–22]). Note, however, that there may exist numerous            the Ruspini data is shown in Fig. 2, where five visually
+partitions of a data set into the right number of clusters, but      acceptable clusters are displayed.
+clusters that are very unnatural with respect to the spatial            It is important to notice that Milligan and Cooper [14]
+distribution of the data. As an example, let us consider a           minimized or even avoided the above-mentioned problem
+partition of the Ruspini data set [1,23] into four clusters,         by generating the collection of candidate partitions for each
+as shown in Fig. 1. Even though visual inspection suggests           data set in such a way that the optimal (known) parti-
+that four is an adequate estimate of the number of natu-             tion was very likely to be included into that collection
+ral clusters for the Ruspini data, common sense says that            as the only partition with the right number of clusters.
+Statistical Analysis and Data Mining DOI:10.1002/sam
+                                  Vendramin, Campello, and Hruschka: Relative Clustering Validity Criteria                              211
+
+
+This was accomplished by applying a hierarchical clustering              not taken into account. This capability indicates a parti-
+algorithm to data sets with well-behaved cluster structures.             cular kind of robustness of the criterion that is important
+In spite of this, another potential problem with the method-             in real-world application scenarios for which no cluster-
+ology adopted in Ref. [14] is that it relies on the assumption           ing algorithm can provide precise solutions (i.e. compact
+that a mistake made by a certain validity criterion when                 and separated clusters) due to noise contamination, clus-
+assessing a collection of candidate partitions of a data set             ter overlapping, high dimensionality, and other possible
+can be quantified by the absolute difference between the                 complicative factors. Such a robustness is also particularly
+right (known) number of clusters in the data and the num-                desirable, for instance, in algorithms for clustering, where
+ber of clusters contained in the partition elected as the best           an initial random population of partitions evolves toward
+one. For instance, if a certain criterion suggests that the best         selectively improving a given clustering validity measure—
+partition of a data set with six clusters has eight clusters,            e.g. see ref. [24] and references therein.
+then this mistake counts two units for the amount of mis-                    Before proceeding with an attempt at getting around the
+takes made by that specific criterion. However, a partition              drawbacks described above, it is important to remark that
+of a data set with k clusters into k + k clusters may be                some very particular criteria are only able to estimate the
+better than another partition of the same data into k − k               number of clusters in data—by suggesting when a given
+clusters and vice versa. As an example, let us consider a                iterative (e.g. hierarchical) clustering procedure should stop
+partition of the Ruspini data set into three clusters, as shown          increasing this number. Such criteria are referred to as stop-
+in Fig. 3. Such a partition is possibly less visually appealing          ping rules [14] and should not be seen as clustering validity
+than that with five clusters shown in Fig. 2 for most people.            measures in a broad sense, since they are not able to quan-
+But more importantly, the partition in Fig. 3 can be deemed              titatively measure the quality of data partitions. In other
+worse than that in Fig. 2 from the conceptual viewpoint of               words, they are not optimization-like validity measures.
+cluster analysis. Indeed, the partition in Fig. 3 loses infor-           When comparing the efficacy of stopping rules, the tra-
+mation on the intrinsic structure contained in the data by               ditional methodology adopted by Milligan and Cooper [14]
+merging two well-defined clusters, whereas that in Fig. 2                is possibly the only choice1 . However, when dealing with
+just suggests that some objects nearby a given well-defined              optimization-like measures, which are the kind of criterion
+cluster would be better as a cluster on their own.                       subsumed in the present paper and can be used as stopping
+   A third potential problem with the methodology adopted                rules as well, a comparison methodology that is broader in
+in Ref. [14] is that the assessment of each validity crite-              scope may also be desired.
+rion relies solely on the correctness (with respect to the                   The present paper describes an alternative, possibly com-
+number of clusters) of the partition elected as the best one             plementary methodology for comparing relative clustering
+according to that criterion. The accuracy of the criterion               validity measures and uses it as a basis to perform an exten-
+when evaluating all the other candidate partitions is just               sive comparison study of 40 measures. Given a set of par-
+ignored. Accordingly, its capability to properly distinguish             titions of a particular data set and their respective validity
+among a set of partitions that are not good in general is                values according to different relative measures, the perfor-
+                                                                         mance of each measure on the assessment of the whole
+                                                                         set of partitions can be evaluated with respect to an exter-
+              160                                                        nal (absolute rather than relative) criterion that supervisedly
+                                                                         quantifies the degree of compatibility between each parti-
+              140
+                                                                         tion and the right one, formed by known clusters. Among
+              120                                                        the most well-known external criteria are the adjusted Rand
+                                                                         index (ARI) [7,25] and the Jaccard coefficient [1,7]. It is
+              100                                                        expected that a good relative clustering validity measure
+attribute 2
+
+
+
+
+                                                                         will rank the partitions according to an ordering that is simi-
+              80
+                                                                         lar to that established by an external criterion, since external
+              60                                                         criteria rely on supervised information about the underly-
+                                                                         ing structure in the data (known referential clusters). The
+              40                                                         agreement level between the dispositions of the partitions
+                                                                         according to their relative and external validity values can
+              20
+                                                                         be readily computed using a correlation index—e.g. Pear-
+               0
+                                                                         son coefficient [26]—as formerly envisioned by Milligan
+                    0   20   40       60        80    100      120
+                                  attribute 1
+                                                                           1
+                                                                             For this reason, stopping rules have not been included into the
+Fig. 3 Partitioning of the Ruspini data into three clusters.             present study.
+
+                                                                                   Statistical Analysis and Data Mining DOI:10.1002/sam
+212                                      Statistical Analysis and Data Mining, Vol. 3 (2010)
+
+
+in 1981 [27]. Clearly, the larger the correlation value the          partitions produced by a hierarchical clustering algorithm.
+higher the capability of a relative measure to (unsupervis-          Unlike simple stopping rules, which can only be used to
+edly) mirror the behavior of the external index and properly         halt this sort of algorithm [14], difference-like criteria can
+distinguish between better and worse partitions. In particu-         be modified so as to exhibit (maximum or minimum) peaks
+lar, if the set of partitions is not good in general (e.g. due       at the partitions deemed the best ones, as will be discussed
+to noise contamination), higher correlation values suggest           in Section 2.2.
+more robustness of the corresponding relative measures.                 The description of each criterion in Sections 2.1 and 2.2
+   This work is a thorough extension of a preliminary con-           is followed by an asymptotic time complexity analysis.
+ference paper [28]. The extensions take place in the follow-         Such analysis is based on the assumption that the crite-
+ing different aspects: (i) 16 additional relative validity mea-      rion receives as input a collection of N data objects, X =
+sures have been included into the analyses, thus summing             {x1 , . . . , xN }, partitioned into k disjoint clusters, C1 , C2 ,
+up to a total of 40 ; (ii) a detailed review of these measures       . . . , Ck , each of which is composed of Nl objects (Nl =
+have been provided that includes an original comparative             cardinality(Cl ) = 0), in such a way that N1 + N2 +
+asymptotic analysis of their computational complexities;             . . . + Nk = N . It is also assumed that the distance d(xi , xj )
+(iii) five different clustering algorithms (four hierarchical        between two data objects can be computed in linear time
+ones and k-means) have been used in the experiments,                 with respect to the number of dimensions (attributes) of
+instead of k-means only; (iv) a much more extensive collec-          these objects, i.e. it is assumed that d(xi , xj )
+tion of experiments, involving a number of additional data           is O(n).
+sets (over three times more) and original evaluation scenar-            Before proceeding with the review of relative clustering
+ios, has been carried out. For instance, the behaviors of the        validity criteria, it is important to remark that the definitions
+validity criteria when assessing partitions of data sets with        of most of these criteria subsume the use of numerical data,
+different amounts of clusters and dimensions (attributes)            which means that they operate on data objects described by
+have been investigated; (v) part of the study has been               numerical attributes only (xj = [xj 1 , . . . , xj n ]T ∈ Rn ). In
+devoted to reproducing experiments performed by Milligan             these cases, the concepts of cluster and/or data centroid may
+and Cooper in their 1985 paper [14], with the inclusion of           take place. In order to standardize notation, the centroid of a
+several measures that were not covered in that reference;            cluster Cl is hereafter referred to as xl , whereas the centroid
+and (vi) a discussion on how to transform difference-like            of the whole data set (grand mean)           is referred to as x.
+validity measures into optimization-like measures has been           So, one has xl = [x l1 . . . x ln ]T = N1l xi ∈Cl xi and x =
+included.                                                                                    
+                                                                     [x 1 . . . x n ]T = N1 N    i=1 xi . The cost of computing such
+   The remainder of this paper is organized as follows. In           centroids is included into the complexity analyses of the
+Section 2, a collection of relative clustering validity mea-         corresponding criteria.
+sures are reviewed and their computational complexities
+are analyzed. Next, in Section 3, a brief review of exter-
+nal clustering validity criteria is presented. In Section 4,                       2.1. Optimization-like Criteria
+an alternative methodology for comparing relative validity
+measures is described. Such a methodology is then used in                          2.1.1. Calinski–Harabasz (VRC)
+Sections 5 and 6 to perform an extensive comparison study              The variance ratio criterion [16] evaluates the quality of
+involving those measures reviewed in Section 2. Finally,             a data partition as:
+the conclusions and some directions for future research are
+addressed in Section 7.                                                                               trace(B)   N −k
+                                                                                      VRC =                    ×                    (1)
+                                                                                                     trace(W)    k−1
+
+                                                                     where W and B are the n × n within-group and between-
+      2. RELATIVE CLUSTERING VALIDITY                                group dispersion matrices, respectively, defined as:
+                   CRITERIA
+
+   A collection of relative clustering validity criteria from                                  
+                                                                                               k
+                                                                                      W=             Wl                             (2)
+the literature is surveyed in this section, which has been
+                                                                                               l=1
+divided into two main subsections. Section 2.1 comprises                                       
+optimization-like criteria, which are those for which                                Wl =               (xi − xl )(xi − xl )T       (3)
+higher (maximization) or lower (minimization) values nat-                                      xi ∈Cl
+urally indicate the best partitions. Section 2.2 addresses
+                                                                                               
+                                                                                               k
+difference-like criteria, which are those primarily designed                           B=            Nl (xl − x)(xl − x)T           (4)
+to assess the relative improvement between two consecutive                                     l=1
+
+Statistical Analysis and Data Mining DOI:10.1002/sam
+                                Vendramin, Campello, and Hruschka: Relative Clustering Validity Criteria                           213
+
+
+where Nl is the number of objects assigned to the lth                  as follows:
+cluster, xl is the n-dimensional vector of sample means
+                                                                                                        1
+                                                                                                            k
+within that cluster (cluster centroid), and x is the n-
+                                                                                              DB =         Dl                      (9)
+dimensional vector of overall sample means (data centroid).                                             k
+                                                                                                           l=1
+As such, the within-group and between-group dispersion
+matrices sum up to the scatter    matrix of the data         set,     where Dl = maxl=m {Dl,m }. Term Dl,m is the within-to-
+i.e. T = W + B, where T = N         i=1 (xi − x)(x i − x) T . The
+                                                                       between cluster spread for the lth and mth clusters, i.e.
+trace of matrix W is the sum of the within-cluster vari-               Dl,m = (d l + d m )/dl,m , where d l and d m are the aver-
+ances (its diagonal elements). Analogously, the trace of               age within-group distances for the lth and mth clus-
+B is the sum of the between-cluster variances. As a con-               ters, respectively, and dl,m is the inter-group distance
+sequence, compact and separated clusters are expected to               betweenthese clusters. These distances are defined as d l =
+have small values of trace(W) and large values of trace(B).            (1/Nl ) xi ∈Cl ||xi − xl || and dl,m = ||xl − xm ||, where ·
+Hence, the better the data partition the greater the value of          is a norm (e.g. Euclidean).
+the ratio between trace(B) and trace(W). The normaliza-                   Term Dl represents the worst case within-to-between
+tion term (N − k)/(k − 1) prevents this ratio to increase              cluster spread involving the lth cluster. Minimizing Dl for
+monotonically with the number of clusters, thus making                 all clusters clearly minimizes the Davies–Bouldin index.
+VRC an optimization (maximization) criterion with respect              Hence, good partitions, composed of compact and separated
+to k.                                                                  clusters, are distinguished by small values of DB in Eq. (9).
+   It is worth remarking that it is not necessary to perform           Complexity analysis: Computing the centroids takes O(nN )
+the computationally intensive calculation of W and B in                time. Given the centroids, computing each term d l is
+order to get their traces. Actually, these traces can be readily       O(nNl ) and, for l = 1, . . . , k, O(nN1 + . . . + nNk ) →
+computed as:                                                           O(nN ) operations are required. Also, computing each term
+                                                                       dl,m is O(n) and, for l, m = 1, . . . , k, O(nk 2 ) opera-
+                             
+                             k                                         tions are required. Once all terms dl,m have been com-
+               trace(W) =          trace(Wl )                 (5)      puted, computing each term Dl is O(k) and, for l =
+                             l=1                                       1, . . . , k, O(k 2 ) operations are required. Hence, the com-
+                             
+                             n                                        plexity of DB in Eq. (9) can be written as O(nN + nk 2 +
+              trace(Wl ) =                (xip − x lp )2      (6)      k 2 ) → O(n(N + k 2 )). If k 2 << N , one gets O(nN ). If
+                             p=1 xi ∈Cl                                k ≈ N , however, one gets O(nN 2 ).
+               trace(B) = trace(T) − trace(W)                 (7)
+                             
+                             n 
+                               N                                                               2.1.3. Dunn
+               trace(T) =              (xip − x p )2          (8)
+                                                                         Dunn’s index [17] is another validity criterion that is also
+                             p=1 i=1
+                                                                       based on geometrical measures of cluster compactness and
+                                                                       separation. It is defined as:
+where xip is the pth element (attribute) of the ith data                                                                 
+object, x lp is the pth element of the centroid of the lth                                                         δp,q  
+cluster, and x p is the pth element of the data centroid.                        DN =            min                             (10)
+                                                                                           p, q ∈ {1, . . . , k}  max l 
+                                                                                               p = q            l ∈ {1,. . .,k}
+Complexity analysis: Computing the centroids takes O(nN )
+time. Computing both trace(T) and trace(W) also takes
+                                                                       where l is the diameter of the lth cluster and δp,q is
+O(nN ) time (the latter follows from the observation that
+                                                                       the set distance between clusters p and q. The set dis-
+nN1 + . . . + nNk = nN ). Hence, it is straightforward to
+                                                                       tance δp,q was originally defined as the minimum distance
+conclude that the overall time complexity for computing the
+                                                                       between a pair of objects across clusters p and q, i.e.
+Calinski–Harabasz index in Eq. (1) using Eqs. (5) through
+                                                                       minxi ∈Cp {minxj ∈Cq ||xi − xj ||}, whereas the diameter l of
+(8) is O(nN ).                                                         a given cluster l was originally defined as the maximum
+                                                                       distance between a pair of objects within that cluster, i.e.
+                                                                       maxxi ∈Cl {maxxj ∈Cl ||xi − xj ||}. Note that the definitions of
+                   2.1.2. Davies–Bouldin
+                                                                       l and δp,q are directly related to the concepts of within-
+  The Davies–Bouldin index [15] is somewhat related                    group and between-group distances, respectively. Bearing
+to VRC in that it is also based on a ratio involving                   this in mind, it is straightforward to verify that partitions
+within-group and between-group distances. Specifically,                composed of compact and separated clusters are distin-
+the index evaluates the quality of a given data partition              guished by large values of DN in Eq. (10).
+                                                                                Statistical Analysis and Data Mining DOI:10.1002/sam
+214                                                      Statistical Analysis and Data Mining, Vol. 3 (2010)
+
+
+Complexity analysis: All we need to compute DN is the                                                          2 
+                                                                                                        l =       ||xi − xl ||                  (17)
+distance between every pair of objects in the data set. If                                                     Nl
+                                                                                                                  xi ∈Cl
+both objects belong to the same cluster, the corresponding
+distance is used to compute l , otherwise it is used to                             where Eq. (16) is the average distance among all Nl (Nl −
+compute δp,q . Given that there are N (N − 1)/2 pairs of                             1)/2 pairs of objects of the lth cluster and Eq. (17) is two
+objects in a data set with N objects, computing all l                               times the cluster radius, estimated as the average distance
+and δp,q requires O(nN 2 ) time. Equation (10) on its own                            among the objects of the lth cluster and its prototype.
+is O(k 2 ). Then, it is straightforward to conclude that the
+complexity of Dunn’s index in Eq. (10) is O(nN 2 + k 2 )                             Complexity analysis: The time complexities for the variants
+and, provided that k ∈ {2, . . . , N }, this complexity reduces                      of Dunn’s index can be estimated by combining the indi-
+to O(nN 2 ).                                                                         vidual complexities associated with the respective equations
+                                                                                     for δp,q and l . By combining these individual complexities
+                                                                                     and recalling, Eq. (10) on its own is O(k 2 ), it is possible
+         2.1.4. Seventeen variants of Dunn’s index                                   to show that the overall complexity for computing most
+                                                                                     of the variants of Dunn’s index is the same as that for
+  The original definitions of set distance and diameter in                           computing the original index, that is, O(nN 2 ). The only
+Eq. (10) were generalized in Ref. [21] giving rise to 17                             two exceptions are the variants given by: (i) the combina-
+variants of the original Dunn’s index. These variants can be                         tion of Eqs. (13) and (17), which takes O(nN + nk 2 ) time;
+obtained by combining one out of six possible definitions of                         and (ii) the combination of Eqs. (14) and (17), which takes
+δp,q (the original one plus five alternative definitions) with                       O(nN k) time.
+one out of three possible definitions of l (the original one
+plus two alternative definitions). The alternative definitions
+for the set distance between the pth and qth clusters are:                                     2.1.5. Silhouette width criterion (SWC)
+                                                                                        Another well-known index that is also based on geo-
+δp,q =       max          ||xi − xj ||                                    (11)       metrical considerations about compactness and separation
+         xi ∈Cp ,xj ∈Cq                                                              of clusters is the SWC [1,19]. In order to define this cri-
+           1                                                                       terion, let us consider that the j th object of the data set,
+δp,q =             ||xi − xj ||                                           (12)       xj , belongs to a given cluster p ∈ {1, . . . , k}. Then, let the
+         Np Nq
+                  xi ∈Cp xj ∈Cq                                                      average distance of this object to all other objects in cluster
+δp,q = ||xp − xq ||                                (13)                              p be denoted by ap,j . Also, let the average distance of this
+                                                                                   object to all objects in another cluster q, q = p, be called
+            1                                                                      dq,j . Finally, let bp,j be the minimum dq,j computed over
+δp,q =               ||xi − xq || +   ||xj − xp ||
+       Np + Nq                                                                       q = 1, . . . , k, q = p, which represents the average dissim-
+                           xi ∈Cp                    xj ∈Cq
+                                                                                     ilarity of object xj to its closest neighboring cluster. Then,
+                                                  (14)                               the silhouette of the individual object xj is defined as:
+                                                     
+δp,q = max max min ||xi − xj ||, max min ||xi − xj ||                                                             bp,j − ap,j
+                 xi ∈Cp xj ∈Cq                    xj ∈Cq xi ∈Cp                                          sxj =                                   (18)
+                                                                                                                 max{ap,j , bp,j }
+                                                                          (15)
+                                                                                     where the denominator is just a normalization term. The
+                                                                                     higher sxj , the better the assignment of xj to cluster p.
+   Note that, in contrast to the primary definition of δp,q for
+                                                                                     In case p is a singleton, i.e. if it is constituted uniquely
+the original Dunn’s index, which is essentially the single
+                                                                                     by xj , then it is assumed by convention that sxj = 0 [1].
+linkage definition of set distance, expressions (11) and
+                                                                                     This prevents the SWC, defined as the average of sxj over
+(12) are precisely its complete linkage and average linkage                          j = 1, 2, . . . , N , i.e.
+counterparts. Definition (13), in its turn, is the same as that
+for the inter-group distance in the Davies–Bouldin index,
+                                                                                                                     1 
+                                                                                                                            N
+Eq. (14) is a hybrid of Eqs. (12) and (13), and Eq. (15) is                                                SWC =         sxj                     (19)
+the Hausdorff metric.                                                                                                N
+                                                                                                                           j =1
+   The alternative definitions for diameter are:
+                                                                                     to elect the trivial solution k = N (with each object of
+                        1                                                           the data set forming a cluster on its own) as the best
+              l =                                  ||xi − xj ||          (16)       one. Clearly, the best partition is expected to be pointed
+                   Nl (Nl − 1)
+                                         (xi =xj )∈Cl
+                                                                                     out when SWC is maximized, which implies minimizing
+Statistical Analysis and Data Mining DOI:10.1002/sam
+                                Vendramin, Campello, and Hruschka: Relative Clustering Validity Criteria                        215
+
+
+the intra-group distance (ap,j ) while maximizing the inter-           demands only the distance of this object to the centroid
+group distance (bp,j ).                                                of its cluster (the pth cluster), which takes O(n) time.
+Complexity analysis: All we need to compute SWC is the                 Then, O(nN ) operations are needed in order to compute
+distance between every pair of objects in the data set. If             ap,j for all N objects of the data set. In addition, comput-
+both objects belong to the same cluster, the corresponding             ing those k − 1 terms dq,j associated with the j th object
+distance is used to compute ap,j , otherwise it is used to             is O(nk), because only the distances of this object to the
+compute dq,j . Given that there are N (N − 1)/2 pairs of               centroids of clusters q = p are required. So, in order to
+objects in a data set with N objects, computing all ap,j and           compute these terms for all N objects of the data set
+dq,j requires O(nN 2 ) time. Once every dq,j is available,             requires O(nkN ) operations. Terms bp,j can be derived
+computing bp,j for each object is O(k) and, accordingly,               simultaneously to these operations, at a constant additional
+O(N k) operations are required to compute bp,j for all N               cost, and computing Eq. (19) itself is O(N ). Then, the
+objects of the data set. Finally, computing Eq. (19) itself            overall complexity of the simplified silhouette is estimated
+is O(N ). Then, the computation of the above-mentioned                 as O(nN + nkN + N ) → O(nkN ). When k << N , as is
+terms altogether take O(nN 2 + N k + N ) → O(nN 2 +                    usual in practical applications, one gets O(nN ). Oppositely,
+N k) time and, as k ∈ {2, . . . , N }, it follows that the overall     if k ≈ N , then one gets O(nN 2 ).
+complexity of the SWC is O(nN 2 ).
+                                                                            2.1.8. Alternative simplified silhouette (ASSWC)
+           2.1.6. Alternative silhouette (ASWC)
+                                                                          An additional variant of the SWC can be derived by
+  A variant of the original silhouette criterion can be                combining the alternative and the simplified silhouettes
+obtained by replacing Eq. (18) with the following alter-               described in Sections 2.1.6 and 2.1.7, respectively, thus
+native definition of the silhouette of an individual object            resulting in a hybrid of such versions of the original
+[29]:                                                                  silhouette. Clearly, the complexity remains the same as that
+                                  bp,j                                 for the simplified version, that is, O(nkN ).
+                        sxj =                                (20)
+                                ap,j + 
+                                                                                               2.1.9. PBM
+where  is a small constant (e.g. 10−6 for normalized data)
+used to avoid division by zero when ap,j = 0. Note that the              The criterion known as PBM [30] is also based on the
+rationale behind Eq. (20) is the same as that of Eq. (18), in          within-group and between-group distances:
+the sense that both are intended to favoring larger values                                                       2
+of bp,j and lower values of ap,j . The difference lies in the                                           1 E1
+                                                                                          P BM =             DK                (21)
+way they do that, linearly in Eq. (18) and nonlinearly in                                               k EK
+Eq. (20).
+Complexity analysis: The overall complexity of the alter-              where E1 denotes the sum of distances betweenthe objects
+native silhouette criterion is precisely the same as that for          and the grand mean of the data, i.e. E1 = N     i=1 ||xi −
+                                                                                  k 
+the original silhouette, that is, O(nN 2 ).                            x||, EK = l=1 xi ∈Cl ||xi − xl || represents the sum of
+                                                                       within-group distances, and DK = max ||xl − xm || is
+                                                                                                             l,m=1,. . .,k
+            2.1.7. Simplified silhouette (SSWC)                        the maximum distance between group centroids. So, the
+                                                                       best partition should be indicated when PBM is maximized,
+   The original silhouette in Eq. (18) depends on the com-
+                                                                       which implies maximizing DK while minimizing EK .
+putation of all distances among all objects. Such a com-
+putation can be replaced with a simplified one based on                Complexity analysis: Computing the centroids and the
+distances among objects and cluster centroids. In this case,           grand mean point, x, is O(nN ). The computation of E1
+ap,j in Eq. (18) is redefined as the dissimilarity of the j th         and EK is also O(nN ), whereas the calculation of DK
+object to the centroid of its cluster, p. Similarly, dq,j is           is O(nk 2 ). Thus, the overall computational complexity of
+computed as the dissimilarity of the j th object to the cen-           PBM is O(n(N + k 2 )). If k 2 << N , then this complexity
+troid of cluster q, q = p, and bp,j becomes the dissimilarity         becomes O(nN ). Otherwise, if k ≈ N , it becomes O(nN 2 ).
+of the j th object to the centroid of its closest neighbor-
+ing cluster. The idea is to replace average distances with
+distances to mean points.                                                                    2.1.10. C-index
+Complexity analysis: Computing the centroids takes O(nN )                 The C-index criterion [31] is based on the within-group
+time. Given the centroids, computing ap,j for the j th object          distances, as well as on their maximum and minimum
+                                                                                Statistical Analysis and Data Mining DOI:10.1002/sam
+216                                           Statistical Analysis and Data Mining, Vol. 3 (2010)
+
+
+possible values:                                                          quantities, the criterion is defined as:
+                                                                                    S+ − S−
+                         θ − min θ                                         G=                                                                      (24)
+               CI =                                            (22)                 S+ + S−
+                        max θ − min θ
+                                                                                    1                  1 
+                                                                                       k                      k
+                        
+                        N−1   
+                              N
+                                                                          S+ =                                δ(||xi − xj || < ||xp − xq ||)
+                   θ=                qi,j ||xi − xj ||         (23)                 2
+                                                                                        l=1 xi ,xj ∈Cl
+                                                                                                         2
+                                                                                                             m=1 xp ∈Cm
+                        i=1 j =i+1                                                           xi =xj             xq ∈C
+                                                                                                                    / m
+
+                                                                                                                                                   (25)
+where qi,j = 1 if the ith and j th objects are in the same
+                                                                                    1                  1 
+                                                                                     k                    k
+cluster and qi,j = 0 otherwise. The values for min θ and                  S− =                                            δ(||xi − xj || > ||xp − xq ||)
+max θ can be readily obtained from a sorting procedure.                             2                    2
+                                                                                        l=1 xi ,xj ∈Cl       m=1 xp ∈Cm
+In particular, if both the t = (N (N − 1)/2) values for                                      xi =xj             xq ∈C
+                                                                                                                    / m
+||xi − xj || and t values for qi,j are increasingly sorted,                                                                                        (26)
+then the summation over the products of their respective
+elements results in max θ . As qi,j ∈ {0, 1}, this is equiv-              where δ(·) = 1 if the corresponding inequality is satisfied
+alent to the sum of the wd greatest values of ||xi − xj ||,               and δ(·) = 0 otherwise. Conceptually speaking, better par-
+              
+where wd = kl=1 Nl (Nl − 1)/2 is the number of whithin-                   titions are expected to have higher values of S+ , lower
+group distances (number of elements qi,j = 1). In essence,                values of S− , and, as a consequence, higher values of G in
+max θ represents the worst case scenario in which any                     Eq. (24).
+within-group distance in the partition under evaluation                   Complexity analysis: Since every pair of objects is associ-
+would be greater than or equal to any inter-group dis-                    ated to either a within-group distance or a between-group
+tance. Oppositely, if the t values for ||xi − xj || are decreas-          distance, this criterion needs to compute all pairwise dis-
+ingly sorted, whereas the t values for qi,j are increas-                  tances between objects, which is O(nN       2
+                                                                                                                   k ). In addition,
+ingly sorted, then the summation over the products of their               computing S+ and S− demands that all l=1 Nl (Nl − 1)/2
+respective elements results in min θ (best case scenario).                                                             
+                                                                          within-group distances be compared to all km=1 Nm (N −
+Thus, good partitions are expected to have small C-index                  Nm ) between-group
+values.                                                                                                          in an additional
+                                                                                               distances, resulting
+                                                                          complexity of O( kl=1 Nl (Nl − 1) · km=1 Nm (N − Nm )).
+                                                                          Assuming that the number of objects in each group l is
+Complexity analysis: Computing the vector of distances
+                                                                          directly proportional to the cardinality of the data set, N ,
+between every pair of objects is O(nN 2 ), whereas the pro-
+                                                                          and inversely proportional to the number of        groups, k,
+cedure for sorting it is O(N 2 log2 N 2 ) → O(N 2 log2 N ).
+                                                                          i.e. Nl ∝ N/k, this complexity becomes O( kl=1 ( Nk )2 ·
+Computing
+k           max θ (min θ ) as the summation over the wd =                k N                                2 k     N 2 (k−1)
+                                                                             m=1 k (N − k ) )      →                                 →
+                                                                                          N
+       N (N l − 1)/2 first (last) elements of such a vector
+                                                                                                        O( Nk      m=1     k2
+                                                                                                                                 )
+   l=1 l                                                                       2                    4
+         k
+is O( l=1 Nl2 ), which is less computationally demand-                    O( Nk N 2 ) → O( Nk ). Thus, the overall complexity for
+ing than the O(nN 2 ) operations needed for computing                                                                 4
+                                                                          computing gamma is estimated as O(nN 2 + Nk ).
+the vector
+            itself. Similarly, computing θ in Eq. (23) is
+O(n kl=1 Nl2 ), which is also less computationally demand-
+                                                                                                             2.1.12. G(+)
+ing than O(nN 2 ), needed for computing the vector of dis-
+tances. To summarize, the overall time complexity of this                     G(+) [27,33] is another criterion based on the relation-
+index is O(nN 2 + N 2 log2 N ) → O(N 2 (n + log2 N )).                    ships between discordant pairs of objects (S− ). Specifically,
+                                                                          it is defined as the proportion of discordant pairs with
+                                                                          respect to the maximum number of possible comparisons,
+                        2.1.11. Gamma                                     t (t − 1)/2, as follows:
+   The criterion known as gamma [27,32] computes the                                                                    2S−
+                                                                                                         G(+) =                                    (27)
+number of concordant pairs of objects (S+ ), which is the                                                            t (t − 1)
+number of times the distance between a pair of objects
+from the same group is lower than the distance between                       Following the discussions in the previous section, it can
+a pair of objects from different groups, and the number                   be seen that good partitions are expected to have small
+of discordant pairs of objects (S− ), which is the number                 values for S− and, as a consequence, small values for G(+)
+of times the distance between a pair of objects from the                  in Eq. (27).
+same group is greater than the distance between a pair of                 Complexity analysis: The time complexity analysis for
+objects from different groups. By taking into account these               G(+) is similar to that performed for gamma in
+Statistical Analysis and Data Mining DOI:10.1002/sam
+                              Vendramin, Campello, and Hruschka: Relative Clustering Validity Criteria                          217
+
+
+Section 2.1.11. As such, it also results in an order of mag-         of objects belongs to the same cluster, then the respective
+                      4
+nitude of O(nN 2 + Nk ).                                             distance is used to compute dw ; otherwise, it is employed
+                                                                     to calculate db . During this procedure, which takes O(nN 2 )
+                         2.1.13. Tau                                 time, it is also possible to compute wd and bd . In summary,
+                                                                     computing dw , db , wd , and bd is O(nN 2 ). In order to com-
+   Tau [27,33] is based on the τ correlation [34,35] between         pute sd , it is necessary to process wd + bd = t distance
+the matrix that stores all the distances between pairs of            values, which is also O(nN 2 ). From these observations,
+objects and a binary matrix in which each entry indicates            it is straightforward to verify that the time complexity of
+whether a given pair of objects belongs to the same cluster          point-biserial is O(nN 2 ).
+(0) or not (1). It is another criterion that can be written in
+terms of the numbers of concordant (S+ ) and discordant                                                √
+(S− ) pairs of objects, as follows:                                                        2.1.15. C/ k
+                                                                                                    √
+                                                                       The criterion known as C/ k [36,37] is based on the
+                              S+ − S−
+           τ=√                                             (28)      individual contribution of each attribute to the between-
+                   (t (t − 1)/2 − tie ) (t (t − 1)/2)                and within-cluster variances, as follows:
+where S+ and S− are defined in Eqs. (25) and (26), respec-                                             
+                                                                                      √       1 1  SSBq
+                                                                                                    n
+tively, t = N (N − 1)/2, and                                                      C/ k = √                                (31)
+                                                                                               kn         SSTq
+                                                                                                  q=1
+          wd      bd      wd (wd − 1) bd (bd − 1)
+   tie =       +       =              +               (29)                          SSB q = SSTq − SSWq                        (32)
+           2       2           2             2
+            k                               k                                               
+                                                                                              N
+
+with wd = l=1 Nl (Nl − 1)/2 and bd = l=1 Nl (N − Nl )                               SST q =         ||xiq − x q ||2            (33)
+/2. Following the discussions about gamma in Section                                          i=1
+2.1.11, it can be noticed that better partitions are presumed                                 k 
+                                                                                              
+to be distinguished by higher values of τ in Eq. (28).                              SSW q =                ||xiq − x lq ||2    (34)
+                                                                                              l=1 xi ∈Cl
+Complexity analysis: The time complexity analysis for tau
+is similar to that performed for gamma in Section 2.1.11.            where xiq is the qth attribute of the ith object, x q the
+                                                   4
+The final result remains the same, i.e. O(nN 2 + Nk ).               qth attribute of the centroid of the whole data (grand
+                                                                     mean, x), and x lq is the qth attribute of the centroid of
+                   2.1.14. Point-biserial                            the lth cluster, xl . Compact clusters tend to have low
+                                                                     within-group variances (SSW q , q = 1, . . . , n), thus leading
+  Similarly to tau, point-biserial [14,27] is also based on a        to high values
+correlation measure between a distance matrix and a binary                         √ of SSB q /SST q (close to one). So, higher
+                                                                     values of C/ k are expected to indicate better partitions.
+matrix that encodes the mutual memberships of pairs of               Note that, due to the fact that increasing the number of
+objects to clusters, as follows:                                     clusters in the partition under evaluation tends to increase
+                                                                    the ratio SSB q /SST q , the criterion is not only
+                        (db − dw ) wd · bd /t 2                                                                    √ normalized
+               PB =                                      (30)        in relation to n, but also in relation to k.     This is an
+                                  sd                                 attempt at counterbalancing the increase of SSB q /SST q
+                                                                     as a function of k. However, increasing k in a persistent way
+where dw is the average intra-group distance, db is the
+average inter-group distance, t = N (N − 1)/2 is the total              √ SSW q →
+                                                                     makes           √ 0, SSB q → SST q and, as a consequence,
+                                                                     C/ k → 1/ k, which means that this criterion tends to
+number of distances between pairs of objects, sd is the stan-
+                                                                     be biased toward disfavoring partitions formed by many
+dard deviation over all those distances, wd = kl=1 Nl (Nl −
+                                                                    clusters, irrespective of their qualities.
+1)/2 is the number of intra-group distances, and bd = kl=1
+                                                                     Complexity analysis: This criterion requires computing
+Nl (N − Nl )/2 is the number of inter-group distances.
+                                                                     cluster centroids, xl , and the centroid of the whole data,
+Conceptually speaking, good partitions should exhibit large
+                                                                     x, with a cost of O(nN ) operations. In addition, one has to
+inter-group and small intra-group distances. Hence, point-
+                                                                     compute the values for SSW q and SST q , for q = 1, . . . , n.
+biserial is a maximization criterion.
+                                                                     After computing the centroids, it is possible to calculate
+Complexity analysis: This criterion requires the computa-            SST q and SSW q for each individual attribute in O(N )
+tion of db , dw , wd , bd , t, and sd . Computing t is O(1). The     time. Because such quantities must be computed for every
+computation of dw and db , in turn, requires calculating all         attribute, O(nN√ ) operations are required. To summarize,
+the distances between pairs of objects. In fact, if a given pair     computing C/ k in Eq. (32) is O(nN ).
+                                                                              Statistical Analysis and Data Mining DOI:10.1002/sam
+218                                                                 Statistical Analysis and Data Mining, Vol. 3 (2010)
+
+
+                                                         Monotonically Decreasing Criterion                    Monotonically Increasing Criterion
+                                                1                                                     1
+                                               0.9                                                   0.9
+                                               0.8                                                   0.8
+                      Value of the Criterion
+                                               0.7                                                   0.7
+                                               0.6                               knees               0.6
+                                               0.5                                                   0.5                              knees
+                                               0.4                                                   0.4
+                                               0.3                                                   0.3
+                                               0.2                                                   0.2
+                                               0.1                                                   0.1
+                                                0                                                     0
+                                                     2          3                     4          5         2          3                     4       5
+                                                                    No. of clusters                                       No. of clusters
+
+Fig. 4 Examples of criteria with monotonically decreasing (increasing) values as a function of k.
+
+                2.2. Difference-like Criteria                                                        clusters, respectively. Notice, however, that a “knee” in
+                                                                                                     a chart is recognized by an abrupt relative (rather than
+   Some criteria are used to assess relative improvements
+                                                                                                     absolute) change in the variation of the value between con-
+on some relevant characteristic of the data (e.g. within-
+                                                                                                     secutive partitions. From this observation, we here propose
+group variances) over a set of successive data partitions
+                                                                                                     to use the following transformation:
+produced by a given iterative procedure—usually a hier-                                                                                                 
+archical clustering algorithm. Such criteria can be mono-                                                                      Corig (k − 1) − Corig (k)
+                                                                                                              Cnew (k) = abs                                (37)
+tonically increasing (decreasing) as the number of clusters                                                                    Corig (k) − Corig (k + 1)
+varies from k = 2 to k = N , as illustrated in Fig. 4. In these
+cases, one usually tries to identify a prominent “knee” or                                           Indeed, we will experimentally show in Section 5 that
+“elbow” that suggests the most appropriate number of clus-                                           such a transformation provides results significantly better
+ters existing in the data. Such criteria are hereafter called                                        than those found using Eq. (35) or (36). For this reason,
+difference-like criteria, for they require relative assessments                                      the experimental results to be reported in this work are
+between values obtained in two consecutive data partitions                                           based upon the assumption that difference-like criteria are
+(formed by k and k + 1 clusters).                                                                    converted into optimization-like criteria by Eq. (37).
+   Before evaluating the results achieved by difference-like
+                                                                                                                                 2.2.1. Trace(W)
+criteria, it is necessary to transform them into optimization-
+like criteria, for which an extreme value (peak) reveals                                                Trace(W) is a simple and widely known difference-like
+the partition elected as the best one among a set of can-                                            criterion, defined as [38]:
+didates with different values of k. Milligan and Cooper
+stated in Ref. [14] that they used the difference between                                                                          V1 = trace(W)           (38)
+hierarchical levels to transform difference-like criteria into
+optimization-like criteria. However, the authors did not                                             where W is the within-group covariance matrix in Eq. (2).
+present any formal description for such a concept, for which                                         Complexity analysis: From Eqs. (5) and (6) it can be read-
+two possible realizations are:                                                                       ily verified that trace(W) requires O(nN ) operations.
+                                                   
+           Cnew (k) = abs Corig (k − 1) − Corig (k)                                       (35)
+                                                                                                                               2.2.2. Trace(CovW)
+or
+                                                                                                    A variant of the trace(W) criterion involves using the
+     Cnew (k) = abs abs Corig (k − 1) − Corig (k)                                                    pooled covariance matrix instead of W [14], as follows:
+                                                   
+                    − abs Corig (k) − Corig (k + 1)                                       (36)
+                                                                                                                          V2 = trace(Wp )                  (39)
+
+                                                                                                                             1 
+                                                                                                                                                k
+where abs(.) stands for the absolute value of the argument,
+Cnew (k) the value of the transformed criterion for the                                                               Wp =           Wl                    (40)
+                                                                                                                           N −k
+partition formed by k clusters, and Corig (k − 1), Corig (k)                                                               
+                                                                                                                                 l=1
+
+and Corig (k + 1) are the values of the original difference-                                                          Wl =    (xi − xl )(xi − xl )T        (41)
+like criterion for partitions formed by k − 1, k, and k + 1                                                                       xi ∈Cl
+
+Statistical Analysis and Data Mining DOI:10.1002/sam
+                             Vendramin, Campello, and Hruschka: Relative Clustering Validity Criteria                        219
+
+
+Complexity analysis: It is straightforward to verify that                                   2.2.6. k 2 |W |
+the asymptotic computational costs of trace(CovW) and
+trace(W) are the same, namely, O(nN ).                                 The criterion known as k2 |W | [41] is also based on
+                                                                    the determinant of the within-group covariance matrix, as
+                                                                    follows:
+                   2.2.3. Trace(W −1 B)
+                                                                                             V6 = k 2 |W|                   (45)
+  The criterion known as trace(W−1 B) [38] is based both
+on W in Eq. (2) and B in Eq. (4), as follows:                       Complexity analysis: Computing k2 |W| requires calculating
+                                                                    the within-group covariance matrix, W, whose complexity
+                     V3 = trace(W−1 B)                   (42)       is O(n2 N ), and its determinant, which demands O(n3 )
+                                                                    operations. Thus, the overall computational complexity of
+Complexity analysis: Differently from the criteria addressed        k2 |W| in Eq. (45) is O(n2 N + n3 ).
+in Sections 2.2.1 and 2.2.2, this criterion indeed demands
+the computation of the covariance matrices W and B,                                     2.2.7. log(SSB/SSW)
+whose time complexities are O(n2 N ) and O(n2 k), respec-
+tively. Provided that computing the inverse of W and its              The log(SSB/SSW) criterion [8] makes use of the within-
+multiplication by B can both be accomplished in O(n3 )              and between-group distances, as follows:
+time, and given that the computation of the trace of the                                                
+                                                                                                   SSB
+resulting matrix is O(n), it follows that the time com-                              V7 = log10                          (46)
+plexity of trace(W−1 B) is O(n2 N + n2 k + n3 ). Since k ∈                                         SSW
+{2, . . . , N }, computing trace(W−1 B) is then O(n2 N + n3 ).                                                   
+                                                                    where SSW = kl=1 xi ∈Cl ||xi − xl ||2 and SSB = k−1
+                                                                                                                    l=1
+                                                                    k         ||xl −xm ||2
+                                                                                            .
+                       2.2.4. |T|/|W|                                 m=l+1 (1/Nl )+(1/Nm )
+                                                                    Complexity analysis: Computing the centroids is O(nN ).
+  |T|/|W| [38] is a criterion that uses information from            SSW requires computing the distances between every
+the determinants of the data covariance matrix and within-          object and the centroid of the cluster it belongs to, which
+group covariance matrix, as follows:                                is also O(nN ), whereas for SSB it is necessary to calcu-
+                                                                    late every distance between pairs of centroids, leading to
+                                 |T|
+                         V4 =                            (43)       a computational cost of O(nk 2 ). Thus, the overall compu-
+                                |W|                                 tational complexity of log(SSB/SSW) is O(n(k 2 + N )). If
+                                                                    k 2 << N , then it is O(nN ). If k ≈ N , however, it becomes
+where | · | stands for the determinant and matrices W               O(nN 2 ).
+and T = W + B are the same as previously defined in
+Section 2.1.1.
+                                                                                        2.2.8. Ball and Hall
+Complexity analysis: The computation of |T|/|W| requires
+calculating the covariance matrices T and W, whose overall            The Ball–Hall criterion [42] is just the well-known
+complexity is O(n2 N ). Once computing the determinants             within-group sum of distances:
+of these matrices requires O(n3 ) operations, the overall
+                                                                                           1 
+                                                                                               k
+complexity of the |T|/|W| criterion is O(n2 N + n3 ).                               V8 =        ||xi − xl ||                (47)
+                                                                                           N
+                                                                                              l=1 xi ∈Cl
+
+                   2.2.5. N log(|T|/|W|)                            Complexity analysis: Computing centroids and N within-
+  A variant of the |T|/|W| criterion just described involves        group distances is O(nN ). Thus, Ball–Hall is O(nN ).
+using its logarithmic transformation. More precisely, the
+Nlog(|T|/|W|) criterion [39,40] is given by:                                          2.2.9. McClain and Rao
+                                                                    McClain–Rao [43,44] is another criterion based on
+                                       |T|
+                   V5 = N log10                          (44)       within- and between-group distances, as follows:
+                                      |W|
+                                                                                                           
+Complexity analysis: Following the analysis described in                                B/ N 2 − kl=1 Nl2
+                                                                                   V9 =                           (48)
+Section 2.2.4, it can be shown that computing Nlog(|T|/|W|)
+                                                                                        W/ [ kl=1 Nl2 ] − N
+is O(n2 N + n3 ).
+                                                                             Statistical Analysis and Data Mining DOI:10.1002/sam
+220                                          Statistical Analysis and Data Mining, Vol. 3 (2010)
+
+
+where B and W are given by:                                              Table 1. Computational complexities of several relative validity
+                                                                         criteria—difference-like criteria are signed with ∗.
+                  k−1 
+                     k                                                −                  Criterion                  Complexity
+             B=                             ||xi − xj ||      (49)
+                  l=1 m=l+1 xi ∈Cl xj ∈Cm                                         Calinski–Harabasz (VRC)          O(nN) [Eqs. (5)–(8)]
+                                                                                  Davies–Bouldin (DB)              O(n(k 2 + N))
+                  1 
+                    k
+                                                                                  Dunn                             O(nN 2 )
+             W=        ||xi − xj ||                           (50)                Silhouette width criterion       O(nN 2 )
+                  2
+                     l=1 xi ,xj ∈Cl                                                  (SWC)
+                                                                                  Alternative silhouette           O(nN 2 )
+   Milligan and Cooper [14] evaluated McClain–Rao as an                              (ASWC)
+                                                                                  Simplified silhouette            O(nNk)
+optimization-like criterion. However, we performed a col-
+                                                                                     (SSWC)
+lection of preliminary experiments in which McClain–Rao                           Alternative simplified           O(nNk)
+performed significantly better (eight times more accurately)                         silhouette (ASSWC)
+when considered as a difference-like criterion, transformed                       PBM                              O(n(k 2 + N))
+into an optimization-like one. For this reason, McClain–Rao                       C-index                          O(N 2 (n + log2 N))
+is deemed a difference-like criterion in the experiments to                       Gamma                            O(nN 2 + N 4 /k])
+                                                                                  G(+)                             O(nN 2 + N 4 /k])
+be reported in this work.
+                                                                                  Tau                              O(nN 2 + N 4 /k])
+Complexity analysis: Computing centroids is O(nN ). In                            Point-biserial
+                                                                                     √                             O(nN 2 )
+addition, it is necessary to calculate all the distances                          C/ k                             O(nN)
+                                                                         *        Trace(W)                         O(nN)
+between pairs of objects. In fact, if a given pair of objects
+                                                                         *        Trace(CovW)                      O(nN)
+belongs to the same cluster, then the respective distance is             *        Trace(W−1 B)                     O(n2 N + n3 )
+used to compute W ; otherwise, it is employed to calculate               *        |T|/|W|                          O(n2 N + n3 )
+B. This procedure demands O(nN 2 ) operations. Hence,                    *        Nlog(|T|/|W|)                    O(n2 N + n3 )
+the overall computational complexity of McClain–Rao is                   *        k2 W                             O(n2 N + n3 )
+O(nN 2 ).                                                                *        log(SSB/SSW)                     O(n(k 2 + N))
+                                                                         *        Ball–Hall                        O(nN)
+                                                                         *        McClain–Rao                      O(nN 2 )
+      2.3.   Summary of the Complexity Analyses
+   The computational complexity associated with each rel-                the data into k clusters, and is the one to be evaluated.
+ative clustering validity criteria reviewed in the previous              Given the above remarks, the Rand index is then defined
+sections is displayed in Table 12 .                                      as [2,7,45]:
+                                                                                                          a+d
+                                                                                               ω=                                   (51)
+                                                                                                        a+b+c+d
+      3. EXTERNAL CLUSTERING VALIDITY
+                                                                         where:
+                   CRITERIA
+                                                                             • a: Number of pairs of data objects belonging to the
+   In this section, external validity criteria that will be used               same class in R and to the same cluster in Q.
+further in this work—as part of the methodology adopted
+for comparing relative criteria—are also reviewed.                           • b: Number of pairs of data objects belonging to the
+                                                                               same class in R and to different clusters in Q.
+
+                      3.1. Rand Index                                        • c: Number of pairs of data objects belonging to
+                                                                               different classes in R and to the same cluster in Q.
+  The Rand index [45] can be seen as an absolute criterion
+that allows the use of properly labeled data sets for perfor-                • d: Number of pairs of data objects belonging to
+mance assessment of clustering results. This very simple                       different classes in R and to different clusters in Q.
+and intuitive index handles two hard partition matrices (R                  Terms a and d are measures of consistent classifica-
+and Q) of the same data set. The reference partition, R,                 tions (agreements), whereas terms b and c are measures
+encodes the class labels, i.e. it partitions the data into k ∗           of inconsistent classifications (disagreements). Note that:
+known categories of objects. Partition Q, in turn, partitions            (i) ω ∈ [0, 1]; (ii) ω = 0 iff Q is completely inconsistent,
+                                                                         i.e. a = d = 0; and (iii) ω = 1 iff the partition under evalu-
+  2
+    Please, refer to Section 2.1.4 for the complexities of the           ation matches exactly the reference partition, i.e. b = c = 0
+variants of Dunn’s index.                                                (Q ≡ R).
+Statistical Analysis and Data Mining DOI:10.1002/sam
+                                Vendramin, Campello, and Hruschka: Relative Clustering Validity Criteria                           221
+
+
+                                                                                        3.3. Jaccard Coefficient
+                                                                          Another common criticism against the original Rand
+                                                                       index is that it gives the same importance to both the agree-
+                                                                       ment terms a and d, thus making no difference between
+                                                                       pairs of objects that are joined or separated in both the refer-
+                                                                       ential and evaluated partitions [46]. This policy is arguable,
+                                                                       particularly if a partition is interpreted as a set of groups
+                                                                       of joined elements, the separations being just consequences
+                                                                       of the grouping procedure [47]. This interpretation suggests
+                                                                       that term d should be removed from the formulation of the
+                                                                       Rand index. Indeed, it is known that this term may dominate
+                                                                       the other three terms (a, b, and c), thus causing the Rand
+                                                                       index to become unable to properly distinguish between
+                                                                       good and bad partitions [48,49]. This situation gets partic-
+                                                                       ularly critical as the number of classes/clusters increases,
+                                                                       since the value of the index tends to increase too [2,50,51].
+Fig. 5 Data set with k ∗ = 2 classes (class 1 in circles and class     The ordinary removal of term d from the original Rand
+2 in squares) partitioned into k = 3 clusters (clusters 1, 2, and 3
+in black, white, and gray, respectively).                              index in Eq. (51) results in the so-called Jaccard coefficient,
+                                                                       defined as [1,7]:
+
+   As an example, consider the data set in Fig. 5. It is                                               a
+                                                                                              ωJ =                                (53)
+composed of two classes with four objects each. Class 1                                              a+b+c
+(in circles) is composed of objects 1, 2, 3, and 4, while
+class 2 (in squares) is composed of objects 5, 6, 7, and 8.               Clearly, the rationale behind the Jaccard coefficient in
+As shown in Fig. 5, the same data set has been partitioned             Eq. (53) is essentially the same as that for the Rand index,
+into three clusters—Cluster 1 in black (objects 4, 5, and 6),          except for the absence of term d (which does not affect
+Cluster 2 in white (objects 1, 2, and 3), and Cluster 3 in             normality, i.e. ωJ ∈ [0, 1]). An interesting interpretation of
+gray (objects 7 and 8). The pairs of data objects belonging            the differences between these two indexes arises when d
+to the same class and to the same cluster are therefore                is viewed as a “neutral” term—counting pairs of objects
+(1,2), (1,3), (2,3), (5,6), and (7,8). Thus, the number of             that are not clearly indicative either of similarity or of
+pairs of objects in the same class and in the same cluster is          inconsistency—in contrast to the others, viewed as counts
+a = 5. Similarly, the other terms in Eq. (51) can easily be            of “good pairs” (term a) and “bad pairs” (terms b and c)
+computed as b = 7, c = 2, and d = 14, which results in a               [51]. From this viewpoint, the Jaccard coefficient can be
+Rand index of ω = 0.6786.                                              seen as a proportion of good pairs with respect to the sum
+                                                                       of non-neutral (good plus bad) pairs, whereas the Rand
+                                                                       index is just the proportion of pairs not definitely bad with
+                3.2. Adjusted Rand Index                               respect to the total number of pairs.
+
+    One of the main criticisms against the original Rand
+index is that it is not corrected for chance, that is, its
+expected value is not zero when comparing random par-                  4.   COMPARING RELATIVE VALIDITY CRITERIA
+titions. Correcting an index for chance means normalizing
+                                                                          As previously discussed in Section 1, the methodology
+it so that its (expected) value is 0 when the partitions are
+                                                                       usually adopted in the literature to compare relative cluster-
+selected by chance and 1 when a perfect match is achieved              ing validity criteria, based essentially on the ability of the
+[7]. Hubert and Arabie derived the following ARI [25]:                 indexes to indicate the right number of clusters in a data set,
+                                                                       is subject to conceptual limitations. In this work, an alterna-
+                          a − (a+c)(a+b)                               tive, possibly complementary methodology [28] is adopted.
+                ωA = (a+c)+(a+b) M(a+c)(a+b)                  (52)
+                          2     −      M                               Such a methodology can be better explained by means of a
+                                                                       pedagogical example. For the sake of simplicity and with-
+where M = a + b + c + d. This index is corrected for                   out any loss of generality, let us assume in this example
+chance under the assumption that the number of groups                  that our comparison involves only the performances of two
+(classes/clusters) in both partitions R and Q to be compared           validity criteria in the evaluation of a small set of parti-
+is the same.                                                           tions of a single labeled data set. The hypothetical results
+                                                                                Statistical Analysis and Data Mining DOI:10.1002/sam
+222                                          Statistical Analysis and Data Mining, Vol. 3 (2010)
+
+
+Table 2. Example of relative and external evaluation results of          criterion and by an external criterion. The mean of such
+five partitions of a data set.                                           ND correlations is a measure of resemblance between
+                   Relative            Relative            External      those particular (relative and external) validity criteria,
+Partition         criterion 1         criterion 2          criterion     at least with respect to that specific collection of data
+                                                                         sets. Despite this, besides just comparing such means for
+1                    0.75                 0.92                0.82
+                                                                         different relative criteria in order to rank them, one should
+2                    0.55                 0.22                0.49
+3                    0.20                 0.56                0.31       also apply to the results an appropriate statistical test to
+4                    0.95                 0.63                0.89       check the hypothesis that there are (or aren’t) significant
+5                    0.60                 0.25                0.67       differences among those means. In summary the procedure
+                                                                         is given below:
+
+                                                                             1. Take ND different data sets with known clusters.
+are displayed in Table 2, which shows the values of the
+relative criteria under investigation as well as the values of               2. For each data set, get a collection of Nπ data parti-
+a given external criterion (e.g. Jaccard or ARI described in                    tions of varied qualities and numbers of clusters. For
+Section 3) for each of the five data partitions available.                      instance, such partitions can be obtained from a sin-
+   Assuming that the evaluations performed by the external                      gle run of a hierarchical algorithm or from multiple
+criterion are trustable measures of the quality of the parti-                   runs of a partitional algorithm with different numbers
+tions3 , it is expected that the better the relative criterion the              and initial positions of prototypes.
+greater its capability of evaluating the partitions according
+to an ordering and magnitude proportions that are similar                    3. For each data set, compute the values of the relative
+to those established by the external criterion. Such a degree                   and external validity criteria for each of the Nπ
+of similarity can be straightforwardly computed using a                         partitions available. Then, for each relative criterion,
+sequence correlation index, such as the well-known Pear-                        compute the correlation between the corresponding
+son product-moment correlation coefficient [26]. Clearly,                       vector with Nπ relative validity values and the vector
+the larger the correlation value the higher the capability of                   with Nπ external validity values.
+a relative measure to unsupervisedly mirror the behavior of                  4. For each relative criterion, compute the mean4 of
+the external index and properly distinguish between better                      its ND correlation values (one per data set). Then,
+and worse partitions. In the example of Table 2, the Pearson                    rank all the criteria according to their means and
+correlation between the first relative criterion and the exter-                 apply an appropriate statistical test to the results to
+nal criterion (columns 2 and 4, respectively) is 0.9627. This                   check whether the differences between the means are
+high value reflects the fact that the first relative criterion                  significant or not from a statistical perspective, i.e.
+ranks the partitions in the same order that the external cri-                   when taking variances into account.
+terion does. Unitary correlation is not reached only because
+there are some differences in the relative importance                    Remark 1. Since the external validity criteria are typically
+(proportions) given to the partitions. Contrariwise, the cor-            maximization criteria, minimization relative criteria, such
+relation between the second relative criterion and the exter-            as Davies–Bouldin, G(+), and C-index, must be converted
+nal criterion scores is only 0.4453. This is clearly in accor-           into maximization ones. To do so, flip the values of such cri-
+dance with the strong differences that can be visually                   teria around their means before computing their correlation
+observed between the evaluations in columns 3 and 4 of                   with the external validity values.
+Table 2.
+   In a practical comparison procedure, there should be                  Remark 2. The comparison methodology described above
+multiple partitions of varied qualities for a given data set.            is a generalization of the one proposed in a 1981 paper
+Moreover, a practical comparison procedure should involve                by Milligan [27], in which the author stated that “Logi-
+a representative collection of different data sets that fall             cally, if a given criterion is succeeding in indicating the
+within a given class of interest (e.g. mixtures of Gaussians).           degree of correct cluster recovery, the index should exhibit
+This way, if there are ND labeled data sets available, then              a close association with an external criterion which reflects
+there will be ND correlation values associated with each                 the actual degree of recovery of structure in the proposed
+relative validity criterion, each of which represents the                partition solution”. Milligan, however, conjectured that the
+agreement level between the evaluations of the partitions                above statement would possibly not be justified for compar-
+of one specific data set when performed by that relative                 isons involving partitions with different numbers of clus-
+                                                                         ters, due to a kind of monotonic trend that some external
+   3
+     This is based on the fact that such a sort of criterion relies on
+information about the known referential clusters.                           4 Or another statistic of interest.
+
+
+Statistical Analysis and Data Mining DOI:10.1002/sam
+                              Vendramin, Campello, and Hruschka: Relative Clustering Validity Criteria                           223
+
+
+indexes may exhibit as a function of this quantity. For this         N = 50 objects each, embedded in either an n = 4, 6, or 8
+reason, the analyses in Ref. [27] were limited to partitions         dimensional Euclidean space. Each data set contains either
+with the right number (k ∗ ) of clusters known to exist in the       k ∗ = 2, 3, 4, or 5 distinct clusters for which overlap of
+data. This limitation itself causes two major impacts on the         cluster boundaries is permitted in all but the first dimen-
+reliability of the comparison procedure. First, the robustness       sion of the variables space. The actual distribution of the
+of the criteria under investigation in terms of their ability to     objects within clusters follows a (mildly truncated) multi-
+properly distinguish among partitions that are not good in           variate normal distribution, in such a way that the resulting
+general is not taken into account. Second, if the partitions         structure could be considered to consist of natural clusters
+are obtained from a hierarchical algorithm, taking only k ∗          that exhibit the properties of external isolation and internal
+implies that there will be a single value of a given relative        cohesion. The details about the centers and widths of these
+criterion associated with each data set, which means that a          normal distributions are precisely as described in Ref. [27].
+single correlation value will result from the pairs of values           Following Milligan and Cooper’s procedure, the design
+of relative and external criteria computed over the whole            factors corresponding to the number of clusters and to the
+collection of available data sets. Obviously, a single value         number of dimensions were crossed with each other and
+does not allow statistical evaluations of the results.               both were crossed with a third factor that determines the
+   The more general methodology adopted here rules out               number of objects within the clusters. Provided that the
+those negative impacts resulting from Milligan’s conjecture          number of objects in each data set is fixed, this third factor
+mentioned above. But what about the conjecture? Such a               directly affects not only the cluster densities, but the overall
+conjecture is possibly one of the reasons that made Milligan         data balance as well. This factor consists of three levels,
+and Cooper not to adopt the same idea in their 1985 paper            where one level corresponds to an equal number of objects
+[14], which was focused on procedures for determining                in each cluster (or as close to equality as possible), the
+the number of clusters in data. In our opinion, such a               second level requires that one cluster must always contain
+conjecture was not properly elaborated. In fact, while it            10% of the data objects, whereas the third level requires
+is true that some external indexes (e.g. the original Rand           that one cluster must contain 60% of the objects. The
+index described in Section 3) do exhibit a monotonic trend           remaining objects were distributed as evenly as possible
+as a function of the number of clusters, such a trend is             across the other clusters present in the data. Overall, there
+observed when the number of clusters of both the referential         were 36 cells in the design (4 numbers of clusters × 3
+and evaluated partitions increase [50,51]—or in specific             dimensions × 3 balances). Three sampling replications
+situations in which there is no structure in the data and            were generated for each cell, thus producing a total of 108
+in the corresponding referential partition [52]. Neither of          data sets.
+these is the case, however, when one takes a well-defined
+referential partition of a structured data set with a fixed
+number of clusters and compares it against partitions of                         5.2. Experimental Methodology
+the same data produced by some clustering algorithm with                With the data sets in hand, four versions of the stan-
+variable number of clusters, as verified later by Milligan           dard agglomerative hierarchical clustering algorithm [1],
+and Cooper themselves [52].                                          namely, single linkage, complete linkage, average link-
+                                                                     age, and Ward’s, were systematically applied to each data
+                                                                     set. For each data set, each algorithm produced a hierar-
+      5. EXPERIMENTAL RESULTS—PART I                                 chy of data partitions with the number of clusters rang-
+                                                                     ing from k = 2 through k = N = 50. Such partitions can
+   The collection of experiments to be described in this             then be evaluated by the relative clustering validity criteria
+work is divided into two parts. The first one (this section)         under investigation. For illustration purposes, the evalu-
+involves the comparison of those 40 relative validity criteria       ation results produced by four optimization-like criteria
+reviewed in Section 2 using precisely the same clustering            and two difference-like criteria (with the corresponding
+algorithms and faithful reproductions of the synthetic data          optimization-like transformations) for partitions of a typ-
+sets adopted in the studies by Milligan and Cooper [14,27].          ical data set with k ∗ = 5 are displayed in Figs. 6 and 7,
+                                                                     respectively.
+                                                                        All the criteria in Fig. 6 as well as those transformed
+                       5.1. Data Sets
+                                                                     ones in Fig. 7 exhibit a primary (maximum or minimum)
+   The data sets adopted here are reproductions of the arti-         peak at the expected number of clusters, k ∗ = 5. However,
+ficial data sets used in Ref. [14,27]. The data generator            it can be observed in Fig. 6 that some criteria exhibit a
+was developed following strictly the descriptions in those           secondary peak when evaluating partitions with too many
+references. In brief, the data sets consist of a total of            clusters, particularly as k approaches the number of objects,
+                                                                              Statistical Analysis and Data Mining DOI:10.1002/sam
+224                                                                    Statistical Analysis and Data Mining, Vol. 3 (2010)
+
+
+                                             0.8                                                                           400
+
+
+
+
+                                                                                                 Calinski–Harabasz (VRC)
+                                             0.6                                                                           300
+                            Silhouette
+
+
+
+
+                                             0.4                                                                           200
+
+
+                                             0.2                                                                           100
+
+
+                                                 0                                                                          0
+                                                     0    10      20       30       40      50                                   0       10     20        30        40        50
+
+                                             0.8                                                                           1.5
+
+
+                                             0.6
+                            Davies Bouldin
+
+
+
+
+                                                                                                       Dunn
+                                             0.4                                                                            1
+
+
+                                             0.2
+
+
+                                                 0                                                                         0.5
+                                                     0    10      20       30       40      50                                   0       10     20        30        40        50
+                                                                No. of clusters                                                                No. of clusters
+Fig. 6 Values of four optimization-like relative clustering validity criteria: hierarchical partitions of a typical data set for k = 2, . . . , 50.
+
+
+                                                 x 104         Original Criterion                                                         Optimization–Like Transformation
+                                       12                                                                                    40
+
+                                       10
+                                                                                                                             30
+                                             8
+           Trace (W)
+
+
+
+
+                                             6                                                                               20
+
+                                             4
+                                                                                                                             10
+                                             2
+
+                                             0                                                                                   0
+                                                 0       10     20        30        40      50                                       0    10         20        30        40        50
+
+                            1200                                                                                                 5
+
+                            1000                                                                                                 4
+           Nlog (|T|/|W|)
+
+
+
+
+                               800
+                                                                                                                                 3
+                               600
+                                                                                                                                 2
+                               400
+
+                               200                                                                                               1
+
+                                             0                                                                                   0
+                                                 0       10     20        30        40      50                                       0    10       20        30          40        50
+                                                               No. of clusters                                                                    No. of clusters
+Fig. 7 Values of two difference-like criteria (left) and their corresponding optimization-like transformations (right): hierarchical partitions
+of a typical data set for k = 2, . . . , 50.
+
+Statistical Analysis and Data Mining DOI:10.1002/sam
+                                      Vendramin, Campello, and Hruschka: Relative Clustering Validity Criteria                                       225
+
+
+                             1                                                              1
+
+                            0.9                                                            0.9
+
+                            0.8                                                            0.8
+
+                            0.7                                                            0.7
+
+
+
+
+                                                                           Adjusted–Rand
+                            0.6                                                            0.6
+                  Jaccard
+
+
+
+
+                            0.5                                                            0.5
+
+                            0.4                                                            0.4
+
+                            0.3                                                            0.3
+
+                            0.2                                                            0.2
+
+                            0.1                                                            0.1
+
+                             0                                                              0
+                                  0   10      20      30      40      50                         0     10     20        30     40     50
+                                            No. of clusters                                                  No. of clusters
+
+Fig. 8 Values of the Jaccard coefficient and ARI: hierarchical partitions of a typical data set for k = 2, . . . , 50.
+
+N = 50. Such a behavior is also observed in other relative                           produced by the hierarchical algorithms for each data set
+clustering validity criteria5 and must be carefully dealt with                       will be used in the experiments, namely, 3024 partitions
+when assessing their performances. The reason is that this                           for the first interval (4 algorithms × 108 data sets × 7
+eventual secondary peak, which may be less or more intense                           values for k) and 10, 368 partitions for the second interval
+depending on the criterion and on the data set as well,                              (4 × 108 × 24). Having such selected partitions in hand,
+can clearly affect the correlation between the relative and                          the relative and external validity criteria can be computed
+external validity values. In addition, the values of some                            for all of them and the comparison procedure described in
+criteria may not be defined for partitions with too many                             Section 4 can be accomplished.
+clusters. For instance, the criterion Nlog(|T|/|W|) is no
+                                                                                     Remark 3. In order to compute difference-like criteria for
+longer defined for values of k beyond 42 in Fig. 7 due to
+                                                                                     partitions with k = 2 and k = kmax using the optimization-
+the numerical singularity of matrix W when k approaches
+                                                                                     like transformation in Eq. (37), it is actually necessary to
+N . Fortunately, this is not a serious situation inasmuch
+                                                                                     compute the original indexes for k = 1 and k = kmax + 1.
+as partitions with k approaching N are completely out of
+scope in practical clustering analysis. In order to prevent                          Two of the difference-like criteria reviewed in Section 2.2,
+problems, it is recommended to perform the methodology                               however, are not defined for k = 1, namely, log(SSB/SSW)
+proposed in Section 4 over a set of partitions with the                              and McClain–Rao. As a consequence, the transformed ver-
+number of clusters limited within an acceptable range. Such                          sions of these criteria cannot be assessed for partitions with
+an acceptable range depends on the application domain, but                           k = 2.
+there are some general rules that can be useful to guide                                For better confidence of the analysis, the results corre-
+the less experienced user in practical situations. One rule                          sponding to two distinct external validity criteria described
+of thumb √ is to set the upper bound of this interval to                             in Section 3 are reported here; namely, the ARI and the
+kmax = N or so (≈8 for N = 50). Another possibility,                                 Jaccard coefficient. The values of these criteria for the set
+which can be particularly useful if the number of objects                            of partitions produced by a hierarchical algorithm applied to
+is small, is to set this upper bound to kmax = N/2. The                              a typical data set with k ∗ = 5 are illustrated in Fig. 8. This
+rationale behind such a more conservative number is that,                            figure shows that the behaviors of ARI and Jaccard are in
+conceptually speaking, a cluster is expected to be composed                          conformity with each other and, accordingly, these external
+of at least two objects, otherwise being an outlier rather than                      indexes can indeed be used together for better confidence
+a group of objects. Both these intervals, i.e. k ∈ {2, . . . , 8}                    of the analysis. Similarly, two distinct correlation indexes
+and k ∈ {2, . . . , 25}, will be adopted in this part of the                         are also used to measure the agreement level between the
+study. This means that only a subset of the partitions                               relative and external criteria (please, refer to step 3 of the
+                                                                                     comparison procedure in Section 4). One of the indexes is
+  5
+    The value of PBM described in Section 2.1.9, for example,                        the classic Pearson coefficient. Although Pearson is recog-
+goes to infinity as k → N, because Ek in Eq. (21) tends to zero.                     nizably powerful, it is also well-known to be somewhat
+                                                                                                     Statistical Analysis and Data Mining DOI:10.1002/sam
+226                                        Statistical Analysis and Data Mining, Vol. 3 (2010)
+
+
+sensitive to dominant peaks in the sequences of values                 hierarchical algorithms is taken as the final performance of
+under evaluation. In order to prevent the results from being           that criterion. The maximum number of hits is 432 (108
+biased by the subset of best relative and external validity            data sets × 4 hierarchical algorithms).
+values, probably associated with partitions around k ∗ , an
+additional correlation index is also adopted here that can be
+more sensitive to those nonpeak values of the sequences. It                           5.3. Results and Discussions
+is a weighted version of the Goodman-Kruskal index [7,53],                The final results obtained by the traditional methodol-
+named Weighted-Goodman-Kruskal (WGK), which may be                     ogy are illustrated in Fig. 9. Before proceeding with the
+particularly appropriate to clustering analysis for it is fully        discussions, note that, following the terminology adopted
+sensitive to both the ranks and the magnitude proportions              in Ref. [21], the variants of Dunn’s index have been
+of the sequences under evaluation [35].                                named DunnXY. More specifically, X = 1 refers to the orig-
+   Histograms of the results strongly suggest that the                 inal definition of set distance (see Section 2.1.3), whereas
+observed sample distributions hardly satisfy the normality             X ∈ {2, . . . , 6} refers to the alternative definitions given by
+assumption. For this reason, outcomes of parametric                    Eqs. (11), (12), (13), (14), and (15), respectively. Similarly,
+statistical tests will not be reported here. Instead, the              Y = 1 refers to the original definition of diameter, whereas
+well-known Wilcoxon/Mann-Whitney (W/M-W) test will                     Y ∈ {2, 3} refers to Eqs. (16) and (17), respectively. Note
+be adopted. The efficiency of the W/M-W test is 0.95 with              that, following this terminology, the original index is named
+respect to parametric tests like the t-test or the z-test even if      Dunn11.
+the data are normal. Thus, even when the normality assump-                The results achieved by the optimization-like criteria
+tion is satisfied, the W/M-W test might be preferred [54].             that had already been considered in the original study
+This test will be used in this work to compare the results             by Milligan and Cooper [14] were, as expected, similar to
+of every pair of relative validity criteria as two sampled             those reported in that reference. Accordingly, the corre-
+populations. In addition, another test will also be applied            sponding findings and conclusions still remain valid. Con-
+that subdivides these sampled populations into blocks. In              sidering those optimization-like criteria not covered by
+this case, each block is treated as an independent subsam-             Milligan and Cooper [14], it is worth highlighting the
+ple composed of those instances that are related to data sets          excellent performance provided by PBM, which correctly
+generated from a particular configuration of the data gener-           elected the best partition in 92.59% of the assessed scenar-
+ator. A particular configuration of the data generator corre-          ios (400 out of 432). It is also worth mentioning that the
+sponds precisely to one of those 36 design cells composed              variants of Dunn provided good relative performances when
+of data sets with the same numbers of clusters, dimensions,            compared to the original criterion (whose number of hits is
+and the same balance. This is called two-way randomized                355, i.e. 82.18%). On the other hand, the alternative vari-
+block design, one way referring to samples coming from dif-            ants of the silhouette (ASWC and ASSWC) showed slightly
+ferent relative criteria and another way referring to samples          worse performances when compared to both the original
+coming from different configurations of the data generator.            criterion (SWC) and its simplified version (SSWC). This
+A nonparametric test of this class is named Friedman test6 ,           suggests that such alternative variants may have a slightly
+which will be adopted here to reinforce the results of the             inferior capacity of indicating as the best partition one with
+W/M-W test in a conservative (duplicated) manner.                      the expected number of clusters (at least with respect to
+   Finally, for the sake of comparison, the traditional                data sets similar to those considered in the present study).
+methodology adopted by Milligan and Cooper [14] will                      By comparing the results shown in Fig. 9 with those
+also be carried out here for all those 40 relative validity            reported in Ref. [14], one can observe that all difference-
+criteria reviewed in Section 2. Let us recall that, in the             like criteria have performed better when Eq. (37) (proposed
+traditional methodology, each criterion evaluates the set              here) is used to transform them into optimization-like crite-
+of partitions produced by a given hierarchical algorithm               ria. In this context, we would like to highlight the superior
+(single linkage, complete linkage, average linkage, and                performances of trace(W) and Ball–Hall, which got 90.74
+Ward’s, for k = 2, . . . , kmax )7 and, then, the number of            and 89.81% of hits, respectively (in Ref. [14], the corre-
+clusters in the partition elected as the best one by the cri-          sponding results are 27.78 and 29.63%, respectively). These
+terion is compared against the rigth number of clusters                criteria are among the simplest ones (both conceptually
+known to exist in that particular data set. The number of hits         and computationally), because they only need information
+achieved over the whole collection of data sets and different          on the distances between objects and centroids of their
+                                                                       clusters. The criteria Nlog(|T|/|W|) and trace(CovW) have
+  6 A relative of the two-way analysis of variance (ANOVA) test.       shown competitive performances as well, namely, 84.95
+  7
+    kmax will be set to 25, which is precisely the same upper bound    and 84.72% of hits, respectively (against 34.49 and 28.01%
+adopted for the alternative comparison methodology.                    reported in Ref. [14]). The remaining difference-like criteria
+Statistical Analysis and Data Mining DOI:10.1002/sam
+                              Vendramin, Campello, and Hruschka: Relative Clustering Validity Criteria                             227
+
+
+
+
+Fig. 9 Number of hits for each criterion considering a collection of 108 data sets and partitions found by four hierarchical algorithms
+(432 combinations/scenarios)—Difference-like criteria are marked with an asterisk (*).
+
+have also shown better results when compared with those               significant at the α = 5% level (one-sided test). Darker
+reported by Milligan and Cooper, but not when compared                shaded cells indicate that significance has been observed
+with other relative validity criteria included into the present       with respect to both W/M-W and Friedman tests, whereas
+analysis. In particular, note that |T|/|W| and trace(W−1 B)           lighter shaded cells denote significance with respect to one
+have achieved only 32.41 and 24.54% of hits, respectively             of these tests only.
+(against 0.00 and 19.44% in Ref. [14]).                                  The analyses exemplified in Fig. 10 have also been car-
+   Using the alternative methodology discussed in Section 4           ried out for every possible scenario under evaluation, that
+(when the Pearson coefficient, the Jaccard criterion, and             is to say, for all combinations of: two correlation mea-
+kmax = 25 are employed), we found the results reported in             sures (WGK and Pearson), two external criteria (Jaccard
+Fig. 10. Before proceeding with the discussions, note that,           and ARI), and two upper bounds for the number of clusters
+for the sake of compactness and clarity, Fig. 10 displays             (kmax = 8 and kmax = 25), thus resulting in eight different
+only 3 out of the 17 variants of the original Dunn’s index            tables similar to the one depicted in Fig. 10. From such
+(Dunn11) that were reviewed in Section 2.1.4, namely,                 a complete set of tables8 (omitted here for the sake of
+Dunn12, Dunn13, and Dunn62. These variants are those                  compactness) one can derive some interesting conclusions,
+that have shown the best overall performances in this first           summarized below:
+part of the experiments.
+   The mean of the correlation values between each relative             (1) In general, optimization-like criteria exhibited results
+criterion and the external criterion (Jaccard)—computed                     that are better than those provided by difference-like
+over the whole collection of ND = 108 available values                      criteria. In several evaluation scenarios, this is valid
+(one per data set)—is displayed at the bottom bar of                        with strong statistical significance.
+Fig. 10. In this figure, the relative validity criteria have
+been placed in the rows and columns of the top table                    (2) The optimization-like criteria that exhibited the
+according to the ordering established by their correlation                  best performances were point-biserial, tau, ASWC,
+means (decreasing order from top to bottom and from left                    ASSWC, PBM, SWC, SSWC, and VRC. These crite-
+to right). The value displayed in each cell of the top table                ria provided results that are better than those obtained
+corresponds to the difference between the correlation means
+of the corresponding pair of relative criteria. A shaded cell           8
+                                                                          Available at http://www.icmc.usp.br/∼campello/Sub Pages/
+indicates that the corresponding difference is statistically          Selected Publications.htm.
+
+                                                                                Statistical Analysis and Data Mining DOI:10.1002/sam
+228                                         Statistical Analysis and Data Mining, Vol. 3 (2010)
+
+
+
+
+Fig. 10 Mean values (bottom bar) and their differences (cells) for Pearson correlation between relative and external (Jaccard) criteria:
+kmax = 25.
+
+       by all difference-like criteria and by the original                                  1
+       Dunn’s index as well, with statistical significance.                                0.9
+
+  (3) The different versions of the silhouette criterion pre-                              0.8
+      sented comparable results. Then, once the simplified
+                                                                                           0.7
+      versions (SSWC and ASSWC) have lower computa-
+                                                                         Normalized G(+)
+
+
+
+
+      tional requirements, they may be preferred, especially                               0.6
+
+      when dealing with large data sets.                                                   0.5
+
+  (4) In general, Dunn12 and Dunn13 outperformed the                                       0.4
+      original criterion (Dunn11), particularly in those sce-                              0.3
+      narios for which kmax = 25.
+                                                                                           0.2
+  (5) The point-biserial criterion provided superior results
+                                                                                           0.1
+      (with statistical significance) when compared with
+      all criteria, except gamma in the specific scenario                                   0
+                                                                                            0.55   0.6   0.65   0.7   0.75   0.8   0.85   0.9   0.95   1
+      involving Pearson correlation and kmax = 8.                                                                      Jaccard
+
+   It is important to remark that differences were observed             Fig. 11 Scatter plot of normalized values of G(+) versus Jaccard
+                                                                        for partitions of a typical data set: kmax = 8.
+between the performances of some criteria when switching
+from kmax = 8 to kmax = 25. In particular, expressive drops
+in performance were noticed when kmax = 25. This suggests               scatter plots of G(+) versus Jaccard for a typical data set
+that the corresponding criteria are not robust to keep work-                                          √ for kmax = 8 and kmax = 25,
+                                                                        are depicted in Figs. 11 and 12
+ing accurately in the presence of bad quality partitions—in             respectively). Curiously, C/ k behaved in the opposite
+this case formed by numbers of clusters quite different                 way, giving better results when kmax = 25. A detailed and
+from9 k ∗ . As such, these criteria may not be recommended              careful analysis of such a behavior does √ not favor the cri-
+for real-world applications involving complicating factors              terion. As observed in Section 2.1.15, C/ k may be domi-
+such as noisy data, overlapping clusters, high dimensional-                                           √ when this
+                                                                        nated by the number of clusters,          √ quantity is large
+ity, among others. This is the case of G(+), gamma, and C-              enough. More precisely, C/ k → 1/ k for large val-
+index, whose performance losses took place with respect to              ues of k. Such a decreasingly monotonic behavior of this
+all correlation measures (Pearson/WGK) and external crite-              criterion as a function of k is analogous to the one exhib-
+ria (Jaccard/ARI) when kmax = 25 (for illustration purposes,            ited by some external criteria when the data set in hand
+                                                                        has a few clusters (small k ∗ ), which is precisely the case
+  9
+    It is worth noticing that k ∗ = 2, 3, 4, or 5 in the experiments    here √addressed. This explains the misleading performance
+reported in this section.                                               of C/ k for kmax = 25 and reinforces the need for a careful
+Statistical Analysis and Data Mining DOI:10.1002/sam
+                                          Vendramin, Campello, and Hruschka: Relative Clustering Validity Criteria                          229
+
+
+                   1                                                             Aimed at investigating the behavior of the relative validity
+                  0.9
+                                                                                 criteria in a broader context, the following section presents
+                                                                                 a complementary experimental study.
+                  0.8
+
+                  0.7
+Normalized G(+)
+
+
+
+
+                  0.6                                                                  6.    EXPERIMENTAL RESULTS—PART II
+                  0.5                                                              In this second part of our empirical evaluation, we report
+                  0.4                                                            the results of more comprehensive experiments, using larger
+                                                                                 data sets formed by more diversified numbers of clusters
+                  0.3
+                                                                                 and attributes.
+                  0.2
+
+                  0.1
+                                                                                                        6.1. Data Sets
+                   0
+                         0.4     0.5     0.6     0.7     0.8     0.9     1          Milligan and Cooper used data sets formed by 50 objects,
+                                           Jaccard
+                                                                                 possibly due to past computational limitations. As pre-
+Fig. 12 Scatter plot of normalized values of G(+) versus Jaccard                 viously addressed, they used data sets formed by three
+for partitions of a typical data set: kmax = 25.                                 different numbers of dimensions (n ∈ {4, 6, 8}) and four
+                                                                                 different numbers of clusters (k ∗ ∈ {2, 3, 4, 5}). These were
+                                                                                 also used here in this paper, in the first part of the exper-
+design of the experiments and an attentive evaluation of the
+                                                                                 iments (Section 5). In this second part of the experiments,
+results. Discussions on experiments especially designed to
+                                                                                 data sets formed by a number of objects ten times more
+detect biases with respect to the number of clusters, such
+                                                                                 representative (N = 500) have been adopted. The num-
+as the one just described, are covered in the second part of
+                                                                                 ber of dimensions and clusters have also been expanded
+the empirical evaluation (Section 6).
+                                                                                 in order to obtain higher diversity in relation to these
+   Comparative analyses of the results obtained using the
+                                                                                 characteristics, as well as to allow the study on how
+different (traditional and alternative) methodologies adopted
+                                                                                 these factors can affect the performance of relative valid-
+in this first part of the experiments were carried out with
+                                                                                 ity criteria. Considering the number of dimensions, we
+the aim of detecting persisting and conflicting patterns
+                                                                                 generated two subcategories of data sets: one of them
+in the performance of the criteria under investigation.
+                                                                                 formed by fewer dimensions (n ∈ {2, 3, 4}) and the other
+From this standpoint, the main conclusions that can be
+                                                                                 one formed by more dimensions (n ∈ {22, 23, 24}). Analo-
+derived are:
+                                                                                 gously, two subcategories were conceived for the number
+              (1) In absolute terms, trace(W), trace(CovW), Nlog                 of clusters (k ∗ ∈ {2, 4, 6} and k ∗ ∈ {12, 14, 16}). To do so,
+                  (|T|/|W|), Ball–Hall, and Dunn11 provided reason-              the same data set generator described in Section 5.1 was
+                  able results when the traditional methodology is               employed.
+                  employed. However, their performances are poor                    Following the procedure adopted in Section 5.1, the
+                  from the perspective of the alternative methodology.           experimental design factors corresponding to the number
+                  This suggests that these criteria can estimate the num-        of clusters and dimensions were combined and crossed
+                  ber of clusters satisfactorily, but they are not accurate      with a third factor that determines the quantity of objects
+                  when evaluating the quality of a collection of parti-          in each cluster. This third factor consists of three levels.
+                  tions in relative terms (with respect to the information       The first level originates approximately balanced clusters.
+                  provided by external criteria). Opposite behavior was          In the second level, one of the clusters has 10% of the
+                  observed from point-biserial and tau.                          objects, whereas the remaining objects are approximately
+                                                                                 balanced among the other clusters. In the third level, one
+              (2) The criteria for which performances were superior              of the clusters has 60% of the objects, and the remaining
+                  for both methodologies (being among the top ten in             objects are again approximately balanced among the other
+                  both cases) are: SWC, SSWC, VRC, and PBM.                      clusters. However, this level may cause difficulties for data
+                                                                                 sets formed by many clusters, for that it implies in forming
+   It is worth stressing that the results discussed in this                      many clusters with just a few objects, thus making it harder
+section were obtained using data partitions found by hier-                       for a clustering algorithm to find a subset of good quality
+archical algorithms applied to data sets formed by a                             partitions. For this reason, the third level has been changed
+small number of objects (N = 50), a few clusters (k ∗ ∈                          for data sets formed by k ∗ ∈ {12, 14, 16} clusters, in such a
+{2, 3, 4, 5}), and a small number of attributes (n ∈ {4, 6, 8}).                 way that one of the clusters contains 20% (instead of 60%)
+                                                                                            Statistical Analysis and Data Mining DOI:10.1002/sam
+230                                      Statistical Analysis and Data Mining, Vol. 3 (2010)
+
+
+of the objects. In brief, the three experimental design factors      k = kmax , which represents an amount of (kmax − 1) × 20
+described above have been combined, thus producing a set             partitions for each data set.
+of 108 (6 number of clusters × 6 dimensions × 3 balances)               As in Section 5, two distinct evaluation scenarios with
+experimental design cells to generate data sets. For better          respect to different values√ of kmax are considered here.
+statistical confidence, nine independent replications were           One of them is kmax = N (≈ 23 for N = 500). As this
+used for each cell, thus resulting in a collection of 972 data       value is close to the number of clusters in some of the
+sets.                                                                data sets adopted in this part of the experiments, k ∗ , we
+                                                                     also here assess partitions formed by kmax = 50. This value
+Remark 4. Noisy data sets were not considered in the                 allows evaluating partitions with a number of clusters, k,
+experiments because the presence of noise could introduce            significantly different from k ∗ .
+a confounding effect into the analyses of the behavior of the           In brief, k-means is repeatedly applied to each data set
+validity criteria under investigation, namely, the behavior of       with k varying from 2 to kmax , where kmax = 23 or kmax =
+the clustering algorithms used to generate the data partitions       50. For each k, k-means runs 20 times, with different initial
+when they face noisy or noiseless data. However, notice              prototypes. Thus, the algorithm produces Nπ = (50 − 1) ×
+that, even in the absence of noise, the performances of the          20 = 980 partitions for each data set, among which only
+validity criteria were evaluated when assessing partitions           Nπ = (23 − 1) × 20 = 440 partitions are actually used in
+of varied qualities. Indeed, a large amount of partitions            the evaluation scenario with kmax = 23. Since there are 972
+for each data set was generated that includes not only               available data sets, a collection of 972 × 980 = 952, 560
+good (possibly optimal) partitions, but bad partitions as            partitions has been obtained. For each partition, the rel-
+well, namely: (i) partitions with the number of clusters             ative and external validity criteria can be computed and
+very different from the number of natural clusters known to          the procedure described in Section 4 can be performed. To
+exist in each the data set (k ∗ ); and (ii) partitions that may      do so, the 972 data sets are subdivided into four subcate-
+represent local optima of the clustering algorithm adopted           gories, each of which formed by 243 data sets and charac-
+in this part of the experiments (see the next section).              terized by fewer or more dimensions (either n ∈ {2, 3, 4}
+                                                                     or n ∈ {22, 23, 24}) and clusters (either k ∗ ∈ {2, 4, 6} or
+                                                                     k ∗ ∈ {12, 14, 16}). The comparison procedure described in
+            6.2. Experimental Methodology                            Section 4 is then performed individually for each of these
+                                                                     subcategories in order to allow evaluating the influence of
+   Following Milligan and Cooper’s methodology [14,27],              the factors n and k ∗ on the behavior of the relative validity
+in the first part of this study (Section 5) we have adopted          criteria.
+hierarchical clustering algorithms to perform all the exper-            Owing to the very high computational complexity of the
+iments. In this part of the experiments, the classic k-means         relative criteria known as gamma (Section 2.1.11), G(+)
+algorithm [10] is adopted in lieu of hierarchical algorithms,        (Section 2.1.12), and tau (Section 2.1.13), they could hardly
+for the following main reasons: (i) k-means has been elected         be used in real-world applications, especially those involv-
+and listed among the top ten most influential data mining            ing data sets with “large” N . For this reason, they have
+algorithms [55], possibly because it is both very simple and         not been assessed in the current experiments. Moreover,
+quite scalable. Indeed, in contrast to the squared asymptotic        difference-like criteria (Section 2.2) have not been included
+running time of hierarchical algorithms with respect to the          into the current analyses as well, for they require a (hierar-
+number of objects (N ), k-means has linear time complexity           chical) relation of succession between partitions with con-
+with respect to any aspect of the problem size [55]; (ii) The        secutive values of k. This does not happen from multiple,
+hierarchy produced by a hierarchical algorithm provides              independent runs of k-means.
+only a single partition of the data set for every value of
+k. For better confidence of the results, it is preferred here
+                                                                                    6.3. Results and Discussions
+to produce a number of partitions for every k by running
+the k-means algorithm from different initializations of pro-            The final results obtained by means of the methodol-
+totypes (as randomly selected data objects). The use of a            ogy described in Section 4 using the Pearson correlation
+number of partitions for every k allows increasing diver-            coefficient, the Jaccard external criterion, and kmax = 50,
+sity of the collection of partitions. The evaluation of such         are presented in Figs. 13–17. The presentation scheme
+a more diverse collection of partitions results in a more            and layout of these figures is precisely the same as that
+reliable set of Nπ clustering validity values associated with        adopted in Fig. 10. Figures 13–16 correspond to the results
+a given data set—refer to steps 2 and 3 of the comparison            achieved separately from each of the four subcategories
+procedure described in Section 4. In particular, 20 parti-           (formed by 243 data sets) involving combinations of more
+tions are obtained for every k ranging from k = 2 through            (or fewer) dimensions and clusters. Figure 17 reports the
+Statistical Analysis and Data Mining DOI:10.1002/sam
+                               Vendramin, Campello, and Hruschka: Relative Clustering Validity Criteria                             231
+
+
+
+
+Fig. 13 Mean values (bottom bar) and their differences (cells) for Pearson correlation between relative and external (Jaccard) criteria:
+kmax = 50, k ∗ ∈ {2, 4, 6}, n ∈ {2, 3, 4}.
+
+
+
+
+Fig. 14 Mean values (bottom bar) and their differences (cells) for Pearson correlation between relative and external (Jaccard) criteria:
+kmax = 50, k ∗ ∈ {2, 4, 6}, n ∈ {22, 23, 24}.
+
+
+results obtained from the overall collection of 972 data sets.            The main conclusions that can be derived from the 32
+Note that, for compactness, Figs. 13–17 present only 3 (the            tables that correspond to the four subcategories of data sets
+best ones in this part of the experiments) out of those 17             with different values of n and k ∗ are the following10 :
+variants of Dunn’s index reviewed in Section 2.1.4, namely,
+Dunn22, Dunn23, and Dunn62.                                              (1) For data sets formed by fewer dimensions, point-
+   Analyses analogous to those reported in Figs. 13–17                       biserial generally presented better results in the pres-
+were performed for all possible evaluation scenarios, i.e.                   ence of fewer clusters.
+by varying the correlation measure (WGK or Pearson), the                 (2) VRC generally presented better results in the pres-
+external criterion (Jaccard or ARI), and the maximum num-                    ence of fewer clusters for data sets formed by more
+ber of clusters (kmax = 23 or kmax = 50), thus resulting in                  dimensions. In addition, when data sets with fewer
+40 different tables (2 correlation measures × 2 external cri-                clusters are considered, VRC generally presented
+teria × 2 values for kmax × 5 collections of data sets). Such
+tables are omitted here for compactness reasons and are                  10
+                                                                           These conclusions refer to the individual performance of
+available at http://www.icmc.usp.br/∼campello/Sub Pages/               each criterion whose behavior varied clearly across the different
+Selected Publications.htm.                                             subcategories of data.
+
+                                                                                 Statistical Analysis and Data Mining DOI:10.1002/sam
+232                                       Statistical Analysis and Data Mining, Vol. 3 (2010)
+
+
+
+
+Fig. 15 Mean values (bottom bar) and their differences (cells) for Pearson correlation between relative and external (Jaccard) criteria:
+kmax = 50, k ∗ ∈ {12, 14, 16}, n ∈ {2, 3, 4}.
+
+
+
+
+Fig. 16 Mean values (bottom bar) and their differences (cells) for Pearson correlation between relative and external (Jaccard) criteria:
+kmax = 50, k ∗ ∈ {12, 14, 16}, n ∈ {22, 23, 24}.
+
+      superior performance in the presence of more dimen-                    tendency was more prominent for data sets with fewer
+      sions. Then, it can be asserted that VRC exhibited                     clusters.
+      better results for data sets formed by more dimen-
+      sions and fewer clusters.                                           In relative terms, the main conclusions that can be
+                                                                       derived from the eight tables corresponding to the assess-
+  (3) In general, C-index showed better results for data               ments involving the complete collection of 972 data sets
+      sets that contain more clusters, independently of                are the following:
+      the number of dimensions. Opposite behavior √         was          (1) (ASWC, ASSWC, SWC, SSWC, point-biserial,
+      observed from PBM, √   the variants of Dunn, and C/ k.                 PBM)>VRC>(C-index, DB, Dunn22, Dunn23,
+      In what concerns C/ k, this is an expected result.                     Dunn62, Dunn11)
+      Indeed, it is an outcome of a confounding effect that
+      is inherent to the nature of this criterion, as previously         (2) (C-index, DB, Dunn22, Dunn23, Dunn62)>Dunn11
+      discussed in Section 5.3.                                          (3) ASWC>SSWC
+                                                                         (4) (SWC, ASWC)>PBM
+  (4) The DB criterion showed a tendency to provide better
+      results for data sets with fewer dimensions. Such a                (5) (DB, Dunn22)>Dunn62
+Statistical Analysis and Data Mining DOI:10.1002/sam
+                               Vendramin, Campello, and Hruschka: Relative Clustering Validity Criteria                             233
+
+
+
+
+Fig. 17 Mean values (bottom bar) and their differences (cells) for Pearson correlation between relative and external (Jaccard) criteria:
+kmax = 50, k ∗ ∈ {2, 4, 6, 12, 14, 16}, n ∈ {2, 3, 4, 22, 23, 24}.
+
+
+where “>” means that a significant difference has been                 to convert difference-like criteria into optimization-like
+observed between the respective criteria with respect to at            counterparts has been discussed.
+least one of the statistical tests adopted (W/M-W and/or                   An alternative, possibly complementary methodology for
+Friedman). A more conservative reading of the results, in              comparing relative clustering validity criteria has been
+which better performance is asserted if and only if there              described. Such a methodology has been especially
+are significant differences with respect to both tests, allows         designed to get around conceptual limitations that may take
+concluding that:                                                       place when using the comparison paradigm traditionally
+                                                                       adopted in the literature. In particular: (i) it does not rely on
+  (1) (SWC, SSWC, ASWC, ASSWC, point-biserial, PBM)
+                                                                       the assumption that the accuracy of a validity criterion can
+      >(VRC, C-index, DB, Dunn22, Dunn23, Dunn62,
+                                                                       be precisely quantified by the relative frequency with which
+      Dunn11)
+                                                                       it indicates as the best partition a partition with the right
+  (2) VRC>(Dunn22, Dunn23, Dunn62, Dunn11)                             number of clusters; (ii) it does not rely on the assumption
+                                                                       that a mistake made by a certain validity criterion when
+  (3) (C-index, DB)>Dunn11
+                                                                       assessing a set of candidate partitions of a given data set
+  (4) (SWC, ASWC)>PBM                                                  can be quantified by the absolute difference between the
+                                                                       right (known) number of clusters in those data and the
+  (5) DB>Dunn62
+                                                                       number of clusters contained in the partition elected as the
+   To summarize, one can conclude from this second part                best one; and (iii) it does not rely solely on the correctness
+of the experiments that the silhouettes and point-biserial             of the single partition elected as the best one according to
+presented the best results in relative terms, followed by              that criterion. Getting rid of such over-simplified assump-
+PBM and VRC. Among these criteria, only the silhouettes                tions may make the alternative comparison methodology
+showed to be almost insensitive (more robust) throughout               more suitable to assess the performances of validity criteria
+all the assessed scenarios.                                            when trying to distinguish between better and worse par-
+                                                                       titions embedded in difficult application scenarios. In spite
+                                                                       of this, the alternative methodology should be seen as com-
+                                                                       plementary to the traditional one, especially because: (i) it
+      7. CONCLUSIONS AND PERSPECTIVES
+                                                                       is applicable to the comparison of optimization-like crite-
+   This paper has presented an overview of 40 relative clus-           ria only. When comparing simple stopping rules, which are
+tering validity criteria that includes an original comparative         only able to estimate the number of clusters in data, the
+asymptotic analysis of their computational complexities.               traditional methodology is possibly the only choice; and
+This overview has been divided into two parts, one of them             (ii) the traditional methodology focuses on a specific aspect
+dedicated to optimization-like criteria and the other one              of the problem (the number of clusters). Insightful results—
+devoted to difference-like criteria. An effective formulation          such as those highlighted in the end of Section 5.3—can
+                                                                                 Statistical Analysis and Data Mining DOI:10.1002/sam
+234                                     Statistical Analysis and Data Mining, Vol. 3 (2010)
+
+
+be revealed based on the simultaneous application of both           to be particularly meaningful for unsupervised clustering
+methodologies.                                                      practitioners looking for volumetric, well-behaved clusters.
+    An extensive experimental comparison of the perfor-               Studies involving different classes of data sets and the
+mances of those 40 relative clustering validity criteria            comparison of clustering validity criteria of a different
+surveyed in the manuscript has been accomplished. The               nature (e.g. for evaluation of fuzzy partitions) are interesting
+experiments have involved a collection of 962,928 parti-            subjects that deserve further research.
+tions derived by running five different clustering algorithms
+(four hierarchical ones and k-means) over 1080 different
+data sets of a given class of interest. Stringent analyses                            ACKNOWLEDGMENTS
+of the results—based on two different external validity                This work was supported by the Brazilian National
+indexes, two different correlation measures, two different          Research Council (CNPq) and the Research Foundation of
+intervals for the maximum acceptable number of clusters,            the State of São Paulo (Fapesp).
+and two different statistical tests—yielded a number of
+interesting conclusions about the behavior of the criteria
+under investigation. The behavior of the criteria when                                        REFERENCES
+assessing partitions of data sets with different amounts of          [1] L. Kaufman and P. Rousseeuw, Finding Groups in Data,
+clusters and dimensions (attributes) has been explored. In               New York, NY, USA, Wiley, 1990.
+addition, experiments performed by Milligan and Cooper               [2] B. S. Everitt, S. Landau, and M. Leese, Cluster Analysis,
+in their 1985 paper [14] have been faithfully reproduced                 (4th ed.), London, UK, Edward Arnold, 2001.
+                                                                     [3] G. Gan, C. Ma, and J. Wu, Data Clustering: Theory,
+with the inclusion of several validity criteria that were not            Algorithms, and Applications, Philadelphia, PA, USA, ASA-
+covered in that classic study.                                           SIAM, 2007.
+    Aside from a number of detailed observations related             [4] A. K. Jain, M. N. Murty, and P. J. Flynn, Data clustering: a
+to particular evaluation scenarios that have been discussed              review, ACM Comput Surv 31 (1999), 264–323.
+                                                                     [5] R. Xu and D. C. Wunsch II. Survey of clustering algorithms,
+along the manuscript, there are some elucidative overall                 IEEE Trans Neural Netw 16 (2005), 645–678.
+conclusions that have been derived from all the experi-              [6] L. Wang and X. Fu, Data Mining with Computational
+ments and the corresponding results. In general, the best                Intelligence, Secaucus, NJ, USA, Springer, 2005.
+                                                                     [7] A. K. Jain and R. C. Dubes, Algorithms for Clustering Data,
+performances have been associated with the silhouettes,
+                                                                         Upper Saddle River, NJ, USA, Prentice Hall, 1988.
+PBM, VRC, and point-biserial. Among them, the silhou-                [8] J. A. Hartigan, Clustering Algorithms, New York, Wiley,
+ettes have apparently shown the most robust performances                 1975.
+with respect to the different evaluation scenarios. The others       [9] R. Xu and D. C. Wunsch II. Clustering, New York, NY,
+                                                                         USA, Wiley/IEEE Press, 2009.
+have exhibited some sort of sensitivity to at least one aspect      [10] J. B. McQueen. Some methods of classification and analysis
+of the analysis (e.g. the number of attributes and/or clusters           of multivariate observations, In Proceedings 5th Berkeley
+in the data sets), mainly point-biserial and VRC. Inasmuch               Symposium on Mathematical Statistics and Probability,
+as the simplified silhouettes have exhibited global perfor-              Berkeley, California, USA, 1967, 281–297.
+                                                                    [11] A. Dempster, N. Laird, and D. Rubin, Maximum likelihood
+mances that are comparable to that of the original criterion,            from incomplete data via the em algorithm, J R Stat Soc
+they might be preferred when dealing with very large data                39(1) (1977), 1–38.
+sets (due to their lighter computational requirements).             [12] T. Hastie, R. Tibshirani, and J. Friedman, The Elements of
+    As a word of caution, it is worth remarking that the above           Statistical Learning, Sparks, NV, USA, Springer, 2001.
+                                                                    [13] M. Halkidi, Y. Batistakis, and M. Vazirgiannis, On clustering
+results and conclusions hold for a particular collection of              validation techniques, J Intell Inf Syst 17 (2001), 107–145.
+data sets. Since such a collection is reasonably represen-          [14] G. W. Milligan and M. C. Cooper, An examination of
+tative of a particular class, namely, data with volumetric               procedures for determining the number of clusters in a data
+clusters following normal distributions, it seems legitimate             set, Psychometrika 50(2) (1985), 159–179.
+                                                                    [15] D. L. Davies and D. W. Bouldin, A cluster separation
+to believe that similar results are likely to be observed for            measure, IEEE Trans Pattern Anal Mach Intell 1 (1979),
+other data sets of this class. However, nothing can be pre-              224–227.
+sumed about data sets that do not fall within this class, at        [16] R. B. Calinski and J. Harabasz, A dentrite method for cluster
+least not before new experiments involving such data are                 analysis, Commun Stat 3 (1974), 1–27.
+                                                                    [17] J. C. Dunn, Well separated clusters and optimal fuzzy
+performed.                                                               partitions, J Cybern 4 (1974), 95–104.
+    Finally, it is also worth remarking that all the discus-        [18] M. Halkidi, Y. Batistakis, and M. Vazirgiannis, Clustering
+sions related to the experimental portion of this work make              validity checking methods: Part II, SIGMOD Rec 31 (2002),
+                                                                         19–27.
+sense under the assumption that the adopted reference par-          [19] P. J. Rousseeuw, Silhouettes: a graphical aid to the
+titions with known clusters following normal distributions               interpretation and validation of cluster analysis, J Comput
+satisfy the user’s expectations of right partition. This seems           Appl Math 20 (1987), 53–65.
+
+Statistical Analysis and Data Mining DOI:10.1002/sam
+                               Vendramin, Campello, and Hruschka: Relative Clustering Validity Criteria                                235
+
+
+[20] R. C. Dubes, How many clusters are best? An experiment,          [39] A. J. Scott and M. J. Symons, Clustering methods bases on
+     Pattern Recognit 20 (1987), 645–663.                                  likelihood ratio criteria, Biometrics 27 (1971), 387–397.
+[21] J. C. Bezdek and N. R. Pal, Some new indexes of cluster          [40] S. J. Arnold, A test for clusters, J Mark Res 19 (1979),
+     validity, IEEE Trans Syst Man Cybern B 28(3) (1998),                  545–551.
+     301–315.                                                         [41] F. H. C. Marriot, Practical problems in a method of cluster
+[22] U. Maulik and S. Bandyopadhyay, Performance evaluation                analysis, Biometrics 27 (1971), 501–514.
+     of some clustering algorithms and validity indices, IEEE         [42] G. H. Ball and D. J. Hall, Isodata, A Novel Method of Data
+     Trans Pattern Anal Mach Intell 24(12) (2002), 1650–1654.              Analysis and Pattern Classification. Menlo Park, Stanford
+[23] E. H. Ruspini, Numerical methods for fuzzy clustering, Inf            Research Institute, NTIS No. AD 699616, 1965.
+     Sci 2 (1970), 319–350.                                           [43] J. O. McClain and V. R. Rao, CLUSTISZ: a program to test
+[24] E. R. Hruschka, R. J. G. B. Campello, A. A. Freitas, and              for the quality of clustering of a set of objects, J Mark Res
+     A. C. P. L. F. de Carvalho, A survey of evolutionary                  12 (1975), 456–460.
+     algorithms for clustering, IEEE Trans Syst Man Cybern C          [44] I. J. Good, An index of separateness of clusters and a
+     39 (2009), 133–155.                                                   permutation test for its statistical significance, J Stat Comput
+[25] L. Hubert and P. Arabie, Comparing partitions, J Classif 2            Simul 15 (1982), 81–84.
+     (1985), 193–218.                                                 [45] W. M. Rand, Objective criteria for the evaluation of
+[26] G. Casella and R. L. Berger, Statistical Inference (2th ed.),         clustering methods, J Am Stat Assoc 66 (1971), 846–850.
+     California, USA, Duxbury Press, 2001.                            [46] G. Saporta and G. Youness. Comparing two partitions: some
+[27] G. W. Milligan, A monte carlo study of thirty internal                proposals and experiments, In Proceedings in Computational
+     criterion measures for cluster analysis, Psychometrika 46(2)          Statistics, W. Hardle, ed., Berlin, Germany, Physica-Verlag,
+     (1981), 187–199.                                                      2002.
+[28] L. Vendramin, R. J. G. B. Campello, and E. R. Hruschka,          [47] L. Denoeud, H. Garreta, and A. Guenoche. Comparison
+     On the comparison of relative clustering validity criteria,           of distance indices between partitions, In Proceedings 11th
+     In SIAM International Conference on Data Mining, Sparks,              Conference of the Applied Stochastic Models and Data
+     NV, USA, 2009, 733–744.                                               Analysis (ASMDA), Brest, France, 2005.
+[29] E. R. Hruschka, R. J. G. B. Campello, and L. N. de Castro,       [48] R. Sharan and R. Shamir, Click: a clustering algorithm
+     Evolving clusters in gene-expression data, Inf Sci 176                with applications to gene expression analysis, In Proceedings
+     (2006), 1898–1927.                                                    8th International Conference on Intelligent Systems for
+[30] M. K. Pakhira, S. Bandyopadhyay, and U. Maulik, Validity              Molecular Biology, Vienna, Austria, 2000, 307–316.
+     index for crisp and fuzzy clusters, Pattern Recognit Soc 37      [49] D. Jiang, C. Tang, and A. Zhang, Cluster analysis for gene-
+     (2004), 487–501.                                                      expression data: a survey, IEEE Trans Knowl Data Eng 16
+[31] L. J. Hubert and J. R. Levin, A general statistical framework         (2004), 1370–1386.
+     for assessing categorical clustering in free recall, Psychol     [50] E. B. Fowlkes and C. L. Mallows, A method for comparing
+     Bull 10 (1976), 1072–1080.                                            two hierarchical clustering, J Am Stat Assoc 46 (1983),
+[32] F. B. Baker and L. J. Hubert, Measuring the power of                  553–569.
+     hierarchical clustering analysis, J Am Stat Assoc 70(349)        [51] D. L. Wallace, Comment on “a method for comparing
+     (1975), 31–38.                                                        two hierarchical clustering”, J Am Stat Assoc 78 (1983),
+[33] F. J. Rohlf, Methods of comparing classifications, Ann Rev            569–576.
+     Ecol Syst 5 (1974), 101–113.                                     [52] G. W. Milligan and M. C. Cooper, A study of the
+[34] M. G. Kendall and J. D. Gibbons, Rank Correlation                     comparability of external criteria for hierarchical cluster
+     Methods, London, UK, Edward Arnold, 1990.                             analysis, Multivariate Behav Res 21 (1986), 441–458.
+[35] R. J. G. B. Campello and E. R. Hruschka, On comparing            [53] L. A. Goodman and W. H. Kruskal, Measures of association
+     two sequences of numbers and its applications to clustering           for cross-classifications, J Am Stat Assoc 49 (1954),
+     analysis, Inf Sci 179 (2009), 1025–1039.                              732–764.
+[36] D. A. Ratkowsky and G. N. Lance, A criterion for                 [54] M. F. Triola, Elementary Statistics, Don Mills, Ontario,
+     determining the number of groups in a classification, Aust            Canada, Addison Wesley, 1999.
+     Comput J 10 (1978), 115–117.                                     [55] X. Wu, V. Kumar, J. R. Wuinlan, J. Ghosh, K. Yang,
+[37] R. S. Hill, A stopping rule for partitioning dendrograms, Bot         H. Motoda, G. J. McLachlan, A. Ng, B. Liu, P. S. Yu,
+     Gaz 141 (1980), 321–324.                                              Z. H. Zhou, M. Steinbach, D. J. Hand, and D. Steinberg,
+[38] H. P. Friedman and J. Rubin, On some invariant criteria for           Top 10 algorithms in data mining, Knowl Inf Syst 14 (2008),
+     grouping data, J Am Stat Assoc 62 (1967), 1159–1178.                  1–37.
+
+
+
+
+                                                                                Statistical Analysis and Data Mining DOI:10.1002/sam
+

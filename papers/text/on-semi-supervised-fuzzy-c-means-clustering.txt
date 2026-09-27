@@ -1,0 +1,588 @@
+                                                                                             FUZZ-IEEE 2009, Korea, August 20-24, 2009
+
+
+
+                   On Semi-Supervised Fuzzy c-Means Clustering
+                ENDO Yasunori, HAMASUNA Yukihiro, YAMASHIRO Makito, MIYAMOTO Sadaaki
+
+
+   Abstract— We have two methods of pattern classiﬁcation,                    theory is necessary to approach the mathematical structure
+one is supervised and the other is unsupervised. Unsupervised                 so that its theoretical development is difﬁcult.
+classiﬁcation, which is called clustering and classiﬁes data                     In comparison with hierarchical method, non-hierarchical
+except external criteria, is very useful in the methods of pattern
+classiﬁcation so that it has been applied in many ﬁelds.                      one is more deeply studied and more widely applied in
+   There are two types of clustering, one is hierarchical and the             many ﬁelds because of small calculation time and interests
+other is non-hierarchical. We often use hard c-means clustering               in the mathematical background. We often use hard c-means
+(HCM) or fuzzy c-means clustering (FCM) as typical methods                    clustering (HCM) [2] or fuzzy c-means clustering (FCM) [3]
+of non-hierarchical clustering.                                               as typical methods of non-hierarchical clustering in many
+   By the way, supervised classiﬁcation can achieve practical
+classiﬁcation results but can’t handle a lot of data. On the                  ﬁelds as well as engineering and medical science.
+other hand, unsupervised classiﬁcation can handle a lot of data                  By the way, the concept of semi-supervised classiﬁcation
+but the method is complex and sometimes results look a bit of                 has been remarked [5], [6], [7], [8], [9]. Semi-supervised
+strange.                                                                      classiﬁcation has both characters of supervised and semi-
+   Therefore recently, study of semi-supervised classiﬁcation has             supervised classiﬁcation, that is, both of labeled data and
+been studied. This classiﬁcation has advantages of both of the
+above-mentioned methods, e.g., practical results, low costs and               unlabeled data are classiﬁed in the semi-supervised classi-
+short calculation time.                                                       ﬁcation and consequently, it becomes possible to achieve
+   In this paper, we propose new semi-supervised classiﬁcation                more practical results by semi-supervised classiﬁcation than
+algorithms based on fuzzy c-means clustering in which some                    supervised or unsupervised classiﬁcation.
+membership grades are given as supervised membership grade                       In this paper, we present two new semi-supervised fuzzy c-
+in advance.                                                                   means clustering algorithms. The algorithms are constructed
+                      I. I NTRODUCTION                                        by introducing some membership grades which are given as
+                                                                              supervised membership grades in advance into fuzzy c-means
+   Recently, methods of pattern classiﬁcation which classi-                   clustering. Our proposed algorithms can achieve practical
+ﬁes data automatically has been becoming more important                       classiﬁcation results and the algorithms are more simple than
+because of complexity and growing size of the data. The                       the conventional semi-supervised clustering [7], [9]
+pattern classiﬁcation attracted interests of a lot of researchers
+in respects of not only mathematical background but also                        II. S EMI -S UPERVISED F UZZY c-M EANS C LUSTERING
+engineering applications.
+   We have two methods of pattern classiﬁcation, one is                          In this section, we construct new fuzzy c-means clustering
+supervised and the other is unsupervised. In supervised                       algorithms, which have the character of supervised classiﬁ-
+classiﬁcation, e.g., K-nearest neighbor method, some data                     cation, by introducing the supervised membership grade into
+are given as supervised data in advance and the classiﬁcation                 fuzzy c-means clustering.
+is done based on the supervised data. Because that supervised                    In semi-supervised fuzzy c-means clustering, some mem-
+data are given, results of supervised methods become more                     bership grades of a part of data to some clusters are given
+natural than unsupervised methods and the algorithms are                      in advance. The membership grades are called supervised
+simpliﬁed. However, the more data increase, the less it is                    membership grades and denoted as ūki .
+practical to give a lot of supervised data.                                      The supervised membership grade comes from regarding
+   In unsupervised classiﬁcation, which is also called clus-                  not data on the pattern space but membership grade of data to
+tering, data is classiﬁed into some clusters except external                  some cluster as supervisor. Giving uki = 1 can be substituted
+criteria. Because of except the criteria, the algorithms become               for setting a data xk as a supervisor of a cluster Gi , however
+complex. However, it can be said that how to construct                        giving uki = 0.6 can’t be substituted for “setting supervisor”.
+algorithms of unsupervised classiﬁcation is more signiﬁcant                      In this section, we propose two new algorithms of semi-
+than supervised one in the ﬁeld of pattern classiﬁcation from                 supervised fuzzy c-means clustering with ūki based on
+considering that we now have to handle a lot of data so that                  standard and entropy regularized fuzzy c-means clustering.
+it is hard to give supervised data.                                           A. Preliminaries
+   There are two types of clustering, one is hierarchical and
+the other is non-hierarchical. We can sometimes obtain more                     The basic problem is how to construct the way to classify
+natural results by hierarchical method than non-hierarchical                  n numbers of data:
+one, but the hierarchical one has a disadvantage that the
+calculation time more increases widely as the number of data                     X = {xk | xk = (xk1 , . . . , xkp )T ∈ p , k = 1 ∼ n}
+more increases in comparison with the non-hierarchical one.                   into c numbers of clusters:
+Moreover, the methodology of not analysis theory but graph
+                                                                                                  C = {Ci | i = 1 ∼ c}
+   ENDO Yasunori is with Faculty of Systems and Information Engineering,
+University of Tsukuba, 1-1-1 Tennodai, Tsukuba, Ibaraki 305-8573, Japan       which is represented as cluster centers:
+(phone & fax: +81 29 853 5135; email: endo@risk.tsukuba.ac.jp).
+   HAMASUNA Yukihiro is with Graduate School of Systems and In-
+formation Engineering, University of Tsukuba, 1-1-1 Tennodai, Tsukuba,             V = {vi | vi = (vi1 , . . . , vip )T ∈ p , i = 1 ∼ c}
+Ibaraki 305-8573, Japan (phone & fax: +81 29 853 5250; email:
+yhama@soft.risk.tsukuba.ac.jp). He is also a research fellow of the japan
+society for the promotion of science.
+                                                                              on a pattern space p . Euclidean norm is deﬁned on the
+   YAMASHIRO Makito is with Graduate School of Systems and In-                space, that is,
+formation Engineering, University of Tsukuba, 1-1-1 Tennodai, Tsukuba,                                    
+Ibaraki 305-8573, Japan (phone & fax: +81 29 853 5250; email: ya-                                         
+mashiro@soft.risk.tsukuba.ac.jp).                                                                          p
+                                                                                             xk − vi  = 
+                                                                                                                          2
+   MIYAMOTO Sadaaki is with Faculty of Systems and Information Engi-                                          (xkj − vij ) .
+neering, University of Tsukuba, 1-1-1 Tennodai, Tsukuba, Ibaraki 305-8573,                                   j=1
+Japan (phone: +81 29 853 5346; email: miyamoto@risk.tsukuba.ac.jp).
+
+
+
+
+     978-1-4244-3597-5/09/$25.00 ©2009 IEEE                            1119
+                                                                                             FUZZ-IEEE 2009, Korea, August 20-24, 2009
+
+uki ∈ [0, 1] represents membership grade that xk belongs to                 1) m > 1: Instead of (2), we consider the following
+Ci and the goal of this classiﬁcation is to obtain the following          objective function in which there is no absolute value:
+U:                                                                                                   n 
+                                                                                                      c
+                                        
+                                        c
+                                                                                     J  (U, V ) =             (uki − ūki )m xk − vi 2 ,            (5)
+         U ={uki | uki ∈ [0, 1],               uki = 1,                                              k=1 i=1
+                                         i=1
+                                   k = 1 ∼ n, i = 1 ∼ c}.                 where the constraints for uki and conditions for ūki are (3)
+                                                                          and (1), respectively.
+ūki ∈ [0, 1] represents supervised membership grade that xk                 To derive the optimal solution uki with the constraints
+belongs to Ci and                                                         (3), we introduce the following Lagrange function L(U ) as
+                                                                          follows:
+                                                                                                              c           
+      Ū = {ūki | ūki ∈ [0, 1], k = 1 ∼ n, i = 1 ∼ c}                                                 
+                                                                                                        n      
+                                                                                   L(U ) =J  (U, V ) +   λk       uki − 1
+is given in advance. It is not necessary to determine ūki                                                          k=1        i=1
+between all xk and Ci and the value ūki is equals to zero
+in case that ūki is not given. Thus, conditions for ūki are as
+                                                                                                 n 
+                                                                                                  c
+
+follows:                                                                                     =               (uki − ūki )m xk − vi 2
+                                                                                                 k=1 i=1
+                
+                c                                                                                                    c               
+                                                                                                      n             
+                      ūki ≤ 1.      (∀k = 1, . . . , n)           (1)                               +         λk           uki − 1 .
+                i=1                                                                                      k=1          i=1
+
+B. Semi-Supervised Standard Fuzzy c-Means Clustering                      J is convex for uki so that we can obtain the solution from
+                                                                          ∂vi = 0, that is,
+                                                                          ∂L
+   In this paragraph, we try to construct an algorithm of semi-
+supervised standard fuzzy c-means clustering by introducing
+supervised membership grade ūki into standard fuzzy c-                           ∂L
+                                                                                      = m(uki − ūki )m−1 xk − vi 2 + λk = 0.
+means clustering. To do that, we consider to minimize the                        ∂uki
+following objective function J(U, V ) which is derived by
+introducing ūki into the objective function of standard fuzzy            Therefore,
+c-means clustering:                                                                                                                        1
+                                                                                                      λk    1                              m−1
+
+                       
+                       n 
+                         c                                                             uki = ūki + −    ·                                         .
+        J(U, V ) =                 |uki − ūki |m xk − vi 2 ,    (2)                                m xk − vi 2
+                       k=1 i=1                                            On the other hand, we get the following relation from the
+                                                                          constraints (3):
+where the constraints are as follows.                                                                                 1 
+
+                
+                c                                                           c         c
+                                                                                                      λk      1        m−1
+
+                      uki = 1.       (∀k = 1, . . . , n)                        uki =        ūki + −    ·                    = 1,
+                                                                   (3)
+                                                                            i=1        i=1
+                                                                                                      m xk − vi 2
+                i=1
+                                                                          that is,
+   First, we derive an optimal solution vi which minimizes
+J(U, V ). J is convex for vi so that we can obtain the solution                                                              
+                                                                                                                             c
+from ∂v∂J
+           = 0. Thus,                                                                                 1
+                                                                                                                      1−           ūkj
+         i
+                                                                                                      m−1
+                                                                                             λk                              j=1
+                                                                                          −                 =                                 .
+         ∂J
+                        n
+                                                                                             m                   
+                                                                                                                 c
+                                                                                                                                          −2
+             = −2   |uki − ūki |m (xk − vi ) = 0.                                                                        xk − vj  m−1
+         ∂vi
+                       k=1                                                                                       j=1
+
+Therefore, we get                                                         Hence, we get the following optimal solution:
+         
+         n                             
+                                       n                                                                               1
+                                                                                            ⎛               ⎞     1 m−1
+               |uki − ūki |m vi =           |uki − ūki |m xk .
+                                                                                                   c
+                                                                                                                 dki
+         k=1                           k=1                                      uki =ūki + ⎝1 −       ūkj ⎠ c          1 ,                          (6)
+                                                                                                   j=1
+                                                                                                                   1 m−1
+Consequently, we obtain the following optimal solution vi :
+                                                                                                                             j=1
+                                                                                                                                     dkj
+                            
+                            n
+                                |uki − ūki |m xk                                    dki =xk − vi 2 .                                                (7)
+                   vi = k=1n                         .             (4)    Notice that
+                         
+                                   |uki − ūki | m
+                                                                                                               
+                                                                                                               c
+
+                             k=1                                                                         1−          ūki ≥ 0
+                                                                                                               j=1
+  Next, we derive an optimal solution uki which minimizes
+J(U, V ). In this case, we have to consider two cases, m > 1              and we know that uki ≥ ūki . The solution is derived from
+and m = 1. The reason is that J becomes piece-wise linear                 (5), however it is also the optimal solution of (2) from uki −
+and J can’t be differentiated on uki = ūki in case of m = 1.             ūki ≥ 0.
+
+
+
+
+                                                                   1120
+                                                                                              FUZZ-IEEE 2009, Korea, August 20-24, 2009
+
+   2) m = 1: As the above-mentioned, the objective function              To derive the optimal solution uki with the constraints (3), we
+(2)c can be differentiated on uki = ūki when m = 1. If
+                                                                        introduce the following Lagrange function L(U ) as follows:
+   i=1 ūki = 1, the optimal solution uki which minimizes                                               n           
+J(U, V ) would become uki = ūki . However  c the constraints                                  c       
+of ūki are (1), thus the value of 1 − i=1 ūki should be                      L =J  (U, V ) +     γk       uki − 1
+given to  some uki . For minimizing J(U, V ), it is sufﬁcient                                            k=1         i=1
+that 1 − ūki is given to uki where i = arg minl dkl for                                n 
+                                                                                         c
+any k, that is,                                                                     =               uki xk − vi 2
+            ⎧
+            ⎨                c
+                                                                                        k=1 i=1
+                ūki + 1 −      ūki , (i = arg minl dkl )                                           n 
+                                                                                                      c
+    uki =                                                   (8)
+            ⎩               i=1                                                           + λ−1                  (uki − ūki ) log(uki − ūki )
+                ūki .                 (otherwise)                                               k=1 i=1
+                                                                                                    n                      
+   3) Algorithm: Here, we construct an algorithm of semi-                                      
+                                                                                               c     
+supervised standard fuzzy c-means clustering (sSFCM) using                                +          γk           uki − 1                         (12)
+the optimal solutions derived above as follows. The algorithm                                 k=1           i=1
+obtains uki and vi which minimize J by iterative optimiza-
+tion like as fuzzy c-means clustering.                                   J  is convex for uki so that we can obtain the solution from
+   Algorithm 1 (sSFCM):
+                                                                         ∂uki = 0, that is,
+                                                                          ∂L
+    sSFCM1 Give supervised membership grades Ū and set
+      the initial values of V .
+    sSFCM2 Calculate U on ﬁxing V by (6) (m > 1) or (8)                    ∂L
+      (m = 1).                                                                 = xk − vi 2 + λ−1 (log(uki − ūki + 1)) + γk = 0.
+                                                                          ∂uki
+    sSFCM3 Calculate V on ﬁxing U by (4).
+    sSFCM4 If the stop criterion satisﬁes, the algorithm is              Therefore,
+      ﬁnished. Otherwise, go back to sSFCM2.
+C. Semi-Supervised Entropy Regularized Fuzzy c-Means                                          uki = ūki + e−(λ(dki +γk )+1) .                    (13)
+Clustering
+   In this paragraph, we try to construct an algorithm of semi-          On the other hand, we get the following relation from the
+supervised entropy regularized fuzzy c-means clustering by               constraints (3):
+introducing supervised membership grade ūki into entropy
+regularized fuzzy c-means clustering. To do that, we consider                           
+                                                                                        c             c 
+                                                                                                                                     
+to minimize the following objective function J(U, V ) which                                   uki =             ūki + e−λ(dki +γk )+1 ,
+is derived by introducing ūki into the objective function of
+entropy regularized fuzzy c-means clustering:                                           i=1           i=1
+
+                n    c
+                                                                         that is,
+  J(U, V ) =             uki xk − vi 2
+             k=1 i=1                                                                                                   
+                                                                                                                       c
+                      
+                      n 
+                        c                                                                                         1−            ūki
+             + λ−1              (|uki − ūki | log |uki − ūki |) (9)                             −λγk                 i=1
+                                                                                                e          =                           .
+                      k=1 i=1                                                                                         
+                                                                                                                      c
+                                                                                                                             −λdki
+under the constraints (3).                                                                                      e−1         e
+  First, we derive an optimal solution vi which minimizes                                                             i=1
+J(U, V ). J  is convex for vi so that we can obtain the
+solution from ∂u∂J
+                    = 0. Thus,                                           Hence, we get the following optimal solution:
+                 ki
+
+                        n                                                                               ⎛               ⎞
+               ∂L                                                                                               c
+                   =   uki (2vi − 2xk ) = 0.                                                    e−λdki ⎝
+               ∂vi                                                               uki = ūki + c            1−       ūkj ⎠ .                      (14)
+                        k=1                                                                    
+                                                                                                   −λdkj        j=1
+Hence, we get the following optimal solution:                                                     e
+                                                                                                          j=1
+                          n
+                              uki xk                                     Notice that uki ≥ ūki and we know uki which minimizes
+                        vi = k=1n            .                  (10)     (11) also minimizes (9), i.e., .the uki is the optimal solution.
+                                                                           Here, we construct an algorithm of semi-supervised en-
+                                       uki                               tropy regularized fuzzy c-means clustering (eSFCM) using
+                                 k=1                                     the optimal solutions derived above as follows. The algorithm
+   Next, we derive an optimal solution uki which minimizes               obtains uki and vi which minimize J by iterative optimiza-
+J(U, V ). Instead of (9), we consider the following objective            tion like as the above-mentioned sSFCM.
+function in which there is no absolute value:                               Algorithm 2 (eSFCM):
+                n 
+                  c
+                                                                             eSFCM1 Give supervised membership grades Ū and set
+  J  (U, V ) =       uki xk − vi 2                                         the initial values of V .
+              k=1 i=1                                                        eSFCM2 Calculate U on ﬁxing V by (14).
+                       n 
+                        c                                                   eSFCM3 Calculate V on ﬁxing U by (10).
+              + λ−1              (uki − ūki ) log(uki − ūki ) (11)         eSFCM4 If the stop criterion satisﬁes, the algorithm is
+                       k=1 i=1                                                ﬁnished. Otherwise, go back to eSFCM2.
+
+
+
+
+                                                                  1121
+                                                                                              FUZZ-IEEE 2009, Korea, August 20-24, 2009
+
+                 III. N UMERICAL E XAMPLES
+                                                                                       10
+   In this section, we show some numerical examples through
+the following three proposed methods:
+    • Results by sSFCM (m > 1)                                                          8
+    • Results by sSFCM (m = 1)
+    • Results by eFCM
+Notice that, sSFCM on m > 1 and ūki = 0.0, sSFCM on                                    6
+
+m = 1 and ūki = 0.0 and eSFCM on ūki = 0.0 are equal
+to the conventional sFCM, the conventional HCM and the                                  4
+conventional eFCM, respectively.
+A. Data and Supervised Membership Grades                                                2
+
+  We consider simple data for clarifying characters of our
+proposed algorithms. The data set consists of two clusters in
+                                                                                        0
+which there are 10 data each (Table I). Moreover, we consider
+                                                                                              0      2      4       6      8      10
+                                TABLE I
+                  DATA S ET {xk | xk ∈ 2 , k = 1 ∼ 20}
+                                                                                   Fig. 2.   Numerical Result by sSFCM in Case 2 (m = 2)
+             k        (xk1 , xk2 )       k           (xk1 , xk2 )
+              1      (0.00, 4.50)         2         (0.00, 5.50)
+              3      (1.75, 4.50)         4         (1.75, 5.50)                       10
+              5      (3.50, 4.50)         6         (3.50, 5.50)
+              7      (5.25, 4.50)         8         (5.25, 5.50)
+              9      (7.00, 4.50)        10         (7.00, 5.50)
+             11      (9.00, 0.00)        12         (9.00, 2.50)                        8
+
+             13      (9.00, 5.00)        14         (9.00, 7.50)
+             15     (9.00, 10.00)        16        (10.00, 0.00)
+             17     (10.00, 2.50)        18        (10.00, 5.00)                        6
+             19     (10.00, 7.50)        20       (10.00, 10.00)
+
+                                                                                        4
+the following three cases for supervised membership grades.
+    Case 1 ūki = 0.0 for any k and i.
+    Case 2 ū9,1 = ū10,1 = 0.3. Otherwise ūki = 0.0.                                  2
+
+    Case 3 ū9,1 = ū10,1 = 0.6. Otherwise ūki = 0.0.
+                                                                                        0
+B. Numerical Results
+   1) Results by sSFCM (m = 2): Here, we show numerical                                       0      2      4       6      8      10
+
+results by sSFCM (m = 2). Fig. 1, Fig. 2 and Fig. 3 show the
+results in Case 1, Case 2 and Case 3, respectively. Table II
+                                                                                   Fig. 3.   Numerical Result by sSFCM in Case 3 (m = 2)
+shows membership grades uki in each case.
+
+
+                                                                               3) Results by eSFCM: Here, we show numerical results
+             10
+                                                                             by eSFCM. Fig. 7, Fig. 8 and Fig. 9 show the results in
+                                                                             Case 1, Case 2 and Case 3, respectively. Table IV shows
+             8
+                                                                             membership grades uki in each case.
+                                                                             C. Consideration
+             6                                                                  Through the above-mentioned numerical examples, we can
+                                                                             show that incorrect classiﬁed data belongs to the correct
+                                                                             cluster after giving supervised membership grades so that
+             4
+                                                                             we believe that our proposed is effectiveness.
+                                                                                Here, we consider characters of the algorithms. We can
+             2
+                                                                             ﬁnd a similar point between the case that m = 2 and m = 1
+                                                                             for sSFCM. In case that m = 1, ﬁnal calculated results of
+                                                                             membership grade of data given a supervised membership
+             0                                                               grade doesn’t change as well as the other data. Moreover, in
+                                                                             case that m = 2, ﬁnal calculated results and initial values
+                    0       2        4        6        8       10            for membership grades are different, however the difference
+                                                                             is small. We can also say the same for eSFCM.
+                                                                                On the other hand, we can see the difference between
+  Fig. 1.   Numerical Result by sSFCM in Case 1 (m = 2), i.e., sFCM          sSFCM and eSFCM for the position of cluster centers.
+                                                                             The reason is that cluster centers by (4) have inference on
+   2) Results by sSFCM (m = 1): Here, we show numerical                      supervised membership grade ūki while the centers by (10)
+results by sSFCM (m = 1). Fig. 4, Fig. 5 and Fig. 6 show the                 does not include ūki .
+results in Case 1, Case 2 and Case 3, respectively. Table III                   Last, we have to notice that we can not always get
+shows membership grades uki in each case.                                    correct results of classiﬁcation if only we give incorrect
+
+
+
+
+                                                                      1122
+                                                                                        FUZZ-IEEE 2009, Korea, August 20-24, 2009
+
+                            TABLE II
+ M EMBERSHIP G RADE (uk1 , uk2 ) OF E ACH DATA BY S SFCM (m = 2)
+                                                                                  10
+
+
+
+          k       ūki = 0.0     ūki = 0.3     ūki = 0.6
+                                                                                   8
+          1      (0.91, 0.09)   (0.92, 0.08)   (0.92, 0.08)
+           2     (0.91, 0.09)   (0.92, 0.08)   (0.92, 0.08)
+           3     (0.98, 0.02)   (0.98, 0.02)   (0.98, 0.02)
+           4     (0.98, 0.02)   (0.98, 0.02)   (0.98, 0.02)                        6
+           5     (0.97, 0.03)   (0.97, 0.03)   (0.97, 0.03)
+           6     (0.97, 0.03)   (0.97, 0.03)   (0.97, 0.03)
+           7     (0.68, 0.32)   (0.70, 0.30)   (0.72, 0.28)                        4
+           8     (0.68, 0.32)   (0.70, 0.30)   (0.72, 0.28)
+           9     (0.19, 0.81)   (0.45, 0.55)   (0.69, 0.31)
+          10     (0.19, 0.81)   (0.45, 0.55)   (0.69, 0.31)                        2
+          11     (0.28, 0.72)   (0.28, 0.72)   (0.28, 0.72)
+          12     (0.12, 0.88)   (0.12, 0.88)   (0.12, 0.88)
+          13     (0.00, 1.00)   (0.00, 1.00)   (0.00, 1.00)                        0
+          14     (0.12, 0.88)   (0.12, 0.88)   (0.12, 0.88)
+          15     (0.28, 0.72)   (0.28, 0.72)   (0.28, 0.72)
+                                                                                        0       2       4        6       8      10
+          16     (0.25, 0.75)   (0.25, 0.75)   (0.25, 0.75)
+          17     (0.11, 0.89)   (0.10, 0.90)   (0.10, 0.90)
+          18     (0.02, 0.98)   (0.01, 0.99)   (0.01, 0.99)
+          19     (0.11, 0.89)   (0.10, 0.90)   (0.10, 0.90)                        Fig. 5.   Result by sSFCM in Case 2 (m = 1)
+          20     (0.25, 0.75)   (0.25, 0.75)   (0.25, 0.75)
+
+                                                                                  10
+
+
+
+           10
+                                                                                   8
+
+
+
+            8
+                                                                                   6
+
+
+
+            6
+                                                                                   4
+
+
+
+            4
+                                                                                   2
+
+
+
+            2
+                                                                                   0
+
+
+
+            0                                                                           0       2       4        6       8      10
+
+
+
+                  0      2       4       6      8      10
+                                                                                   Fig. 6.   Result by sSFCM in Case 3 (m = 1)
+
+       Fig. 4.   Result by sSFCM in Case 1 (m = 1), i.e., HCM
+                                                                                         ACKNOWLEDGMENT
+                                                                         This study has partly been supported by the Grant-in-
+classiﬁed data a supervised membership grade because each              Aid for Scientiﬁc Research (C) (No.21500212) and (B)
+membership grade have inﬂuence on calculation of values of             (No.19300074), Japan Society for the Promotion of Science.
+other membership grades or cluster centers.
+                                                                                                    R EFERENCES
+                        IV. C ONCLUSION                                [1] L. A. Zadeh : “Fuzzy sets”, Information and Control, Vol.8, pp.338-
+                                                                           353 (1965).
+                                                                       [2] M.R. Anderberg : ‘Cluster Analysis for Applications’, Academic Press,
+   In this paper, we have presented two new semi-supervised                New York (1973).
+FCM. Our proposed algorithms are constructed by introduc-              [3] J.C. Bezdek : ‘Pattern Recognition with Fuzzy Objective Function
+ing some membership grades which are given as supervised                   Algorithms’, Plenum Press, New York (1981).
+                                                                       [4] F. Höppner , F. Klawonn, R. Kruse, T. Runkler : ‘Fuzzy Cluster
+membership grades in advance into FCM. One of the char-                    Analysis’, Wiley, Chichester (1999).
+acters of the algorithms is more simple than the conventional          [5] K. Wagstaff, C. Cardie, S. Rogers, S. Schroedl : “Constrained K-means
+ones. Moreover, we have veriﬁed the effectiveness through                  Clustering with Background Knowledge”, In Proceedings of ICML,
+                                                                           pp.577–584, (2001).
+numerical examples. The algorithms can achieve natural                 [6] S. Basu, A. Banerjee, R. Mooney : “Semi-supervised Clustering by
+classiﬁcation results.                                                     Seeding” , In ICML-2002, pp.19–26, (2002).
+   Our proposed algorithms is expected to handle data more             [7] A. Bouchachia, W. Pedrycz : “A Semi-supervised Clustering Algorithm
+                                                                           for Data Exploration”, Proceedings of Fuzzy Sets and Systems, IFSA
+ﬂexibly than the conventional FCM from the viewpoint that                  2003, LNAI2715, pp.328–337 (2003).
+we can give any data supervised membership grades.                     [8] N. Grira, M. Crucianu, N. Boujemaa : “Unsupervised and Semi-
+   In the forthcoming paper, we have to verify the algorithms              supervised Clustering:a Brief Survey”, Report of the MUSCLE Eu-
+                                                                           ropean Network of Excellence (2005).
+through more real data. Moreover, we also have to estimate             [9] Mitsuaki Yamasaki, Sadaaki Miyamoto, In-Jae Lee : “Semi-Supervised
+those using classiﬁcation functions. In addition, we expect                Clustering Using Target Clusters”, 24th Fuzzy System Symposium,
+that our concept that uki is substituted for |uki − ūki | is very         pp.133–138 (2008) (in Japanese).
+simple so that we can apply the concept to other objective
+functions.
+
+
+
+
+                                                                1123
+                                                                                        FUZZ-IEEE 2009, Korea, August 20-24, 2009
+
+                           TABLE III
+M EMBERSHIP G RADE (uk1 , uk2 ) OF E ACH DATA BY S SFCM (m = 1)
+
+                                                                               10
+              k        ūki = 0.0   ūki = 0.3   ūki = 0.6
+               1       (1.0, 0.0)   (1.0, 0.0)   (1.0, 0.0)
+               2       (1.0, 0.0)   (1.0, 0.0)   (1.0, 0.0)                     8
+               3       (1.0, 0.0)   (1.0, 0.0)   (1.0, 0.0)
+               4       (1.0, 0.0)   (1.0, 0.0)   (1.0, 0.0)
+               5       (1.0, 0.0)   (1.0, 0.0)   (1.0, 0.0)                     6
+               6       (1.0, 0.0)   (1.0, 0.0)   (1.0, 0.0)
+               7       (1.0, 0.0)   (1.0, 0.0)   (1.0, 0.0)
+               8       (1.0, 0.0)   (1.0, 0.0)   (1.0, 0.0)
+                                                                                4
+               9       (0.0, 1.0)   (0.3, 0.7)   (0.6, 0.4)
+              10       (0.0, 1.0)   (0.3, 0.7)   (0.6, 0.4)
+              11       (0.0, 1.0)   (0.0, 1.0)   (0.0, 1.0)
+                                                                                2
+              12       (0.0, 1.0)   (0.0, 1.0)   (0.0, 1.0)
+              13       (0.0, 1.0)   (0.0, 1.0)   (0.0, 1.0)
+              14       (0.0, 1.0)   (0.0, 1.0)   (0.0, 1.0)
+              15       (0.0, 1.0)   (0.0, 1.0)   (0.0, 1.0)                     0
+              16       (0.0, 1.0)   (0.0, 1.0)   (0.0, 1.0)
+              17       (0.0, 1.0)   (0.0, 1.0)   (0.0, 1.0)                              0       2       4        6          8        10
+              18       (0.0, 1.0)   (0.0, 1.0)   (0.0, 1.0)
+              19       (0.0, 1.0)   (0.0, 1.0)   (0.0, 1.0)
+              20       (0.0, 1.0)   (0.0, 1.0)   (0.0, 1.0)                         Fig. 9.   Result by eSFCM in Case 3 (λ = 1)
+
+
+
+
+         10
+                                                                                                 TABLE IV
+                                                                      M EMBERSHIP G RADE (uk1 , uk2 ) OF E ACH DATA BY E SFCM (λ = 1)
+          8
+
+                                                                               k         ūki = 0.0      ūki = 0.3          ūki = 0.6
+                                                                               1        (0.76, 0.24)    (0.76, 0.24)        (0.76, 0.24)
+          6
+                                                                                2       (0.76, 0.24)    (0.76, 0.24)        (0.76, 0.24)
+                                                                                3       (0.84, 0.16)    (0.84, 0.16)        (0.84, 0.16)
+                                                                                4       (0.84, 0.16)    (0.84, 0.16)        (0.84, 0.16)
+          4                                                                     5       (0.94, 0.06)    (0.94, 0.06)        (0.94, 0.06)
+                                                                                6       (0.94, 0.06)    (0.94, 0.06)        (0.94, 0.06)
+                                                                                7       (0.94, 0.06)    (0.93, 0.07)        (0.93, 0.07)
+          2                                                                     8       (0.94, 0.06)    (0.93, 0.07)        (0.93, 0.07)
+                                                                                9       (0.25, 0.75)    (0.47, 0.53)        (0.69, 0.31)
+                                                                               10       (0.25, 0.75)    (0.47, 0.53)        (0.69, 0.31)
+          0                                                                    11       (0.36, 0.64)    (0.37, 0.63)        (0.37, 0.63)
+                                                                               12       (0.21, 0.79)    (0.21, 0.79)        (0.21, 0.79)
+                   0        2       4      6       8      10
+                                                                               13       (0.02, 0.98)    (0.03, 0.97)        (0.03, 0.97)
+                                                                               14       (0.21, 0.79)    (0.21, 0.79)        (0.21, 0.79)
+                                                                               15       (0.36, 0.64)    (0.37, 0.63)        (0.37, 0.63)
+           Fig. 7.      Result by eSFCM in Case 1 (λ = 1)                      16       (0.34, 0.66)    (0.34, 0.66)        (0.34, 0.66)
+                                                                               17       (0.20, 0.80)    (0.21, 0.79)        (0.21, 0.79)
+                                                                               18       (0.09, 0.91)    (0.09, 0.91)        (0.09, 0.91)
+                                                                               19       (0.20, 0.80)    (0.21, 0.79)        (0.21, 0.79)
+                                                                               20       (0.34, 0.66)    (0.34, 0.66)        (0.34, 0.66)
+
+         10
+
+
+
+
+          8
+
+
+                                                                                                     TABLE V
+          6                                                                                   C LUSTER C ENTER (v1 , v2 )
+
+
+          4                                                                          vi                          v1                  v2
+                                                                            sSFCM (m = 2, Case 1)            (2.72, 5.00)        (9.08, 5.00)
+                                                                            sSFCM (m = 2, Case 2)            (2.71, 5.00)        (9.21, 5.00)
+          2                                                                 sSFCM (m = 2, Case 3)            (2.70, 5.00)        (9.34, 5.00)
+                                                                            sSFCM (m = 1, Case 1)            (2.63, 5.00)        (9.08, 5.00)
+                                                                            sSFCM (m = 1, Case 2)            (2.63, 5.00)        (9.20, 5.00)
+          0                                                                 sSFCM (m = 1, Case 3)            (2.63, 5.00)        (9.31, 5.00)
+                                                                            eSFCM (λ = 1, Case 1)            (4.60, 5.00)        (8.33, 5.00)
+                   0        2       4      6       8      10
+                                                                            eSFCM (λ = 1, Case 2)            (4.60, 5.00)        (8.29, 5.00)
+                                                                            eSFCM (λ = 1, Case 3)            (4.59, 5.00)        (8.25, 5.00)
+
+           Fig. 8.      Result by eSFCM in Case 2 (λ = 1)
+
+
+
+
+                                                               1124
+
