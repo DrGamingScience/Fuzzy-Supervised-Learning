@@ -1,0 +1,357 @@
+\documentclass[t,aspectratio=169]{beamer}
+\usepackage[utf8]{vietnam}
+\usepackage{amsthm,amsmath,amssymb}
+\usepackage{lmodern}
+
+% Keep the spacing and visual language of the supplied HUST template.
+\def\slideContentLeftMargin{0.6cm}
+\def\slideContentRightMargin{0.9cm}
+\def\hustHeaderHeight{1cm}
+\def\slideContentBotMargin{3.5cm}
+
+\usepackage[blue,169]{beamerthemeHUST}
+\usetikzlibrary{arrows.meta,positioning}
+
+\renewcommand{\titlePageTitleX}{-0.5cm}
+\renewcommand{\titlePageTitleY}{-0.35cm}
+\renewcommand{\hustTitleAlign}{\alignLeft}
+\renewcommand{\hustSubtitleAlign}{\alignLeft}
+\renewcommand{\hustAuthorAlign}{\alignLeft}
+\renewcommand{\hustInstAlign}{\alignLeft}
+
+\title{Week 1 Progress Report}
+\subtitle{Semi-Supervised Fuzzy C-Means Clustering}
+\author{Nguyễn Trí Hiếu}
+\institute{School of Information and Communication Technology (SoICT)\\
+Hanoi University of Science and Technology\\
+29 September 2026}
+
+\newcommand{\keyterm}[1]{\textcolor{hustprimary}{\textbf{#1}}}
+
+\begin{document}
+
+\husttitlepage
+\resetPageCount
+\showPageNumber
+\useStyleHustFull
+\useThinBar
+
+% -----------------------------------------------------------------------------
+\section{Progress}
+
+\begin{frame}{Week 1 Objectives and Progress}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.60\textwidth}
+      \begin{itemize}
+        \item Reviewed three papers on sSFCM, sSMC-FCM, and clustering validity.
+        \item Traced the development from FCM to two forms of semi-supervision.
+        \item Verified the shared 20-point numerical example and reported memberships.
+        \item Defined the first implementation and experiment sequence.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.36\textwidth}
+      \begin{block}{Current outcome}
+        \centering
+        \textbf{Implementation target}\\[0.3em]
+        \Large\textcolor{hustprimary}{sSMC-FCM}\\[0.5em]
+        \normalsize with FCM and sSFCM baselines
+      \end{block}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.6em}
+  \begin{alertblock}{Week 1 boundary}
+    The work so far covers paper analysis and experiment design. Algorithm code has not yet been implemented.
+  \end{alertblock}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\section{Methods}
+
+\begin{frame}{FCM and the Role of Semi-Supervision}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.54\textwidth}
+      \begin{block}{Standard FCM}
+        \[
+          J_m(U,V)=\sum_{i=1}^{N}\sum_{k=1}^{C}u_{ik}^{m}D_{ik}^{2},
+          \qquad \sum_{k=1}^{C}u_{ik}=1
+        \]
+        \[
+          V_k=\frac{\sum_{i=1}^{N}u_{ik}^{m}x_i}
+          {\sum_{i=1}^{N}u_{ik}^{m}}
+        \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{itemize}
+        \item $u_{ik}$: membership of point $x_i$ in cluster $k$.
+        \item $V_k$: centroid of cluster $k$.
+        \item $m>1$: common fuzzification coefficient.
+        \item $D_{ik}=\lVert x_i-V_k\rVert$.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.3em}
+  \begin{alertblock}{Why add supervision?}
+    A small set of trusted point-to-cluster hints can guide ambiguous samples while the remaining data stay unlabeled.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{sSFCM 2009: Supervised Memberships}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.52\textwidth}
+      \begin{block}{Core formulation}
+        \[
+          J(U,V)=\sum_{i=1}^{N}\sum_{k=1}^{C}
+          \left|u_{ik}-\bar{u}_{ik}\right|^{m}D_{ik}^{2}
+        \]
+        \[
+          u_{ik}=\bar{u}_{ik}+
+          \left(1-\sum_{j=1}^{C}\bar{u}_{ij}\right)
+          \frac{D_{ik}^{-2/(m-1)}}
+          {\sum_{\ell=1}^{C}D_{i\ell}^{-2/(m-1)}}
+        \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.44\textwidth}
+      \begin{itemize}
+        \item $\bar U$ stores membership grades supplied in advance.
+        \item Missing supervision is represented by $\bar u_{ik}=0$.
+        \item $\bar U$ changes the membership update directly.
+        \item Centroids use weights $|u_{ik}-\bar u_{ik}|^m$.
+        \item The algorithm alternates membership and centroid updates.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{sSMC-FCM 2021: Multiple Fuzzification Coefficients}
+  \small
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.47\textwidth}
+      \begin{block}{Objective}
+        \[
+          J(U,V)=\sum_{i=1}^{N}\sum_{k=1}^{C}
+          u_{ik}^{m_{ik}}D_{ik}^{2}
+        \]
+      \end{block}
+
+      \begin{itemize}
+        \item No auxiliary supervised membership matrix.
+        \item Unsupervised memberships use the standard FCM update.
+        \item A supervised membership solves Eq. (19), then normalizes the result.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.49\textwidth}
+      \begin{block}{How supervision changes $m_{ik}$}
+        \centering
+        \begin{tikzpicture}[
+          node distance=0.35cm,
+          box/.style={draw=hustprimary,rounded corners=2pt,fill=hustprimary!7,
+            align=center,text width=5.5cm,minimum height=0.75cm,inner sep=4pt},
+          arr/.style={-{Latex[length=2mm]},thick,draw=hustprimary}
+        ]
+          \node[box] (u) {Unsupervised point $x_i$\\$m_{ij}=M$ for every cluster $j$};
+          \node[box,below=of u] (s) {Point $x_i$ supervised toward cluster $k$\\$m_{ik}=M_0>M$, and $m_{ij}=M$ for $j\neq k$};
+          \draw[arr] (u) -- node[right,font=\scriptsize]{add target-cluster information} (s);
+        \end{tikzpicture}
+      \end{block}
+
+      \vspace{0.25em}
+      \textbf{Effect:} The selected exponent changes both membership and centroid weighting. Equation (23) guides $M_0$ for a target $u_{ik}\geq\alpha$. Here $M_0$ denotes the paper's $M'$.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{sSFCM 2009 and sSMC-FCM 2021}
+  \centering
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \renewcommand{\arraystretch}{1.22}
+  \begin{tabular}{p{2.15cm}|p{5.55cm}|p{5.55cm}}
+    \textbf{Aspect} & \textbf{sSFCM 2009} & \textbf{sSMC-FCM 2021} \\
+    \hline
+    Supervision & Values in $\bar U$ & Target pairs in a supervised set \\
+    Objective & $|u_{ik}-\bar u_{ik}|^mD_{ik}^2$ & $u_{ik}^{m_{ik}}D_{ik}^2$ \\
+    Main parameter & Supervised grade $\bar u_{ik}$ & Coefficients $M$ and $M_0>M$ \\
+    Membership update & Adds supervised grade, then allocates the remaining mass & Standard FCM for unlabeled points; scalar solve for a target pair \\
+    Centroid influence & Weight $|u_{ik}-\bar u_{ik}|^m$ & Weight $u_{ik}^{m_{ik}}$ \\
+    Extra input & Auxiliary matrix $\bar U$ & Supervised point-cluster pairs and $M_0$ \\
+    Main idea & Modify membership information & Modify fuzzification behavior \\
+  \end{tabular}
+
+  \vspace{0.5em}
+  \begin{alertblock}{Implementation consequence}
+    The 2021 method replaces direct membership guidance with pair-specific exponents and a numerical membership subproblem.
+  \end{alertblock}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\section{Evidence and Evaluation}
+
+\begin{frame}{Shared 20-Point Numerical Example}
+  \centering
+  \small
+  \setlength{\tabcolsep}{3pt}
+  \renewcommand{\arraystretch}{1.22}
+  \begin{tabular}{p{4.4cm}|p{3.1cm}|c|c|p{2.0cm}}
+    \textbf{Method} & \textbf{Supervision} & $\boldsymbol{U_{C1}}$ & $\boldsymbol{U_{C2}}$ & \textbf{Hard cluster} \\
+    \hline
+    FCM & none & 0.19 & 0.81 & C2 \\
+    sSFCM 2009 & $\bar u_{i1}=0.3$ & 0.45 & 0.55 & C2 \\
+    sSFCM 2009 & $\bar u_{i1}=0.6$ & \textbf{0.69} & 0.31 & C1 \\
+    sSMC-FCM 2021 & $M=2,\ M_0=4$ & 0.43 & 0.57 & C2 \\
+    sSMC-FCM 2021 & $M=2,\ M_0=8$ & \textbf{0.60} & 0.40 & C1 \\
+  \end{tabular}
+
+  \vspace{0.6em}
+  \begin{block}{Points 9 and 10 have the same reported memberships}
+    Both mechanisms progressively pull the supervised samples toward cluster 1. Stronger supervision changes their hard assignment from cluster 2 to cluster 1.
+  \end{block}
+  \begin{alertblock}{Interpretation limit}
+    This example demonstrates comparable behavior. It does not establish general superiority of the 2021 method.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Initial Evaluation Metrics}
+  \small
+  \textbf{\textcolor{red}{Scoring rule:}} The 2010 criteria evaluate hard partitions, so use
+  $\hat y_i=\operatorname*{arg\,max}_{k}u_{ik}$ before scoring.
+
+  \vspace{0.35em}
+  \centering
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \renewcommand{\arraystretch}{1.18}
+  \begin{tabular}{p{2.25cm}|p{2.35cm}|p{6.2cm}|p{1.75cm}}
+    \textbf{Ground truth} & \textbf{Metric} & \textbf{What it measures} & \textbf{Better} \\
+    \hline
+    Available & ARI & Pairwise agreement, corrected for chance & Higher \\
+    Available & Jaccard & Agreement on point pairs assigned together & Higher \\
+    Unavailable & SWC / SSWC & Cohesion versus separation; SSWC uses centroids & Higher \\
+    Unavailable & VRC & Between-cluster dispersion relative to within-cluster dispersion & Higher \\
+  \end{tabular}
+
+  \vspace{0.45em}
+  \raggedright
+  \small
+  \textbf{Selection:} ARI and Jaccard support labeled benchmarks. Silhouette was among the strongest criteria in the paper, while VRC provides a fast complementary check.
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\section{Implementation}
+
+\begin{frame}{Implementation and Experiment Pipeline}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.58\textwidth}
+      \centering
+      \begin{tikzpicture}[
+        flow/.style={draw=hustprimary,rounded corners=2pt,fill=hustprimary!7,
+          align=center,minimum height=0.58cm,minimum width=2.05cm,
+          font=\scriptsize,inner xsep=4pt},
+        arr/.style={-{Latex[length=2mm]},thick,draw=hustprimary}
+      ]
+        \node[flow] (data) {Dataset};
+        \node[flow,below=0.34cm of data] (prep) {Preprocessing and supervision split};
+        \node[flow,below=0.34cm of prep] (init) {Shared initialization};
+        \node[flow,below=0.62cm of init,xshift=-2.35cm] (fcm) {FCM};
+        \node[flow,below=0.62cm of init] (ssfcm) {sSFCM};
+        \node[flow,below=0.62cm of init,xshift=2.35cm] (ssmc) {sSMC-FCM};
+        \node[flow,below=1.08cm of ssfcm] (metric) {Metrics and validation checks};
+        \node[flow,below=0.34cm of metric] (out) {Comparison tables and plots};
+        \draw[arr] (data) -- (prep);
+        \draw[arr] (prep) -- (init);
+        \draw[arr] (init) -- (fcm);
+        \draw[arr] (init) -- (ssfcm);
+        \draw[arr] (init) -- (ssmc);
+        \draw[arr] (fcm) -- (metric);
+        \draw[arr] (ssfcm) -- (metric);
+        \draw[arr] (ssmc) -- (metric);
+        \draw[arr] (metric) -- (out);
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.38\textwidth}
+      \begin{block}{Planned modules}
+        \small\ttfamily
+        src/fcm.py\\
+        src/ssfcm.py\\
+        src/ssmc\_fcm.py\\
+        src/metrics.py\\
+        src/datasets.py\\
+        src/experiments.py
+      \end{block}
+      \begin{block}{Implementation order}
+        \scriptsize
+        \begin{enumerate}
+          \item FCM baseline and tests
+          \item 2009 toy data
+          \item sSFCM reproduction
+          \item sSMC-FCM Eqs. (17)--(20)
+          \item 2021 Table 3 reproduction
+          \item Metrics and larger data sets
+        \end{enumerate}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Next Steps and Decisions to Confirm}
+  \small
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.49\textwidth}
+      \begin{block}{Next coding steps}
+        \begin{enumerate}
+          \item Implement FCM with shape, sum-to-one, and finite-value tests.
+          \item Recreate the 20-point data set and FCM memberships.
+          \item Implement sSFCM and reproduce the 2009 values.
+          \item Implement the supervised sSMC-FCM membership solver.
+          \item Reproduce the 2021 values before larger experiments.
+        \end{enumerate}
+      \end{block}
+    \end{column}
+    \begin{column}{0.47\textwidth}
+      \begin{alertblock}{Questions for discussion}
+        \begin{itemize}
+          \item Solver tolerance, step size, and upper bound for Eq. (19).
+          \item Center initialization and stopping norm.
+          \item Zero-distance and empty-cluster handling.
+          \item Real benchmark data sets and supervision ratios.
+        \end{itemize}
+      \end{alertblock}
+      \textbf{Week 2 gate:} reproduce the point 9/10 memberships before testing new data.
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\section{References}
+\useStyleLogoOnly
+
+\begin{frame}{References}
+  \small
+  \begin{thebibliography}{9}
+    \bibitem{endo2009}
+    Y. Endo, Y. Hamasuna, M. Yamashiro, and S. Miyamoto,
+    ``On Semi-Supervised Fuzzy c-Means Clustering,''
+    \emph{IEEE International Conference on Fuzzy Systems}, 2009.
+
+    \bibitem{khang2021}
+    T. D. Khang, M.-K. Tran, and M. Fowler,
+    ``A Novel Semi-Supervised Fuzzy C-Means Clustering Algorithm Using Multiple Fuzzification Coefficients,''
+    \emph{Algorithms}, vol. 14, no. 9, article 258, 2021.
+    DOI: 10.3390/a14090258.
+
+    \bibitem{vendramin2010}
+    L. Vendramin, R. J. G. B. Campello, and E. R. Hruschka,
+    ``Relative Clustering Validity Criteria: A Comparative Overview,''
+    \emph{Statistical Analysis and Data Mining}, vol. 3, pp. 209--235, 2010.
+    DOI: 10.1002/sam.10080.
+  \end{thebibliography}
+\end{frame}
+
+\hidePageNumber
+\hustthankyou
+
+\end{document}

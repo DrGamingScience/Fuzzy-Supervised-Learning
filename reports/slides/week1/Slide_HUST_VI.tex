@@ -1,0 +1,356 @@
+\documentclass[t,aspectratio=169]{beamer}
+\usepackage[utf8]{vietnam}
+\usepackage{amsthm,amsmath,amssymb}
+\usepackage{lmodern}
+
+% Giữ nguyên bố cục và nhận diện của template HUST.
+\def\slideContentLeftMargin{0.6cm}
+\def\slideContentRightMargin{0.9cm}
+\def\hustHeaderHeight{1cm}
+\def\slideContentBotMargin{3.5cm}
+
+\usepackage[blue,169]{beamerthemeHUST}
+\usetikzlibrary{arrows.meta,positioning}
+
+\renewcommand{\titlePageTitleX}{-0.5cm}
+\renewcommand{\titlePageTitleY}{-0.35cm}
+\renewcommand{\hustTitleAlign}{\alignLeft}
+\renewcommand{\hustSubtitleAlign}{\alignLeft}
+\renewcommand{\hustAuthorAlign}{\alignLeft}
+\renewcommand{\hustInstAlign}{\alignLeft}
+
+\title{Báo cáo tiến độ tuần 1}
+\subtitle{Phân cụm mờ C-Means bán giám sát}
+\author{Nguyễn Trí Hiếu}
+\institute{Trường Công nghệ Thông tin và Truyền thông (SoICT)\\
+Đại học Bách khoa Hà Nội\\
+Ngày 29 tháng 9 năm 2026}
+
+\begin{document}
+
+\husttitlepage
+\resetPageCount
+\showPageNumber
+\useStyleHustFull
+\useThinBar
+
+% -----------------------------------------------------------------------------
+\section{Tiến độ}
+
+\begin{frame}{Mục tiêu và tiến độ tuần 1}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.60\textwidth}
+      \begin{itemize}
+        \item Đã đọc ba bài báo về sSFCM, sSMC-FCM và đánh giá phân cụm.
+        \item Đã hiểu tiến trình từ FCM đến hai cơ chế bán giám sát.
+        \item Đã đối chiếu ví dụ 20 điểm và các giá trị độ thuộc được báo cáo.
+        \item Đã xác định thứ tự hiện thực và thí nghiệm ban đầu.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.36\textwidth}
+      \begin{block}{Kết quả hiện tại}
+        \centering
+        \textbf{Thuật toán sẽ hiện thực}\\[0.3em]
+        \Large\textcolor{hustprimary}{sSMC-FCM}\\[0.5em]
+        \normalsize cùng hai baseline FCM và sSFCM
+      \end{block}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.6em}
+  \begin{alertblock}{Phạm vi tuần 1}
+    Công việc hiện tại mới gồm phân tích bài báo và thiết kế thí nghiệm. Chưa viết mã thuật toán.
+  \end{alertblock}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\section{Phương pháp}
+
+\begin{frame}{FCM và vai trò của thông tin giám sát}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.54\textwidth}
+      \begin{block}{FCM chuẩn}
+        \[
+          J_m(U,V)=\sum_{i=1}^{N}\sum_{k=1}^{C}u_{ik}^{m}D_{ik}^{2},
+          \qquad \sum_{k=1}^{C}u_{ik}=1
+        \]
+        \[
+          V_k=\frac{\sum_{i=1}^{N}u_{ik}^{m}x_i}
+          {\sum_{i=1}^{N}u_{ik}^{m}}
+        \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{itemize}
+        \item $u_{ik}$: độ thuộc của điểm $x_i$ vào cụm $k$.
+        \item $V_k$: tâm của cụm $k$.
+        \item $m>1$: hệ số mờ hóa dùng chung.
+        \item $D_{ik}=\lVert x_i-V_k\rVert$.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.3em}
+  \begin{alertblock}{Vì sao cần bán giám sát?}
+    Một số gợi ý điểm-cụm đáng tin cậy có thể định hướng các mẫu khó, trong khi phần dữ liệu còn lại không cần nhãn.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{sSFCM 2009: Độ thuộc giám sát}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.52\textwidth}
+      \begin{block}{Công thức chính}
+        \[
+          J(U,V)=\sum_{i=1}^{N}\sum_{k=1}^{C}
+          \left|u_{ik}-\bar{u}_{ik}\right|^{m}D_{ik}^{2}
+        \]
+        \[
+          u_{ik}=\bar{u}_{ik}+
+          \left(1-\sum_{j=1}^{C}\bar{u}_{ij}\right)
+          \frac{D_{ik}^{-2/(m-1)}}
+          {\sum_{\ell=1}^{C}D_{i\ell}^{-2/(m-1)}}
+        \]
+      \end{block}
+    \end{column}
+    \begin{column}{0.44\textwidth}
+      \begin{itemize}
+        \item $\bar U$ lưu các độ thuộc được cung cấp trước.
+        \item Cặp không có giám sát dùng $\bar u_{ik}=0$.
+        \item $\bar U$ tác động trực tiếp đến cập nhật độ thuộc.
+        \item Tâm cụm dùng trọng số $|u_{ik}-\bar u_{ik}|^m$.
+        \item Thuật toán luân phiên cập nhật độ thuộc và tâm.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{sSMC-FCM 2021: Nhiều hệ số mờ hóa}
+  \small
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.47\textwidth}
+      \begin{block}{Hàm mục tiêu}
+        \[
+          J(U,V)=\sum_{i=1}^{N}\sum_{k=1}^{C}
+          u_{ik}^{m_{ik}}D_{ik}^{2}
+        \]
+      \end{block}
+
+      \begin{itemize}
+        \item Không cần ma trận độ thuộc giám sát phụ trợ.
+        \item Mẫu không giám sát dùng cập nhật FCM chuẩn.
+        \item Mẫu có giám sát phải giải Eq. (19), sau đó chuẩn hóa.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.49\textwidth}
+      \begin{block}{Cách giám sát thay đổi $m_{ik}$}
+        \centering
+        \begin{tikzpicture}[
+          node distance=0.35cm,
+          box/.style={draw=hustprimary,rounded corners=2pt,fill=hustprimary!7,
+            align=center,text width=5.5cm,minimum height=0.75cm,inner sep=4pt},
+          arr/.style={-{Latex[length=2mm]},thick,draw=hustprimary}
+        ]
+          \node[box] (u) {Mẫu không giám sát $x_i$\\$m_{ij}=M$ với mọi cụm $j$};
+          \node[box,below=of u] (s) {Mẫu $x_i$ được giám sát vào cụm $k$\\$m_{ik}=M_0>M$, và $m_{ij}=M$ với $j\neq k$};
+          \draw[arr] (u) -- node[right,font=\scriptsize]{thêm thông tin cụm đích} (s);
+        \end{tikzpicture}
+      \end{block}
+
+      \vspace{0.25em}
+      \textbf{Tác động:} Hệ số tại cặp được chọn làm thay đổi cả độ thuộc và trọng số cập nhật tâm. Eq. (23) hướng dẫn chọn $M_0$ để đạt $u_{ik}\geq\alpha$. Paper ký hiệu hệ số này là $M'$.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{So sánh sSFCM 2009 và sSMC-FCM 2021}
+  \centering
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \renewcommand{\arraystretch}{1.22}
+  \begin{tabular}{p{2.15cm}|p{5.55cm}|p{5.55cm}}
+    \textbf{Khía cạnh} & \textbf{sSFCM 2009} & \textbf{sSMC-FCM 2021} \\
+    \hline
+    Giám sát & Các giá trị trong $\bar U$ & Các cặp mẫu-cụm đích \\
+    Hàm mục tiêu & $|u_{ik}-\bar u_{ik}|^mD_{ik}^2$ & $u_{ik}^{m_{ik}}D_{ik}^2$ \\
+    Tham số chính & Độ thuộc $\bar u_{ik}$ & Hai hệ số $M$ và $M_0>M$ \\
+    Cập nhật $U$ & Cộng độ thuộc giám sát rồi phân bổ phần còn lại & FCM cho mẫu không nhãn; giải scalar cho cặp đích \\
+    Ảnh hưởng đến tâm & Trọng số $|u_{ik}-\bar u_{ik}|^m$ & Trọng số $u_{ik}^{m_{ik}}$ \\
+    Đầu vào thêm & Ma trận phụ trợ $\bar U$ & Cặp mẫu-cụm và $M_0$ \\
+    Ý tưởng chính & Thay đổi thông tin độ thuộc & Thay đổi hành vi mờ hóa \\
+  \end{tabular}
+
+  \vspace{0.5em}
+  \begin{alertblock}{Hệ quả khi lập trình}
+    Phương pháp 2021 thay hướng dẫn trực tiếp bằng số mũ theo từng cặp và một bài toán số cho độ thuộc có giám sát.
+  \end{alertblock}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\section{Kết quả đối chiếu và đánh giá}
+
+\begin{frame}{Ví dụ số 20 điểm dùng chung}
+  \centering
+  \small
+  \setlength{\tabcolsep}{3pt}
+  \renewcommand{\arraystretch}{1.22}
+  \begin{tabular}{p{4.4cm}|p{3.1cm}|c|c|p{2.0cm}}
+    \textbf{Phương pháp} & \textbf{Giám sát} & $\boldsymbol{U_{C1}}$ & $\boldsymbol{U_{C2}}$ & \textbf{Cụm cứng} \\
+    \hline
+    FCM & không & 0.19 & 0.81 & C2 \\
+    sSFCM 2009 & $\bar u_{i1}=0.3$ & 0.45 & 0.55 & C2 \\
+    sSFCM 2009 & $\bar u_{i1}=0.6$ & \textbf{0.69} & 0.31 & C1 \\
+    sSMC-FCM 2021 & $M=2,\ M_0=4$ & 0.43 & 0.57 & C2 \\
+    sSMC-FCM 2021 & $M=2,\ M_0=8$ & \textbf{0.60} & 0.40 & C1 \\
+  \end{tabular}
+
+  \vspace{0.6em}
+  \begin{block}{Điểm 9 và 10 có cùng độ thuộc được báo cáo}
+    Cả hai cơ chế đều kéo dần các mẫu được giám sát về cụm 1. Khi giám sát đủ mạnh, nhãn cứng chuyển từ cụm 2 sang cụm 1.
+  \end{block}
+  \begin{alertblock}{Giới hạn diễn giải}
+    Ví dụ này chỉ chứng minh hành vi tương tự. Nó không đủ để kết luận phương pháp 2021 tốt hơn một cách tổng quát.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Bộ chỉ số đánh giá ban đầu}
+  \small
+  \textbf{\textcolor{red}{Quy tắc:}} Paper 2010 đánh giá phân hoạch cứng, vì vậy dùng
+  $\hat y_i=\operatorname*{arg\,max}_{k}u_{ik}$ trước khi tính chỉ số.
+
+  \vspace{0.35em}
+  \centering
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \renewcommand{\arraystretch}{1.18}
+  \begin{tabular}{p{2.25cm}|p{2.35cm}|p{6.2cm}|p{1.75cm}}
+    \textbf{Nhãn thật} & \textbf{Chỉ số} & \textbf{Đo lường} & \textbf{Tốt hơn} \\
+    \hline
+    Có & ARI & Mức đồng thuận theo cặp, đã hiệu chỉnh ngẫu nhiên & Cao hơn \\
+    Có & Jaccard & Đồng thuận trên các cặp được xếp cùng cụm & Cao hơn \\
+    Không & SWC / SSWC & Độ chặt và độ tách; SSWC dùng tâm cụm & Cao hơn \\
+    Không & VRC & Phân tán giữa cụm so với phân tán trong cụm & Cao hơn \\
+  \end{tabular}
+
+  \vspace{0.45em}
+  \raggedright
+  \small
+  \textbf{Lý do chọn:} ARI và Jaccard phù hợp benchmark có nhãn. Silhouette thuộc nhóm mạnh trong paper, còn VRC là phép kiểm tra bổ sung có chi phí thấp.
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\section{Kế hoạch hiện thực}
+
+\begin{frame}{Pipeline hiện thực và thí nghiệm}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.58\textwidth}
+      \centering
+      \begin{tikzpicture}[
+        flow/.style={draw=hustprimary,rounded corners=2pt,fill=hustprimary!7,
+          align=center,minimum height=0.58cm,minimum width=2.05cm,
+          font=\scriptsize,inner xsep=4pt},
+        arr/.style={-{Latex[length=2mm]},thick,draw=hustprimary}
+      ]
+        \node[flow] (data) {Dữ liệu};
+        \node[flow,below=0.34cm of data] (prep) {Tiền xử lý và chia tập giám sát};
+        \node[flow,below=0.34cm of prep] (init) {Khởi tạo chung};
+        \node[flow,below=0.62cm of init,xshift=-2.35cm] (fcm) {FCM};
+        \node[flow,below=0.62cm of init] (ssfcm) {sSFCM};
+        \node[flow,below=0.62cm of init,xshift=2.35cm] (ssmc) {sSMC-FCM};
+        \node[flow,below=1.08cm of ssfcm] (metric) {Đánh giá và kiểm tra};
+        \node[flow,below=0.34cm of metric] (out) {Bảng so sánh và biểu đồ};
+        \draw[arr] (data) -- (prep);
+        \draw[arr] (prep) -- (init);
+        \draw[arr] (init) -- (fcm);
+        \draw[arr] (init) -- (ssfcm);
+        \draw[arr] (init) -- (ssmc);
+        \draw[arr] (fcm) -- (metric);
+        \draw[arr] (ssfcm) -- (metric);
+        \draw[arr] (ssmc) -- (metric);
+        \draw[arr] (metric) -- (out);
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.38\textwidth}
+      \begin{block}{Các module dự kiến}
+        \small\ttfamily
+        src/fcm.py\\
+        src/ssfcm.py\\
+        src/ssmc\_fcm.py\\
+        src/metrics.py\\
+        src/datasets.py\\
+        src/experiments.py
+      \end{block}
+      \begin{block}{Thứ tự hiện thực}
+        \scriptsize
+        \begin{enumerate}
+          \item FCM và unit test
+          \item Dữ liệu 20 điểm năm 2009
+          \item Tái lập sSFCM
+          \item sSMC-FCM Eqs. (17)--(20)
+          \item Tái lập Table 3 năm 2021
+          \item Metrics và dữ liệu lớn hơn
+        \end{enumerate}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Bước tiếp theo và quyết định cần chốt}
+  \small
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.49\textwidth}
+      \begin{block}{Các bước coding tiếp theo}
+        \begin{enumerate}
+          \item Hiện thực FCM và kiểm tra shape, simplex, finite.
+          \item Tạo lại bộ 20 điểm và độ thuộc FCM.
+          \item Hiện thực sSFCM, tái lập kết quả năm 2009.
+          \item Hiện thực solver độ thuộc cho sSMC-FCM.
+          \item Tái lập kết quả năm 2021 trước thí nghiệm lớn.
+        \end{enumerate}
+      \end{block}
+    \end{column}
+    \begin{column}{0.47\textwidth}
+      \begin{alertblock}{Các câu hỏi cần trao đổi}
+        \begin{itemize}
+          \item Tolerance, bước tăng và cận trên cho Eq. (19).
+          \item Khởi tạo tâm và norm dừng.
+          \item Xử lý khoảng cách 0 và cụm rỗng.
+          \item Dataset thật và tỷ lệ mẫu giám sát.
+        \end{itemize}
+      \end{alertblock}
+      \textbf{Cổng tuần 2:} tái lập độ thuộc của điểm 9/10 trước khi thử dữ liệu mới.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\section{Tài liệu tham khảo}
+\useStyleLogoOnly
+
+\begin{frame}{Tài liệu tham khảo}
+  \small
+  \begin{thebibliography}{9}
+    \bibitem{endo2009}
+    Y. Endo, Y. Hamasuna, M. Yamashiro, and S. Miyamoto,
+    ``On Semi-Supervised Fuzzy c-Means Clustering,''
+    \emph{IEEE International Conference on Fuzzy Systems}, 2009.
+
+    \bibitem{khang2021}
+    T. D. Khang, M.-K. Tran, and M. Fowler,
+    ``A Novel Semi-Supervised Fuzzy C-Means Clustering Algorithm Using Multiple Fuzzification Coefficients,''
+    \emph{Algorithms}, vol. 14, no. 9, article 258, 2021.
+    DOI: 10.3390/a14090258.
+
+    \bibitem{vendramin2010}
+    L. Vendramin, R. J. G. B. Campello, and E. R. Hruschka,
+    ``Relative Clustering Validity Criteria: A Comparative Overview,''
+    \emph{Statistical Analysis and Data Mining}, vol. 3, pp. 209--235, 2010.
+    DOI: 10.1002/sam.10080.
+  \end{thebibliography}
+\end{frame}
+
+\hidePageNumber
+\hustcontactpage{\hfill CÂU HỎI VÀ TRAO ĐỔI \hfill}{
+  \textbf{Mục tiêu tuần 2:} tái lập đúng các giá trị độ thuộc đã công bố trước khi mở rộng thí nghiệm.
+}
+
+\end{document}

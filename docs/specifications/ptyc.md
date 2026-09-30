@@ -2,6 +2,8 @@
 
 Tài liệu này đặc tả việc hiện thực thuật toán sSMC-FCM dựa trên ba bài báo trong workspace. Phạm vi hiện tại chỉ gồm phân tích, thiết kế, lập kế hoạch kiểm thử và đối chiếu khoa học; chưa viết mã thuật toán.
 
+**Rà soát gần nhất: 29/09/2026.** Nội dung đã được đối chiếu với báo cáo tiến độ tuần 1 và vẫn giữ nguyên nguyên tắc: tái lập ví dụ của bài báo trước khi mở rộng sang dữ liệu mới. Bài báo 2021 ký hiệu hệ số giám sát là $M'$. Slide báo cáo dùng $M_0$ để dễ đọc; hai ký hiệu này chỉ cùng một đại lượng. API Python tiếp tục dùng tên `M_prime`.
+
 ## 1. Phát biểu bài toán
 
 Cần phân cụm tập dữ liệu số $X$ khi chỉ một phần mẫu có thông tin giám sát. Kết quả chính gồm:
@@ -11,7 +13,7 @@ Cần phân cụm tập dữ liệu số $X$ khi chỉ một phần mẫu có th
 - nhãn cứng suy ra bằng argmax theo từng hàng của $U$;
 - lịch sử hội tụ và các chẩn đoán số học.
 
-sSMC-FCM đưa thông tin giám sát vào FCM bằng cách gán hệ số mờ hóa lớn hơn $M'$ cho cặp (mẫu được giám sát, cụm đích), trong khi các cặp còn lại dùng $M$. Đây là khác biệt cốt lõi so với sSFCM: sSFCM đưa ma trận độ thuộc giám sát $\bar U$ trực tiếp vào hàm mục tiêu, còn sSMC-FCM thay đổi số mũ $m_{ik}$.
+sSMC-FCM đưa thông tin giám sát vào FCM bằng cách gán hệ số mờ hóa lớn hơn $M'$ (hay $M_0$ trên slide) cho cặp (mẫu được giám sát, cụm đích), trong khi các cặp còn lại dùng $M$. Đây là khác biệt cốt lõi so với sSFCM: sSFCM đưa ma trận độ thuộc giám sát $\bar U$ trực tiếp vào hàm mục tiêu, còn sSMC-FCM thay đổi số mũ $m_{ik}$.
 
 Phạm vi hiện thực sau này:
 
@@ -76,7 +78,7 @@ Tài liệu chuẩn hóa dữ liệu theo chiều mẫu để phù hợp NumPy. 
 | $m$ | Hệ số mờ hóa chung của FCM/sSFCM | float > 1; sSFCM còn có nhánh $m=1$ |
 | $m_{ik}$ | Hệ số mờ hóa theo cặp của sSMC-FCM | exponents[i,k], shape (N,C) |
 | $M$ | Hệ số mờ hóa cơ sở | float > 1 |
-| $M'$ | Hệ số của cặp mẫu-cụm được giám sát | float, yêu cầu $M'>M$ |
+| $M'$ / $M_0$ | Hệ số của cặp mẫu-cụm được giám sát; $M'$ là ký hiệu paper, $M_0$ là ký hiệu slide | `M_prime`, float, yêu cầu $M'>M$ |
 | $Y$ | Tập cặp $(i,k)$ được giám sát | target_cluster, shape (N,), -1 nếu không nhãn |
 | $S$ | Số mẫu được giám sát | sum(target_cluster >= 0) |
 | $d_{\min}$ | $\min_jD_{ij}$ cho một mẫu giám sát | scalar |
@@ -136,6 +138,8 @@ U_{ik}=\bar U_{ik}
 $$
 
 Với $m=1$, Eq. (8) gán toàn bộ phần dư $r_i$ cho cụm gần nhất và giữ các phần tử còn lại bằng $\bar U$. Bài báo không quy định cách phá hòa khi nhiều tâm cùng khoảng cách.
+
+Benchmark tuần 1 dùng $m=2$, vì vậy nhánh $m=1$ là phần bổ sung sau MVP và không chặn việc tái lập Table II.
 
 ### 5.5 Luồng thuật toán
 
@@ -385,15 +389,17 @@ predict(X_new) chỉ dùng Eq. (15) với tâm đã fit. Dự đoán có thêm g
                 mu[k] = giải Eq. (19)
                 U[i] = mu / sum(mu)       # Eq. (20)
         V_new = Eq. (10)
-        objective = Eq. (7)
+        delta = norm(V_new - V)
+        Tính lại khoảng cách từ X đến V_new
+        objective = Eq. (7) trên cặp (U, V_new)
         ghi chẩn đoán
-        nếu norm(V_new - V) < epsilon: dừng
         V = V_new
+        nếu delta < epsilon: dừng
 
     Nếu hết max_iter: converged_ = False
     labels = argmax(U, axis=1)
 
-Phải xác định objective history được tính trên $(U,V_{\mathrm{old}})$ hay $(U,V_{\mathrm{new}})$; không trộn hai quy ước.
+Quy ước hiện tại là ghi objective trên $(U,V_{\mathrm{new}})$. Nếu mã sau này chọn quy ước khác thì phải đổi đồng bộ tài liệu, test và logging; không trộn hai trạng thái trong cùng history. Khi dừng, model phải lưu $V_{\mathrm{new}}$, không giữ nhầm tâm của vòng trước.
 
 ## 10. Kế hoạch đánh giá
 
@@ -446,12 +452,14 @@ Chín chỉ số gồm trace(W), trace(CovW), trace(W^-1 B), |T|/|W|, Nlog(|T|/|
 
 Bài validity dùng ARI và Jaccard làm tham chiếu ngoại tại. Pearson và WGK đo tương quan giữa các chuỗi score. Accuracy và NMI không được ba bài báo định nghĩa.
 
-### 10.5 Bộ chỉ số tối thiểu
+### 10.5 Bộ chỉ số tối thiểu đã chốt cho giai đoạn đầu
 
 - Kiểm chứng trực tiếp: membership Table 3, tâm cụm, số vòng.
 - Có ground truth: ARI và Jaccard.
-- Không ground truth: SWC/SSWC, VRC và PBM.
+- Không ground truth: SWC/SSWC và VRC.
 - Chẩn đoán: objective, delta tâm, simplex residual và residual Eq. (19).
+
+PBM vẫn thuộc phạm vi paper và có thể bổ sung sau MVP, nhưng không nằm trong bộ chỉ số bắt buộc của báo cáo tuần 1. FPC, Xie-Beni, NMI và Purity không được gán cho paper validity này.
 
 ### 10.6 Dữ liệu và thí nghiệm
 
@@ -464,6 +472,18 @@ Bài validity dùng ARI và Jaccard làm tham chiếu ngoại tại. Pearson và
    - M'=4: (2.735,5.000), (9.200,5.000);
    - M'=8: (2.714,5.000), (9.303,5.000).
 6. Dùng synthetic blobs có seed để kiểm tra độ ổn định.
+
+Bảng acceptance tối thiểu cho điểm 9 và 10:
+
+| Phương pháp | Mức giám sát | $U_{C1}$ | $U_{C2}$ | Cụm cứng |
+|---|---:|---:|---:|---|
+| FCM | không | 0.19 | 0.81 | C2 |
+| sSFCM | $\bar u_{i1}=0.3$ | 0.45 | 0.55 | C2 |
+| sSFCM | $\bar u_{i1}=0.6$ | 0.69 | 0.31 | C1 |
+| sSMC-FCM | $M=2, M'=4$ | 0.43 | 0.57 | C2 |
+| sSMC-FCM | $M=2, M'=8$ | 0.60 | 0.40 | C1 |
+
+Bảng này là kiểm tra hành vi và tái lập số liệu, không phải bằng chứng rằng sSMC-FCM tốt hơn sSFCM trên mọi dữ liệu.
 
 ## 11. Chiến lược kiểm chứng
 
@@ -496,7 +516,8 @@ Bài validity dùng ARI và Jaccard làm tham chiếu ngoại tại. Pearson và
 - So Table II sSFCM đến 2 chữ số sau khi căn chỉnh hoán vị nhãn.
 - So Table 3 sSMC-FCM đến 2 chữ số.
 - So tâm đến 3 chữ số.
-- Mẫu 9,10: độ thuộc cụm 1 tăng xấp xỉ 0.19 -> 0.43 -> 0.60 khi M'=2,4,8.
+- sSFCM, mẫu 9 và 10: độ thuộc cụm 1 tăng xấp xỉ 0.19 -> 0.45 -> 0.69 khi $\bar u_{i1}=0,0.3,0.6$.
+- sSMC-FCM, mẫu 9 và 10: độ thuộc cụm 1 tăng xấp xỉ 0.19 -> 0.43 -> 0.60 khi $M'=2,4,8$.
 - Ví dụ Eq. (23): M'=5.582 với M=2, alpha=0.5, U'=0.189.
 - “Khoảng 10 vòng” chỉ là kiểm tra mềm vì thiếu initialization và norm.
 

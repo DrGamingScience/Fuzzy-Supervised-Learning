@@ -1,6 +1,8 @@
 # Product Backlog - sSMC-FCM
 
-Backlog gồm 37 hạng mục, được sắp theo quan hệ phụ thuộc. Các công việc khảo sát đã hoàn thành; chưa có hạng mục lập trình nào được thực hiện.
+Backlog gồm 37 hạng mục, được nhóm theo milestone. Mỗi hạng mục ghi phụ thuộc riêng và thứ tự thực thi hiện tại nằm ở cuối tài liệu. Các công việc khảo sát đã hoàn thành; chưa có hạng mục lập trình nào được thực hiện.
+
+**Rà soát gần nhất: 29/09/2026.** Backlog đã được căn chỉnh với báo cáo tuần 1: làm FCM trước, tạo fixture 20 điểm, tái lập sSFCM, sau đó mới hiện thực sSMC-FCM và tái lập Table 3. Bài báo ký hiệu hệ số giám sát là $M'$, slide dùng $M_0$, còn mã nguồn dùng `M_prime`.
 
 Quy ước ưu tiên:
 
@@ -8,6 +10,16 @@ Quy ước ưu tiên:
 - P1: bắt buộc để đánh giá và tái lập đầy đủ.
 - P2: mở rộng sau khi phần lõi đã đúng.
 - Số trang là số trang của tệp PDF.
+
+Cổng tái lập bắt buộc trước thí nghiệm lớn:
+
+| Phương pháp | Cấu hình | Membership điểm 9/10 |
+|---|---|---|
+| FCM | không giám sát | $(0.19,0.81)$ |
+| sSFCM | $\bar u_{i1}=0.3/0.6$ | $(0.45,0.55)/(0.69,0.31)$ |
+| sSMC-FCM | $M=2$, $M'=4/8$ | $(0.43,0.57)/(0.60,0.40)$ |
+
+Các giá trị trên kiểm tra hành vi và khả năng tái lập. Không dùng chúng để kết luận phương pháp 2021 tốt hơn tổng quát.
 
 ## Milestone 0 - Hiểu và chuẩn hóa bài báo
 
@@ -63,7 +75,7 @@ Title, abstract, keywords và section headings.
 
 ### Đầu ra
 
-Bảng ánh xạ trong docs/ptyc.md.
+Bảng ánh xạ trong docs/specifications/ptyc.md.
 
 ### Hiện thực
 
@@ -133,7 +145,7 @@ TXT và PDF gốc.
 
 ### Đầu ra
 
-Các công thức đã được đối chiếu trong docs/ptyc.md.
+Các công thức đã được đối chiếu trong docs/specifications/ptyc.md.
 
 ### Hiện thực
 
@@ -165,7 +177,7 @@ Bài báo thiếu initialization, norm dừng, xử lý khoảng cách 0 và chi
 
 ### Đầu vào
 
-Section 12 của docs/ptyc.md.
+Section 12 của docs/specifications/ptyc.md.
 
 ### Đầu ra
 
@@ -403,10 +415,11 @@ sSMC-FCM Section 2.1, Steps 1-5.
 - Cùng seed cho cùng kết quả.
 - Objective không tăng quá tolerance trên test chuẩn.
 - Mọi invariant shape/simplex đúng.
+- Trên fixture PB-30, trường hợp $C=2,m=2$ tái lập membership điểm 9/10 xấp xỉ $(0.19,0.81)$ sau khi căn chỉnh nhãn.
 
 ### Phụ thuộc
 
-PB-08, PB-09, PB-10.
+PB-08, PB-09, PB-10, PB-30.
 
 ## Milestone 2 - sSFCM baseline
 
@@ -487,11 +500,11 @@ PB-09, PB-12.
 
 ### Mục tiêu
 
-Hiện thực Eq. (8). Ưu tiên: P1.
+Hiện thực Eq. (8). Ưu tiên: P2.
 
 ### Lý do
 
-Bài gốc trình bày đây là một nhánh đầy đủ.
+Bài gốc trình bày đây là một nhánh đầy đủ, nhưng benchmark hiện tại dùng $m=2$ nên nhánh này không chặn MVP.
 
 ### Đầu vào
 
@@ -539,7 +552,7 @@ Trạng thái model và histories.
 
 ### Hiện thực
 
-Objective Eq. (2), tâm Eq. (4), membership PB-13/PB-14.
+Objective Eq. (2), tâm Eq. (4), membership $m>1$ từ PB-13. Tích hợp nhánh $m=1$ từ PB-14 khi thực hiện hạng mục tùy chọn đó.
 
 ### Tham chiếu bài báo
 
@@ -553,13 +566,13 @@ sSFCM Eqs. (2),(4),(6),(8), Algorithm 1.
 
 ### Phụ thuộc
 
-PB-13, PB-14, PB-10.
+PB-13, PB-10.
 
 ## PB-16 - Tái lập sSFCM Table II
 
 ### Mục tiêu
 
-Kiểm tra baseline bằng số liệu bài báo. Ưu tiên: P1.
+Kiểm tra baseline bằng số liệu bài báo. Ưu tiên: P0.
 
 ### Lý do
 
@@ -649,7 +662,7 @@ exponents:(N,C).
 
 ### Hiện thực
 
-Điền M rồi đặt ô target thành M_prime.
+Điền M rồi đặt ô target thành M_prime. `M_prime` tương ứng $M'$ trong paper và $M_0$ trên slide.
 
 ### Tham chiếu bài báo
 
@@ -882,6 +895,8 @@ sSMC-FCM phần tóm tắt thuật toán, PDF trang 6-7.
 - Không NaN/Inf trên dữ liệu chuẩn.
 - Cùng seed/cấu hình cho cùng kết quả.
 - Default path không chứa biến thể ngoài bài báo.
+- Khi hội tụ, model lưu tâm mới nhất $V_{new}$.
+- Objective history dùng nhất quán cặp $(U,V_{new})$ và khoảng cách được tính lại từ $V_{new}$.
 
 ### Phụ thuộc
 
@@ -998,15 +1013,15 @@ Validity Sections 3.1-3.3.
 
 PB-26.
 
-## PB-28 - Bộ chỉ số nội tại cốt lõi
+## PB-28 - Bộ chỉ số nội tại MVP
 
 ### Mục tiêu
 
-Hiện thực SWC, SSWC, VRC và PBM. Ưu tiên: P1.
+Hiện thực SWC, SSWC và VRC. Ưu tiên: P1.
 
 ### Lý do
 
-Survey kết luận silhouettes, PBM và VRC có kết quả tổng thể tốt; SSWC rẻ hơn SWC.
+Survey cho thấy nhóm silhouette có kết quả tổng thể mạnh; SSWC rẻ hơn SWC và VRC là phép kiểm tra bổ sung có chi phí thấp.
 
 ### Đầu vào
 
@@ -1018,16 +1033,16 @@ Các score và lỗi rõ cho trường hợp không xác định.
 
 ### Hiện thực
 
-Dùng validity Eqs. (1)-(8),(18)-(21); singleton có silhouette 0.
+Dùng validity Eqs. (1)-(8),(18)-(19) và định nghĩa SSWC; singleton có silhouette 0.
 
 ### Tham chiếu bài báo
 
-Validity Sections 2.1.1, 2.1.5, 2.1.7, 2.1.9 và Section 7.
+Validity Sections 2.1.1, 2.1.5, 2.1.7 và Section 7.
 
 ### Tiêu chí chấp nhận
 
 - SWC trong [-1,1], đúng quy ước singleton.
-- VRC/PBM hữu hạn khi hợp lệ.
+- VRC hữu hạn khi hợp lệ.
 - Trùng ví dụ thủ công và thư viện tin cậy.
 - Từ chối k<2, cụm rỗng và mẫu số 0.
 
@@ -1039,7 +1054,7 @@ PB-07.
 
 ### Mục tiêu
 
-Hiện thực phần còn lại của survey nếu cần nghiên cứu đầy đủ. Ưu tiên: P2.
+Hiện thực PBM và phần còn lại của survey nếu cần nghiên cứu đầy đủ. Ưu tiên: P2.
 
 ### Lý do
 
@@ -1051,7 +1066,7 @@ X, labels và chuỗi phân hoạch cho chỉ số dạng sai khác.
 
 ### Đầu ra
 
-13 họ tối ưu không-Dunn, 18 biến thể Dunn và 9 chỉ số dạng sai khác.
+Registry đủ 40 tiêu chuẩn, tái sử dụng các metric đã có từ PB-28.
 
 ### Hiện thực
 
@@ -1078,7 +1093,7 @@ PB-28.
 
 ### Mục tiêu
 
-Mã hóa chính xác dữ liệu trong hai bài thuật toán. Ưu tiên: P0.
+Mã hóa chính xác dữ liệu trong hai bài thuật toán. Ưu tiên: P0. Dù nằm trong milestone thí nghiệm, hạng mục này được thực hiện sớm theo thứ tự cuối tài liệu.
 
 ### Lý do
 
@@ -1114,7 +1129,7 @@ PB-04.
 
 ### Mục tiêu
 
-Tái lập ba trường hợp trong bài báo. Ưu tiên: P1.
+Tái lập ba trường hợp trong bài báo. Ưu tiên: P0.
 
 ### Lý do
 
@@ -1182,7 +1197,7 @@ sSMC-FCM Section 4; validity Sections 4-6.
 
 ### Phụ thuộc
 
-PB-11, PB-15, PB-24, PB-27, PB-28.
+PB-11, PB-15, PB-24, PB-27, PB-28, PB-33.
 
 ## PB-33 - Bộ sinh split có nhãn/không nhãn
 
@@ -1257,7 +1272,7 @@ sSMC-FCM Section 3.
 
 ### Phụ thuộc
 
-PB-18 đến PB-25.
+PB-18 đến PB-24. PB-25 có test riêng khi thực hiện hạng mục tùy chọn đó.
 
 ## PB-35 - Test bất biến và ổn định số
 
@@ -1283,7 +1298,7 @@ Test điểm trùng, zero distance, scale lớn/nhỏ, cụm gần rỗng, M g�
 
 ### Tham chiếu bài báo
 
-Ràng buộc sau Eq. (7); docs/ptyc.md Section 12.
+Ràng buộc sau Eq. (7); docs/specifications/ptyc.md Section 12.
 
 ### Tiêu chí chấp nhận
 
@@ -1372,13 +1387,21 @@ PB-16, PB-27, PB-28, PB-31, PB-32, PB-36.
 
 ## Thứ tự lập trình khuyến nghị
 
-Điểm bắt đầu tốt nhất là PB-06. Đường găng:
+Điểm bắt đầu tốt nhất là PB-06. Thứ tự hiện tại:
 
-    PB-06 -> PB-07 -> PB-08 -> PB-09 -> PB-10 -> PB-11
-          -> PB-12 -> PB-13 -> PB-15
-          -> PB-17 -> PB-18 -> PB-19 -> PB-20 -> PB-21
-          -> PB-22 -> PB-23 -> PB-24
-          -> PB-34 -> PB-35 -> PB-36 -> PB-31 -> PB-37
+    Nền tảng và FCM:
+    PB-06 -> PB-07 -> PB-30 -> PB-08 -> PB-09 -> PB-10 -> PB-11
 
-PB-20, solver Eq. (19), là thành phần có rủi ro kỹ thuật cao nhất. PB-25 và PB-29 chỉ nên làm sau khi phần lõi và tái lập đã đạt.
+    Baseline sSFCM và tái lập 2009:
+    PB-12 -> PB-13 -> PB-15 -> PB-16
+
+    Lõi sSMC-FCM và tái lập 2021:
+    PB-17 -> PB-18 -> PB-19 -> PB-20 -> PB-21
+          -> PB-22 -> PB-23 -> PB-24 -> PB-31
+
+    Metrics, thí nghiệm và kiểm chứng:
+    PB-26 -> PB-27 -> PB-28 -> PB-33 -> PB-32
+          -> PB-34 -> PB-35 -> PB-36 -> PB-37
+
+PB-20, solver Eq. (19), là thành phần có rủi ro kỹ thuật cao nhất. PB-16 và PB-31 là hai cổng tái lập P0. PB-25 và PB-29 chỉ nên làm sau khi phần lõi và hai cổng tái lập đã đạt.
 
