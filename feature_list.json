@@ -489,8 +489,8 @@
       "phase": "P2",
       "title": "Báo cáo toàn bộ và điểm chưa giám sát",
       "priority": "must",
-      "status": "implemented_unverified",
-      "passes": false,
+      "status": "verified",
+      "passes": true,
       "depends_on": [
         "MET-002"
       ],
@@ -506,8 +506,8 @@
       "evidence": [
         "python -m pytest -q tests/test_metrics.py PASS: 19 tests. Mask đúng 5 thuật toán, toàn bộ/chưa giám sát, thiếu nhãn, tập 0/1 điểm và mask sai; diff review/check PASS."
       ],
-      "completion_commit": null,
-      "completed_at": null,
+      "completion_commit": "abca92413ccf5eb2a64ba9d90aca5e8b5a363729",
+      "completed_at": "2026-11-09T23:19:38+07:00",
       "expected_files": [
         "src/metrics.py",
         "src/experiments.py"
@@ -849,7 +849,7 @@
     "blocked": "Có trở ngại cụ thể",
     "deferred": "Để phase sau theo phạm vi đã chốt"
   },
-  "workflow_state": "MET-003_EXE",
+  "workflow_state": "verified_through_MET-003",
   "workflow": {
     "wid_limit": 1,
     "stages": [
@@ -866,7 +866,7 @@
       "Có Git commit local, checkpoint và completion_commit thật",
       "Working tree sạch trong scope; handoff có commit hash và status"
     ],
-    "active_task": "MET-003",
+    "active_task": null,
     "legacy_drafts_policy": "Năm file mã nguồn nháp đã xóa theo yêu cầu. Feature tương ứng trở về planned; không tính kiểm tra cũ là nghiệm thu mã mới.",
     "source_reset": {
       "requested": true,
