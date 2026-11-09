@@ -5,8 +5,8 @@
 - Thư mục gốc kho lưu trữ: `D:\Downloads\Semi-supervised-learning`; Git branch `main`, baseline ban đầu `4f7fd34` (giữ nguyên hồ sơ/cấu hình có sẵn, chưa kiểm chứng).
 - Đường dẫn khởi động chuẩn: `app.py` chưa có; chưa chạy được Streamlit.
 - Đường dẫn xác minh chuẩn: Hồ sơ: `python tmp/check_records.py`; chưa có tests phần mềm.
-- Tính năng chưa hoàn thành có mức ưu tiên cao nhất hiện tại: DOC-001, INIT/in_progress.
-- Sự cố chặn hiện tại: Không có blocker ngoài phạm vi hiện được giao.
+- Tính năng chưa hoàn thành có mức ưu tiên cao nhất hiện tại: Tiếp tục ENV-001 theo yêu cầu đến DATA-001..
+- Sự cố chặn hiện tại: DOC-001 verified; không có blocker. Chỉ các task đã verified có bằng chứng nghiệm thu.
 
 ## Nhật ký Phiên
 
@@ -17,10 +17,10 @@
 - Đã hoàn thành: Git baseline 4f7fd34 giữ nguyên file có sẵn; xác nhận src rỗng và xóa thư mục bằng lệnh không đệ quy; mở scope đến DATA-001, giữ nguyên lịch sử.
 - Xác minh đã chạy: 09/11/2026: python tmp/check_records.py PASS; git diff --check PASS; Test-Path src = False sau cleanup. Lệnh xóa đệ quy bị automatic policy chặn; xóa rỗng không đệ quy thành công. Nghiệm thu hồ sơ, không phải thuật toán.
 - Bằng chứng đã ghi lại: yêu cầu người dùng “Thực hiện đến hết data-001”; làm DOC → ENV → INIT → DATA tuần tự, không triển khai CORE/ALG/UI.
-- Commit: chờ kiểm tra/commit; baseline `4f7fd34edcf920ae00a5b250202b719adb170e7d`.
+- Commit: `1dcb6fd266a5f0b4a9860988a2599425aa9f20d4` (DOC-001); metadata hậu commit được lưu bằng commit riêng trước task tiếp theo/handoff. Working tree sau commit triển khai sạch.
 - Tệp hoặc artifact đã cập nhật: AGENTS.md, docs/WORKFLOW.md, feature_list.json, progress.md, src/__pycache__.
 - Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi trong scope; thuật toán/metrics/UI demo chưa triển khai.
-- Bước tốt nhất tiếp theo: hoàn thành INIT rồi EXE, nghiệm thu và commit riêng DOC-001.
+- Bước tốt nhất tiếp theo: Tiếp tục ENV-001 theo yêu cầu đến DATA-001.
 
 ### Phiên 006
 
