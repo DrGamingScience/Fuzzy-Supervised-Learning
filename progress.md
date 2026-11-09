@@ -2,13 +2,26 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; implementation checkpoint `446db53d2cf07d8e6664995a0e5f2f3cff03570d` (ALG-005).
+- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; baseline task `0491176e2a345c127bd3edaa8cd0551c9edd2ace`; working tree sạch trước INIT.
 - Khởi động: `python -m streamlit run app.py`; kiểm tra: `python -m pytest -q`.
-- Đã verified tuần tự đến `ALG-005`; không có task đang mở. Phạm vi được giao đến DOC-002, dừng trước LATER-001.
-- Check: python -m pytest -q tests/test_algorithms.py PASS: 36 tests. Giải (17)-(20) bằng logit/Brent có bracket và residual; KKT 2/3 cụm độc lập; Mprime=M trùng FCM, U9=0.428699/0.604491; tâm đúng số mũ; diff review/check PASS.
-- Blocker: không có; task kế tiếp: CORE-002. Không có thay đổi người dùng có sẵn; metadata hậu commit được commit trước chuyển task/handoff.
+- Task duy nhất: `CORE-002` — INIT pass, EXE đang làm; phạm vi đã giao đến DOC-002, không làm LATER.
+- Môi trường: Anaconda Python 3.13.9; imports NumPy/SciPy/pandas/sklearn/Streamlit/Plotly đã kiểm tra.
+- Blocker: không có; không có thay đổi người dùng có sẵn.
 
 ## Nhật ký Phiên
+
+### Phiên 017
+
+- Ngày: 2026-11-09T23:13:42+07:00 (Asia/Saigon).
+- Mục tiêu: CORE-002 — Trường hợp suy biến và ổn định số. Yêu cầu: thực hiện hết feature đến trước later. Scope/files: src/algorithms.py, tests/test_numerics.py. Không mở task tiếp theo trước khi commit task này. Acceptance criteria giữ nguyên: Kiểm tra điểm trùng tâm, nhiều tâm trùng, điểm trùng và tổng B bằng 1; Mất trọng số có xử lý và cảnh báo rõ; Không âm thầm trả NaN/Inf hoặc phá ràng buộc U.
+- INIT: branch main, HEAD `0491176e2a345c127bd3edaa8cd0551c9edd2ace`, git status sạch; interpreter/dependencies kế thừa ENV-001 đã kiểm tra lại đầu đợt; baseline liên quan PASS ở checkpoint trước (đầu đợt 28 tests). Không có thay đổi người dùng có sẵn.
+- Đã hoàn thành: EXE và acceptance checks PASS; diff đã review trong scope, chờ commit.
+- Xác minh đã chạy: python -m pytest -q tests/test_algorithms.py tests/test_numerics.py PASS: 49 tests. Trùng điểm/tâm, B tổng 1, cụm mất trọng số cảnh báo, exponent=10000/20000 tính log, scale overflow/underflow báo lỗi rõ. Test ban đầu bỏ sót entropy âm eSFCM khi khoảng cách=0; sửa kỳ vọng theo (9): -4 log 2, không đổi công thức. Diff review/check PASS.
+- Bằng chứng đã ghi lại: chỉ tính tests chạy trên src mới; không dùng kết quả khảo sát cũ thay nghiệm thu.
+- Commit: chờ acceptance tests và review diff.
+- Tệp hoặc artifact đã cập nhật: src/algorithms.py, tests/test_numerics.py.
+- Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi đang mở trong scope; giới hạn ngoài scope giữ nguyên.
+- Bước tốt nhất tiếp theo: hoàn tất EXE và COMMIT của CORE-002.
 
 ### Phiên 016
 

@@ -109,9 +109,12 @@ class Result:
 
 def squared_distances(X, V):
     with np.errstate(over='ignore', invalid='ignore'):
-        d2 = np.sum((X[:, None, :] - V[None, :, :])**2, axis=2)
+        delta=X[:, None, :] - V[None, :, :]
+        d2 = np.sum(delta**2, axis=2)
     if not np.isfinite(d2).all():
         raise ValueError('Khoảng cách vượt miền số thực; hãy đổi thang dữ liệu.')
+    if ((d2==0)&np.any(delta!=0,axis=2)).any():
+        raise ValueError('Khoảng cách bị underflow; hãy đổi thang dữ liệu.')
     return d2
 
 
@@ -229,6 +232,33 @@ def _centers(X, weights, previous, warnings):
     return V
 
 
+def _center_weights(U, config, B, targets, warnings):
+    """Chuẩn hóa trọng số trong log trước lũy thừa, tránh mất cụm do underflow."""
+    if config.algorithm=='esfcm':
+        return U
+    base=np.abs(U-B) if config.algorithm in ('ssfcm','ssfcm1') else U
+    powers=(exponent_matrix(U.shape,config,targets) if config.algorithm=='ssmc'
+            else 1 if config.algorithm=='ssfcm1' else config.m)
+    with np.errstate(divide='ignore',over='ignore',invalid='ignore'):
+        log_w=np.log(base)*powers
+    if np.isnan(log_w).any() or np.isposinf(log_w).any() or (np.isneginf(log_w)&(base>0)).any():
+        raise ValueError('Số mũ vượt miền tính toán trọng số; hãy giảm tham số.')
+    weights=np.zeros_like(U)
+    for k in range(U.shape[1]):
+        top=log_w[:,k].max()
+        if np.isfinite(top):
+            weights[:,k]=np.exp(log_w[:,k]-top)
+            if top < np.log(np.finfo(float).tiny):
+                warnings.add(f'Cụm {k+1}: tính trọng số trong log để tránh underflow.')
+    return weights
+
+
+def _check_membership(U):
+    if (not np.isfinite(U).all() or (U < 0).any() or (U > 1+1e-12).any()
+            or not np.allclose(U.sum(axis=1),1,rtol=0,atol=1e-12)):
+        raise ArithmeticError('U không hữu hạn hoặc vi phạm ràng buộc simplex.')
+
+
 def fit(X, config=Config(), initial_centers=None, B=None, targets=None):
     """Dừng khi max_k ||V_k mới - V_k cũ||₂ <= epsilon, hoặc max_iter.
 
@@ -240,12 +270,16 @@ def fit(X, config=Config(), initial_centers=None, B=None, targets=None):
     if config.algorithm == 'esfcm':
         warnings.add(ESFCM_WARNING)
     U=update_membership(X,V,config,B,targets)
+    _check_membership(U)
     reason='max_iter'
     for iteration in range(1,config.max_iter+1):
-        new=_centers(X,_weights(U,config,B,targets),V,warnings)
-        shift=float(np.max(np.linalg.norm(new-V,axis=1)))
+        new=_centers(X,_center_weights(U,config,B,targets,warnings),V,warnings)
+        if not np.isfinite(new).all():
+            raise ValueError('Tâm vượt miền số thực; hãy đổi thang dữ liệu.')
+        shift=float(np.max(np.hypot.reduce(new-V,axis=1)))
         V=new
         U=update_membership(X,V,config,B,targets)
+        _check_membership(U)
         if shift <= config.epsilon:
             reason='epsilon'
             break
