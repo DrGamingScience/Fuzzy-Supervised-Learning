@@ -429,8 +429,8 @@
       "phase": "P2",
       "title": "Năm metrics hình học",
       "priority": "must",
-      "status": "implemented_unverified",
-      "passes": false,
+      "status": "verified",
+      "passes": true,
       "depends_on": [
         "TEST-001"
       ],
@@ -446,8 +446,8 @@
       "evidence": [
         "python -m pytest -q tests/test_metrics.py PASS: 6 tests. SWC/CH/DB đối chiếu sklearn 3 seed và tay; Dunn gốc min liên cụm/max đường kính, PBM E1=16 Ek=4 Dk=8 k=2 cho 256. Kỳ vọng PBM ban đầu tính nhầm 400, sửa biểu thức theo công thức, src giữ nguyên. Undefined/singleton có lý do. Diff review/check PASS."
       ],
-      "completion_commit": null,
-      "completed_at": null,
+      "completion_commit": "cc59b6db1e3abc5b4b0c2c2c95bac9f5738b0a89",
+      "completed_at": "2026-11-09T23:17:57+07:00",
       "expected_files": [
         "src/metrics.py"
       ],
@@ -839,7 +839,7 @@
     "blocked": "Có trở ngại cụ thể",
     "deferred": "Để phase sau theo phạm vi đã chốt"
   },
-  "workflow_state": "MET-001_EXE",
+  "workflow_state": "verified_through_MET-001",
   "workflow": {
     "wid_limit": 1,
     "stages": [
@@ -856,7 +856,7 @@
       "Có Git commit local, checkpoint và completion_commit thật",
       "Working tree sạch trong scope; handoff có commit hash và status"
     ],
-    "active_task": "MET-001",
+    "active_task": null,
     "legacy_drafts_policy": "Năm file mã nguồn nháp đã xóa theo yêu cầu. Feature tương ứng trở về planned; không tính kiểm tra cũ là nghiệm thu mã mới.",
     "source_reset": {
       "requested": true,

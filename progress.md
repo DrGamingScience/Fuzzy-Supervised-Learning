@@ -2,11 +2,11 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; baseline task `8b70e382eed3275ea9f9a0022aa797473966cc76`; working tree sạch trước INIT.
+- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; implementation checkpoint `cc59b6db1e3abc5b4b0c2c2c95bac9f5738b0a89` (MET-001).
 - Khởi động: `python -m streamlit run app.py`; kiểm tra: `python -m pytest -q`.
-- Task duy nhất: `MET-001` — INIT pass, EXE đang làm; phạm vi đã giao đến DOC-002, không làm LATER.
-- Môi trường: Anaconda Python 3.13.9; imports NumPy/SciPy/pandas/sklearn/Streamlit/Plotly đã kiểm tra.
-- Blocker: không có; không có thay đổi người dùng có sẵn.
+- Đã verified tuần tự đến `MET-001`; không có task đang mở. Phạm vi được giao đến DOC-002, dừng trước LATER-001.
+- Check: python -m pytest -q tests/test_metrics.py PASS: 6 tests. SWC/CH/DB đối chiếu sklearn 3 seed và tay; Dunn gốc min liên cụm/max đường kính, PBM E1=16 Ek=4 Dk=8 k=2 cho 256. Kỳ vọng PBM ban đầu tính nhầm 400, sửa biểu thức theo công thức, src giữ nguyên. Undefined/singleton có lý do. Diff review/check PASS.
+- Blocker: không có; task kế tiếp: MET-002. Không có thay đổi người dùng có sẵn; metadata hậu commit được commit trước chuyển task/handoff.
 
 ## Nhật ký Phiên
 
@@ -18,10 +18,10 @@
 - Đã hoàn thành: EXE và acceptance checks PASS; diff đã review trong scope, chờ commit.
 - Xác minh đã chạy: python -m pytest -q tests/test_metrics.py PASS: 6 tests. SWC/CH/DB đối chiếu sklearn 3 seed và tay; Dunn gốc min liên cụm/max đường kính, PBM E1=16 Ek=4 Dk=8 k=2 cho 256. Kỳ vọng PBM ban đầu tính nhầm 400, sửa biểu thức theo công thức, src giữ nguyên. Undefined/singleton có lý do. Diff review/check PASS.
 - Bằng chứng đã ghi lại: chỉ tính tests chạy trên src mới; không dùng kết quả khảo sát cũ thay nghiệm thu.
-- Commit: chờ acceptance tests và review diff.
+- Commit: `cc59b6db1e3abc5b4b0c2c2c95bac9f5738b0a89` (MET-001); hồ sơ hậu commit được commit riêng trước task tiếp theo.
 - Tệp hoặc artifact đã cập nhật: src/metrics.py, tests/test_metrics.py.
 - Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi đang mở trong scope; giới hạn ngoài scope giữ nguyên.
-- Bước tốt nhất tiếp theo: hoàn tất EXE và COMMIT của MET-001.
+- Bước tốt nhất tiếp theo: MET-002; working tree task sẽ sạch sau commit metadata.
 
 ### Phiên 019
 
