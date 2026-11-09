@@ -1,5 +1,8 @@
 """Chuyển chỉ dẫn ID từ 1, chạy cùng điều kiện, báo cáo không xếp hạng bằng J."""
 from dataclasses import asdict, dataclass
+import io
+import json
+import zipfile
 
 import numpy as np
 import pandas as pd
@@ -90,3 +93,62 @@ def comparison_table(experiment):
                 row[key]=value.value; row[key+'.reason']=value.reason
         rows.append(row)
     return pd.DataFrame(rows)
+
+
+def experiment_payload(experiment):
+    payload=dict(schema_version=1,id_convention='ID điểm/cụm từ 1; nhãn tham chiếu giữ nguyên mã gốc.',
+                 X=experiment.X.tolist(),reference=None if experiment.reference is None else experiment.reference.tolist(),
+                 initial_centers=experiment.initial_centers.tolist(),B=experiment.B.tolist(),
+                 targets=[None if v<0 else int(v)+1 for v in experiment.targets],results={})
+    for name,result in experiment.results.items():
+        payload['results'][name]=dict(config=asdict(result.config),membership=result.membership.tolist(),
+            centers=result.centers.tolist(),labels=(result.labels+1).tolist(),objective=result.objective,
+            n_iter=result.n_iter,stop_reason=result.stop_reason,elapsed_seconds=result.elapsed_seconds,
+            warnings=list(result.warnings),supervised=supervision_mask(name,len(experiment.X),experiment.B,experiment.targets).tolist(),
+            metrics={scope:{metric:asdict(value) for metric,value in metrics.items()}
+                     for scope,metrics in experiment.reports[name].items()},
+            history=[dict(iteration=s.iteration,membership=s.membership.tolist(),centers=s.centers.tolist(),
+                          objective=s.objective,center_shift=s.center_shift) for s in result.history])
+    return payload
+
+
+def export_zip(experiment):
+    """ZIP tự chứa JSON strict + CSV UTF-8 BOM, gồm mọi snapshot và cấu hình."""
+    payload=experiment_payload(experiment)
+    output=io.BytesIO()
+    with zipfile.ZipFile(output,'w',compression=zipfile.ZIP_DEFLATED) as archive:
+        archive.writestr('result.json',json.dumps(payload,ensure_ascii=False,indent=2,allow_nan=False).encode('utf-8'))
+        archive.writestr('HUONG_DAN.txt',
+            ('Kết quả phân cụm mờ bán giám sát\nCSV: UTF-8 BOM. ID điểm/cụm từ 1; nhãn tham chiếu giữ mã gốc.\n'
+             'Vòng 0: tâm khởi tạo, U tính từ tâm này. J chỉ theo dõi từng thuật toán, không xếp hạng chéo.\n'
+             'Chỉ dẫn B và M\' có ý nghĩa khác nhau. X không chứa nhãn tham chiếu.\n'
+             'eSFCM theo công thức, có sai khác Tables IV-V 2009; xem warnings và docs/VALIDATION.md.\n'
+             '2021 Table 3 M\'=4, ID 17/19 in 0.11; công thức tại tâm nguồn cho 0.10452.\n').encode('utf-8-sig'))
+        def csv(name,frame):
+            archive.writestr(name,frame.to_csv(index=False).encode('utf-8-sig'))
+        data=pd.DataFrame(experiment.X,columns=[f'x{d+1}' for d in range(experiment.X.shape[1])])
+        data.insert(0,'point_id',np.arange(1,len(data)+1))
+        if experiment.reference is not None: data['reference']=experiment.reference
+        csv('data.csv',data)
+        supervision=pd.DataFrame(experiment.B,columns=[f'B{k+1}' for k in range(experiment.B.shape[1])])
+        supervision.insert(0,'point_id',np.arange(1,len(data)+1))
+        supervision['target_cluster']=pd.array([None if t<0 else int(t)+1 for t in experiment.targets],dtype='Int64')
+        csv('supervision.csv',supervision)
+        csv('comparison.csv',comparison_table(experiment).drop(columns='parameters'))
+        for name,result in experiment.results.items():
+            members=[]; centers=[]; history=[]; metrics=[]
+            for s in result.history:
+                for i,u in enumerate(s.membership):
+                    members.append(dict(iteration=s.iteration,point_id=i+1,cluster=int(u.argmax())+1,
+                                        **{f'U{k+1}':float(v) for k,v in enumerate(u)}))
+                for k,v in enumerate(s.centers):
+                    centers.append(dict(iteration=s.iteration,cluster=k+1,**{f'x{d+1}':float(x) for d,x in enumerate(v)}))
+                history.append(dict(iteration=s.iteration,objective=s.objective,center_shift=s.center_shift))
+            for scope,values in experiment.reports[name].items():
+                for metric,value in values.items():
+                    metrics.append(dict(scope=scope,metric=metric,**asdict(value)))
+            csv(f'{name}/memberships.csv',pd.DataFrame(members))
+            csv(f'{name}/centers.csv',pd.DataFrame(centers))
+            csv(f'{name}/history.csv',pd.DataFrame(history))
+            csv(f'{name}/metrics.csv',pd.DataFrame(metrics))
+    return output.getvalue()

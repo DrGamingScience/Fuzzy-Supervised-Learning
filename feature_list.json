@@ -552,19 +552,24 @@
       "phase": "P2",
       "title": "Xuất dữ liệu và kết quả tái lập",
       "priority": "must",
-      "status": "planned",
+      "status": "implemented_unverified",
       "passes": false,
       "depends_on": [
         "EXP-001",
         "CORE-003"
       ],
-      "files": [],
+      "files": [
+        "src/experiments.py",
+        "tests/test_export.py"
+      ],
       "acceptance_criteria": [
         "Xuất cấu hình, dữ liệu, U, tâm, nhãn, metrics, giám sát và mọi snapshot",
         "Đọc lại ZIP/CSV/JSON và đối chiếu với kết quả gốc",
         "JSON không có NaN/Inf, CSV đọc được tiếng Việt"
       ],
-      "evidence": [],
+      "evidence": [
+        "python -m pytest -q tests/test_export.py tests/test_experiments.py PASS: 14 tests. Đọc lại ZIP JSON strict và CSV UTF-8 BOM, toàn bộ X/B/targets/U/V/nhãn/config/metrics/warnings/mọi snapshot; undefined là null; diff review/check PASS."
+      ],
       "completion_commit": null,
       "completed_at": null,
       "expected_files": [
@@ -854,7 +859,7 @@
     "blocked": "Có trở ngại cụ thể",
     "deferred": "Để phase sau theo phạm vi đã chốt"
   },
-  "workflow_state": "verified_through_EXP-001",
+  "workflow_state": "EXP-002_EXE",
   "workflow": {
     "wid_limit": 1,
     "stages": [
@@ -871,7 +876,7 @@
       "Có Git commit local, checkpoint và completion_commit thật",
       "Working tree sạch trong scope; handoff có commit hash và status"
     ],
-    "active_task": null,
+    "active_task": "EXP-002",
     "legacy_drafts_policy": "Năm file mã nguồn nháp đã xóa theo yêu cầu. Feature tương ứng trở về planned; không tính kiểm tra cũ là nghiệm thu mã mới.",
     "source_reset": {
       "requested": true,

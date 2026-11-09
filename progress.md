@@ -2,13 +2,26 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; implementation checkpoint `797c2d6823f318b73a4dab1560e4b98ee1684c63` (EXP-001).
+- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; baseline task `faf873cfa204d9b4664aa63dd1a8395b6e5e40d5`; working tree sạch trước INIT.
 - Khởi động: `python -m streamlit run app.py`; kiểm tra: `python -m pytest -q`.
-- Đã verified tuần tự đến `EXP-001`; không có task đang mở. Phạm vi được giao đến DOC-002, dừng trước LATER-001.
-- Check: python -m pytest -q tests/test_experiments.py tests/test_metrics.py PASS: 31 tests. ID/cụm từ 1, trùng bật, dòng tắt, B độc lập targets; 5 thuật toán cùng X/tâm đầu/giám sát, sao chép input, công bố cấu hình, bảng không so J; diff review/check PASS.
-- Blocker: không có; task kế tiếp: EXP-002. Không có thay đổi người dùng có sẵn; metadata hậu commit được commit trước chuyển task/handoff.
+- Task duy nhất: `EXP-002` — INIT pass, EXE đang làm; phạm vi đã giao đến DOC-002, không làm LATER.
+- Môi trường: Anaconda Python 3.13.9; imports NumPy/SciPy/pandas/sklearn/Streamlit/Plotly đã kiểm tra.
+- Blocker: không có; không có thay đổi người dùng có sẵn.
 
 ## Nhật ký Phiên
+
+### Phiên 024
+
+- Ngày: 2026-11-09T23:20:38+07:00 (Asia/Saigon).
+- Mục tiêu: EXP-002 — Xuất dữ liệu và kết quả tái lập. Yêu cầu: thực hiện hết feature đến trước later. Scope/files: src/experiments.py, tests/test_export.py. Không mở task tiếp theo trước khi commit task này. Acceptance criteria giữ nguyên: Xuất cấu hình, dữ liệu, U, tâm, nhãn, metrics, giám sát và mọi snapshot; Đọc lại ZIP/CSV/JSON và đối chiếu với kết quả gốc; JSON không có NaN/Inf, CSV đọc được tiếng Việt.
+- INIT: branch main, HEAD `faf873cfa204d9b4664aa63dd1a8395b6e5e40d5`, git status sạch; interpreter/dependencies kế thừa ENV-001 đã kiểm tra lại đầu đợt; baseline liên quan PASS ở checkpoint trước (đầu đợt 28 tests). Không có thay đổi người dùng có sẵn.
+- Đã hoàn thành: EXE và acceptance checks PASS; diff đã review trong scope, chờ commit.
+- Xác minh đã chạy: python -m pytest -q tests/test_export.py tests/test_experiments.py PASS: 14 tests. Đọc lại ZIP JSON strict và CSV UTF-8 BOM, toàn bộ X/B/targets/U/V/nhãn/config/metrics/warnings/mọi snapshot; undefined là null; diff review/check PASS.
+- Bằng chứng đã ghi lại: chỉ tính tests chạy trên src mới; không dùng kết quả khảo sát cũ thay nghiệm thu.
+- Commit: chờ acceptance tests và review diff.
+- Tệp hoặc artifact đã cập nhật: src/experiments.py, tests/test_export.py.
+- Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi đang mở trong scope; giới hạn ngoài scope giữ nguyên.
+- Bước tốt nhất tiếp theo: hoàn tất EXE và COMMIT của EXP-002.
 
 ### Phiên 023
 
