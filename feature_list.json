@@ -917,15 +917,15 @@
       "Có Git commit local, checkpoint và completion_commit thật",
       "Working tree sạch trong scope; handoff có commit hash và status"
     ],
-    "active_task": "SYNC-001",
+    "active_task": null,
     "github_publication": {
       "task_id": "SYNC-001",
       "repository": "https://github.com/DrGamingScience/Fuzzy-Supervised-Learning",
       "branch": "alternate-version",
-      "status": "prepared",
+      "status": "verified",
       "baseline_commit": "57be75408cdbbdd5fb2252e808f08dcfe41306c7",
-      "completion_commit": null,
-      "completed_at": null
+      "completion_commit": "d41aede40094f64f4bd3ffa14a0e0689a41e1686",
+      "completed_at": "2026-11-09T23:45:39+07:00"
     },
     "legacy_drafts_policy": "Năm file mã nguồn nháp đã xóa theo yêu cầu. Feature tương ứng trở về planned; không tính kiểm tra cũ là nghiệm thu mã mới.",
     "source_reset": {

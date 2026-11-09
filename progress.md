@@ -7,7 +7,7 @@
 - Đã verified tuần tự đến `DOC-002`; không có task đang mở. Phạm vi được giao đến DOC-002, dừng trước LATER-001.
 - Check: python -m pytest -o addopts=" -q PASS: 139 tests trong 10.07s. README Python example PASS U9=[0.60449124,0.39550876], links local tồn tại; python tmp/check_records.py PASS (29 features,31 phiên,AGENTS87 dòng,history/dependency/commit); JSON/diff check PASS. README có setup/demo/công thức/giới hạn/sai khác/metrics/export; diff review trong scope.
 - Blocker: không có; task kế tiếp: LATER-001 (deferred, không triển khai). Không có thay đổi người dùng có sẵn; metadata hậu commit được commit trước chuyển task/handoff.
-- Đồng bộ GitHub: task `SYNC-001`, đang chuẩn bị đẩy branch `alternate-version` vào `https://github.com/DrGamingScience/Fuzzy-Supervised-Learning`; không mở feature later.
+- Đồng bộ GitHub: task `SYNC-001` đã xác minh branch `alternate-version` tại `https://github.com/DrGamingScience/Fuzzy-Supervised-Learning`, checkpoint `d41aede40094f64f4bd3ffa14a0e0689a41e1686`; không mở feature later. Commit hồ sơ bàn giao tiếp theo được push cùng branch.
 
 ## Nhật ký Phiên
 
@@ -18,8 +18,9 @@
 - Acceptance criteria: branch GitHub chứa đủ mã nguồn, dependencies, cấu hình, tests và tài liệu; README có lệnh clone đúng branch; không đưa cache/output tạm lên; remote hash khớp commit local; working tree sạch. Lệnh nghiệm thu: python -m pytest -q; git diff --check; kiểm tra JSON; git ls-remote --heads origin alternate-version; git status --short.
 - INIT: branch main, HEAD `57be75408cdbbdd5fb2252e808f08dcfe41306c7`, working tree sạch, chưa có remote. Python `D:\Downloads\ANACONDA\python.exe`, imports numpy/scipy/pandas/streamlit/plotly/pytest thành công. python -m pytest -q PASS (toàn bộ 139 tests), git diff --check PASS. GitHub truy cập được, chỉ có branch main tại `701fbe570b550f37d7da937fb91a9eab74553c1e`; alternate-version chưa tồn tại.
 - EXE: tạo branch alternate-version từ baseline local, thêm origin đúng URL người dùng; bổ sung lệnh clone trên laptop. Kiểm tra 40 file tracked: mã, tests, ba PDF và tài liệu; cache/tmp đã ignore, không phát hiện mẫu khóa/token trong file văn bản tracked.
-- Commit: chờ commit và push; sẽ xác minh hash trên GitHub trước khi đóng task.
-- Bước tiếp theo: commit riêng SYNC-001, push branch, đối chiếu remote và ghi checkpoint bàn giao; không thực hiện LATER-001.
+- Xác minh EXE: JSON hợp lệ, toàn bộ 29 feature records giữ nguyên; git diff --check PASS. git push --set-upstream origin alternate-version thành công; git ls-remote xác nhận hash remote khớp HEAD. Clone mới từ GitHub vào tmp/laptop-check-d41aede có đủ file chạy, FCM chạy được và membership (20,2) có tổng hàng bằng 1. Lệnh smoke đầu dùng nhầm result.U gây AttributeError (lỗi lệnh kiểm tra); sửa về API result.membership rồi PASS, không sửa mã sản phẩm.
+- Commit: `d41aede40094f64f4bd3ffa14a0e0689a41e1686` — docs(SYNC-001): prepare alternate version for laptop; đã push và đối chiếu remote. Working tree sạch tại checkpoint này; metadata hậu commit được commit/push riêng trước handoff.
+- Bước tiếp theo: trên laptop clone branch alternate-version theo README, cài dependencies và chạy Streamlit. Không có task đang mở; LATER-001 vẫn deferred.
 
 ### Phiên 031
 
