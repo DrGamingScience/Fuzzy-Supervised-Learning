@@ -429,18 +429,23 @@
       "phase": "P2",
       "title": "Năm metrics hình học",
       "priority": "must",
-      "status": "planned",
+      "status": "implemented_unverified",
       "passes": false,
       "depends_on": [
         "TEST-001"
       ],
-      "files": [],
+      "files": [
+        "src/metrics.py",
+        "tests/test_metrics.py"
+      ],
       "acceptance_criteria": [
         "Silhouette, CH, DB, Dunn gốc và PBM đúng định nghĩa",
         "Tâm từ nhãn cứng và chiều tối ưu đúng",
         "Có đối chiếu độc lập; báo giá trị không xác định và lý do"
       ],
-      "evidence": [],
+      "evidence": [
+        "python -m pytest -q tests/test_metrics.py PASS: 6 tests. SWC/CH/DB đối chiếu sklearn 3 seed và tay; Dunn gốc min liên cụm/max đường kính, PBM E1=16 Ek=4 Dk=8 k=2 cho 256. Kỳ vọng PBM ban đầu tính nhầm 400, sửa biểu thức theo công thức, src giữ nguyên. Undefined/singleton có lý do. Diff review/check PASS."
+      ],
       "completion_commit": null,
       "completed_at": null,
       "expected_files": [
@@ -834,7 +839,7 @@
     "blocked": "Có trở ngại cụ thể",
     "deferred": "Để phase sau theo phạm vi đã chốt"
   },
-  "workflow_state": "verified_through_TEST-001",
+  "workflow_state": "MET-001_EXE",
   "workflow": {
     "wid_limit": 1,
     "stages": [
@@ -851,7 +856,7 @@
       "Có Git commit local, checkpoint và completion_commit thật",
       "Working tree sạch trong scope; handoff có commit hash và status"
     ],
-    "active_task": null,
+    "active_task": "MET-001",
     "legacy_drafts_policy": "Năm file mã nguồn nháp đã xóa theo yêu cầu. Feature tương ứng trở về planned; không tính kiểm tra cũ là nghiệm thu mã mới.",
     "source_reset": {
       "requested": true,
