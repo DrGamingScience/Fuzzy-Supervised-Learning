@@ -2,13 +2,26 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; implementation checkpoint `10286ef9e60c09b6b68cc87750c5536280d9bdef` (CORE-001).
+- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; baseline task `e491dca934cf3e16b8fc453aa548daa2571f4eac`; working tree sạch trước INIT.
 - Khởi động: `python -m streamlit run app.py`; kiểm tra: `python -m pytest -q`.
-- Đã verified tuần tự đến `CORE-001`; không có task đang mở. Phạm vi được giao đến DOC-002, dừng trước LATER-001.
-- Check: python -m pytest -q PASS: 49 tests; shape/finiteness/config/B/targets và tham số không áp dụng; git diff --check PASS.
-- Blocker: không có; task kế tiếp: ALG-001. Không có thay đổi người dùng có sẵn; metadata hậu commit được commit trước chuyển task/handoff.
+- Task duy nhất: `ALG-001` — INIT pass, EXE đang làm; phạm vi đã giao đến DOC-002, không làm LATER.
+- Môi trường: Anaconda Python 3.13.9; imports NumPy/SciPy/pandas/sklearn/Streamlit/Plotly đã kiểm tra.
+- Blocker: không có; không có thay đổi người dùng có sẵn.
 
 ## Nhật ký Phiên
+
+### Phiên 012
+
+- Ngày: 2026-11-09T23:09:59+07:00 (Asia/Saigon).
+- Mục tiêu: ALG-001 — FCM đối chứng. Yêu cầu: thực hiện hết feature đến trước later. Scope/files: src/algorithms.py, tests/test_algorithms.py. Không mở task tiếp theo trước khi commit task này. Acceptance criteria giữ nguyên: Cập nhật U và V đúng công thức; U9,1 gần 0.19 và tâm phù hợp ví dụ 2021; Hữu hạn, tổng hàng U bằng 1 và hành vi dừng rõ ràng.
+- INIT: branch main, HEAD `e491dca934cf3e16b8fc453aa548daa2571f4eac`, git status sạch; interpreter/dependencies kế thừa ENV-001 đã kiểm tra lại đầu đợt; baseline liên quan PASS ở checkpoint trước (đầu đợt 28 tests). Không có thay đổi người dùng có sẵn.
+- Đã hoàn thành: EXE và acceptance checks PASS; diff đã review trong scope, chờ commit.
+- Xác minh đã chạy: python -m pytest -q tests/test_algorithms.py PASS: 23 tests. FCM U9=0.188663, V theo 2021 trang 10; cập nhật độc lập, seed, zero và max_iter. Lỗi test ban đầu: nhập nhầm tâm kỳ vọng 2.684338; nguồn 2021 trang 10 ghi 2.719, đã render/đối chiếu rồi sửa test, không đổi src. git diff đã review/check PASS.
+- Bằng chứng đã ghi lại: chỉ tính tests chạy trên src mới; không dùng kết quả khảo sát cũ thay nghiệm thu.
+- Commit: chờ acceptance tests và review diff.
+- Tệp hoặc artifact đã cập nhật: src/algorithms.py, tests/test_algorithms.py.
+- Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi đang mở trong scope; giới hạn ngoài scope giữ nguyên.
+- Bước tốt nhất tiếp theo: hoàn tất EXE và COMMIT của ALG-001.
 
 ### Phiên 011
 

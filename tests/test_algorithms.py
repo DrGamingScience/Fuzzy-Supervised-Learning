@@ -6,6 +6,7 @@ import pytest
 
 from src.algorithms import Config, validate_inputs
 from src.data import demo_initial_centers, load_paper_data
+from src.algorithms import fit, update_membership
 
 
 @pytest.mark.parametrize('X', [[], [1,2], [[np.nan]], [[np.inf]], np.empty((2,0)), [['x']]])
@@ -44,3 +45,28 @@ def test_algorithm_specific_validation_and_copies():
     for targets in [np.zeros(20), [2]*20, [-2]*20, [0]*19]:
         with pytest.raises(ValueError, match='đích'):
             validate_inputs(X,Config(algorithm='ssmc'),targets=targets)
+
+
+def test_fcm_paper_and_independent_one_step():
+    X,_=load_paper_data(); V=demo_initial_centers(); c=Config()
+    U=update_membership(X,V,c)
+    d2=((X[:,None]-V)**2).sum(axis=2)
+    expected=(1/d2)/(1/d2).sum(axis=1,keepdims=True)
+    np.testing.assert_allclose(U,expected)
+    r=fit(X,c,V)
+    assert r.stop_reason=='epsilon' and 1<r.n_iter<500
+    assert r.membership[8,0]==pytest.approx(0.188663,abs=1e-6)
+    # 2021 trang 10: (2.719,5), (9.018,5), dung sai theo chữ số in.
+    np.testing.assert_allclose(r.centers,[[2.719,5],[9.018,5]],atol=0.001)
+    np.testing.assert_allclose(r.membership.sum(axis=1),1,atol=1e-14)
+    assert np.isfinite(r.objective) and (r.membership>=0).all()
+    np.testing.assert_allclose(r.membership,update_membership(X,r.centers,c))
+    limited=fit(X,replace(c,max_iter=1),V)
+    assert limited.stop_reason=='max_iter' and limited.n_iter==1
+
+
+def test_fcm_seed_and_zero_distance():
+    X=np.array([[0.,0],[0,0],[2,0],[4,0]])
+    U=update_membership(X,np.array([[0.,0],[0,0]]),Config())
+    np.testing.assert_allclose(U,0.5)
+    np.testing.assert_array_equal(fit(X).centers,fit(X).centers)
