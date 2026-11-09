@@ -2,13 +2,26 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; implementation checkpoint `cc59b6db1e3abc5b4b0c2c2c95bac9f5738b0a89` (MET-001).
+- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; baseline task `6d0f436d08bbc2e454cf3a0dd8868cc44c0b6e6d`; working tree sạch trước INIT.
 - Khởi động: `python -m streamlit run app.py`; kiểm tra: `python -m pytest -q`.
-- Đã verified tuần tự đến `MET-001`; không có task đang mở. Phạm vi được giao đến DOC-002, dừng trước LATER-001.
-- Check: python -m pytest -q tests/test_metrics.py PASS: 6 tests. SWC/CH/DB đối chiếu sklearn 3 seed và tay; Dunn gốc min liên cụm/max đường kính, PBM E1=16 Ek=4 Dk=8 k=2 cho 256. Kỳ vọng PBM ban đầu tính nhầm 400, sửa biểu thức theo công thức, src giữ nguyên. Undefined/singleton có lý do. Diff review/check PASS.
-- Blocker: không có; task kế tiếp: MET-002. Không có thay đổi người dùng có sẵn; metadata hậu commit được commit trước chuyển task/handoff.
+- Task duy nhất: `MET-002` — INIT pass, EXE đang làm; phạm vi đã giao đến DOC-002, không làm LATER.
+- Môi trường: Anaconda Python 3.13.9; imports NumPy/SciPy/pandas/sklearn/Streamlit/Plotly đã kiểm tra.
+- Blocker: không có; không có thay đổi người dùng có sẵn.
 
 ## Nhật ký Phiên
+
+### Phiên 021
+
+- Ngày: 2026-11-09T23:17:57+07:00 (Asia/Saigon).
+- Mục tiêu: MET-002 — ARI và Jaccard theo cặp. Yêu cầu: thực hiện hết feature đến trước later. Scope/files: src/metrics.py, tests/test_metrics.py. Không mở task tiếp theo trước khi commit task này. Acceptance criteria giữ nguyên: Đếm cặp đúng và bất biến theo hoán vị mã cụm; Đối chiếu số đếm tay và ARI thư viện; Quy ước phân hoạch suy biến được giải thích.
+- INIT: branch main, HEAD `6d0f436d08bbc2e454cf3a0dd8868cc44c0b6e6d`, git status sạch; interpreter/dependencies kế thừa ENV-001 đã kiểm tra lại đầu đợt; baseline liên quan PASS ở checkpoint trước (đầu đợt 28 tests). Không có thay đổi người dùng có sẵn.
+- Đã hoàn thành: EXE và acceptance checks PASS; diff đã review trong scope, chờ commit.
+- Xác minh đã chạy: python -m pytest -q tests/test_metrics.py PASS: 13 tests. Đếm cặp tay và brute force, ARI sklearn 5 seed, hoán vị mã, Jaccard theo cặp và phân hoạch suy biến; diff review/check PASS.
+- Bằng chứng đã ghi lại: chỉ tính tests chạy trên src mới; không dùng kết quả khảo sát cũ thay nghiệm thu.
+- Commit: chờ acceptance tests và review diff.
+- Tệp hoặc artifact đã cập nhật: src/metrics.py, tests/test_metrics.py.
+- Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi đang mở trong scope; giới hạn ngoài scope giữ nguyên.
+- Bước tốt nhất tiếp theo: hoàn tất EXE và COMMIT của MET-002.
 
 ### Phiên 020
 

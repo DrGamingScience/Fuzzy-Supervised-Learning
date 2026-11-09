@@ -77,3 +77,38 @@ def geometric_metrics(X, labels):
     with np.errstate(over='ignore',invalid='ignore'):
         pbm=_metric(((E1/Ek)*center_distance.max()/k)**2) if Ek>0 else Metric(None,'max','Tổng khoảng cách nội cụm bằng 0.')
     return dict(silhouette=_metric(np.mean(silhouettes)),ch=ch,db=db,dunn=dunn,pbm=pbm)
+
+
+def pair_counts(reference, predicted):
+    """a: cùng/cùng, b: cùng/khác, c: khác/cùng, d: khác/khác.
+
+    Đếm bằng contingency; chỉ xét cặp không thứ tự i<j, bất biến tên cụm.
+    """
+    reference=_labels(reference); predicted=_labels(predicted,len(reference))
+    _,a=np.unique(reference,return_inverse=True)
+    _,b=np.unique(predicted,return_inverse=True)
+    def choose2(counts):
+        return sum(int(v)*(int(v)-1)//2 for v in counts)
+    _,counts=np.unique(np.column_stack([a,b]),axis=0,return_counts=True)
+    same=choose2(counts)
+    together_ref=choose2(np.bincount(a))
+    together_pred=choose2(np.bincount(b))
+    total=len(a)*(len(a)-1)//2
+    return dict(a=same,b=together_ref-same,c=together_pred-same,
+                d=total-together_ref-together_pred+same)
+
+
+def external_metrics(reference, predicted):
+    reference=_labels(reference); predicted=_labels(predicted,len(reference))
+    if len(reference)<2:
+        return {name:Metric(None,'max','Cần ít nhất hai điểm để đếm cặp.') for name in ('ari','jaccard')}
+    counts=pair_counts(reference,predicted)
+    a,b,c,d=(counts[name] for name in ('a','b','c','d'))
+    total=a+b+c+d
+    expected=(a+b)*(a+c)/total
+    denominator=((a+b)+(a+c))/2-expected
+    # Phân hoạch tương đương suy biến (cùng một cụm hoặc toàn singleton): ARI=1.
+    ari=1.0 if denominator==0 else (a-expected)/denominator
+    # Hai tập cặp cùng cụm đều rỗng: Jaccard=1 theo quy ước tập rỗng bằng nhau.
+    jaccard=a/(a+b+c) if a+b+c else 1.0
+    return dict(ari=_metric(ari),jaccard=_metric(jaccard))
