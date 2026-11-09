@@ -2,13 +2,26 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; implementation checkpoint `5517e0459d62a8686e2ee477244a94882e4e7494` (UI-003).
+- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; baseline task `4385c81635392a968749faaa91287f4ceaddc17d`; working tree sạch trước INIT.
 - Khởi động: `python -m streamlit run app.py`; kiểm tra: `python -m pytest -q`.
-- Đã verified tuần tự đến `UI-003`; không có task đang mở. Phạm vi được giao đến DOC-002, dừng trước LATER-001.
-- Check: python -m pytest -q tests/test_app.py tests/test_experiments.py PASS: 15 tests. AppTest sửa bảng gây trùng được báo lỗi, reset/preset0.6, dòng tắt bỏ qua, FCM bỏ qua bảng; validation EXE chặn dữ liệu sai. Diff review/check PASS.
-- Blocker: không có; task kế tiếp: UI-004. Không có thay đổi người dùng có sẵn; metadata hậu commit được commit trước chuyển task/handoff.
+- Task duy nhất: `UI-004` — INIT pass, EXE đang làm; phạm vi đã giao đến DOC-002, không làm LATER.
+- Môi trường: Anaconda Python 3.13.9; imports NumPy/SciPy/pandas/sklearn/Streamlit/Plotly đã kiểm tra.
+- Blocker: không có; không có thay đổi người dùng có sẵn.
 
 ## Nhật ký Phiên
+
+### Phiên 028
+
+- Ngày: 2026-11-09T23:23:35+07:00 (Asia/Saigon).
+- Mục tiêu: UI-004 — Biểu đồ, bảng U và chọn vòng lặp. Yêu cầu: thực hiện hết feature đến trước later. Scope/files: app.py, src/ui.py, tests/test_app.py. Không mở task tiếp theo trước khi commit task này. Acceptance criteria giữ nguyên: Biểu đồ điểm/tâm và bảng U khớp snapshot đang chọn; Thanh chọn từ vòng 0 đến cuối và đường hội tụ; Đổi vòng không chạy lại fit và không làm mất kết quả.
+- INIT: branch main, HEAD `4385c81635392a968749faaa91287f4ceaddc17d`, git status sạch; interpreter/dependencies kế thừa ENV-001 đã kiểm tra lại đầu đợt; baseline liên quan PASS ở checkpoint trước (đầu đợt 28 tests). Không có thay đổi người dùng có sẵn.
+- Đã hoàn thành: EXE và acceptance checks PASS; diff đã review trong scope, chờ commit.
+- Xác minh đã chạy: python -m pytest -q tests/test_app.py tests/test_history.py PASS: 10 tests. Chạy đơn, bảng U/tâm đúng vòng, Plotly/hội tụ và slider0..cuối; spy chứng minh đổi vòng không fit lại. Lỗi test tooling ban đầu: AppTest dataframe không callable theo key, sửa truy xuất theo schema cột; UI không lỗi. Diff review/check PASS.
+- Bằng chứng đã ghi lại: chỉ tính tests chạy trên src mới; không dùng kết quả khảo sát cũ thay nghiệm thu.
+- Commit: chờ acceptance tests và review diff.
+- Tệp hoặc artifact đã cập nhật: app.py, src/ui.py, tests/test_app.py.
+- Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi đang mở trong scope; giới hạn ngoài scope giữ nguyên.
+- Bước tốt nhất tiếp theo: hoàn tất EXE và COMMIT của UI-004.
 
 ### Phiên 027
 

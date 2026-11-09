@@ -7,7 +7,8 @@ import streamlit as st
 
 from src.data import load_paper_data, demo_initial_centers
 from src.algorithms import Config
-from src.experiments import supervision_from_rows
+from src.experiments import supervision_from_rows, run_experiment
+from src.ui import render_snapshot
 
 st.set_page_config(page_title="Phân cụm mờ bán giám sát", page_icon="🔬")
 st.title("Phân cụm mờ bán giám sát")
@@ -84,3 +85,16 @@ if algorithm!='fcm':
     except ValueError as exc:
         supervision_error=str(exc)
         st.error(supervision_error)
+
+if st.button('Chạy thuật toán',type='primary',key='run',disabled=supervision_error is not None):
+    try:
+        with st.spinner('Đang phân cụm…'):
+            experiment=run_experiment(X,[config],initial_centers,B,targets,reference)
+        st.session_state['experiment']=experiment
+        st.session_state['run_revision']=st.session_state.get('run_revision',0)+1
+    except (ValueError,ArithmeticError) as exc:
+        st.error(f'Không thể chạy: {exc}')
+
+if 'experiment' in st.session_state:
+    st.subheader('Kết quả và diễn biến')
+    render_snapshot(st.session_state['experiment'],NAMES,st.session_state['run_revision'])

@@ -3,6 +3,9 @@
 from pathlib import Path
 
 from streamlit.testing.v1 import AppTest
+import numpy as np
+from unittest.mock import patch
+from src.algorithms import fit
 
 
 def test_entry_point_renders_demo_without_exception():
@@ -54,3 +57,21 @@ def test_supervision_editor_validation_preset_and_disable():
     assert not app.error
     app.selectbox(key='algorithm').select('fcm').run()
     assert not app.exception
+
+
+def test_snapshot_selection_changes_tables_without_fitting_again():
+    with patch('src.experiments.fit',wraps=fit) as spy:
+        app=AppTest.from_file(str(Path(__file__).resolve().parents[1]/'app.py')).run()
+        app.button(key='run').click().run()
+        assert not app.exception and spy.call_count==1
+        exp=app.session_state['experiment']; result=exp.results['fcm']
+        table=next(d.value for d in app.dataframe if 'U1' in d.value.columns)
+        np.testing.assert_allclose(table[['U1','U2']],result.membership)
+        app.slider[0].set_value(0).run()
+        assert spy.call_count==1
+        table=next(d.value for d in app.dataframe if 'U1' in d.value.columns)
+        centers=next(d.value for d in app.dataframe if 'Cụm' in d.value.columns)
+        np.testing.assert_allclose(table[['U1','U2']],result.history[0].membership)
+        np.testing.assert_allclose(centers[['x','y']],result.history[0].centers)
+        app.slider[0].set_value(result.n_iter).run()
+        assert spy.call_count==1 and not app.exception

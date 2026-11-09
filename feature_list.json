@@ -663,19 +663,25 @@
       "phase": "P3",
       "title": "Biểu đồ, bảng U và chọn vòng lặp",
       "priority": "must",
-      "status": "planned",
+      "status": "implemented_unverified",
       "passes": false,
       "depends_on": [
         "UI-003",
         "CORE-003"
       ],
-      "files": [],
+      "files": [
+        "app.py",
+        "src/ui.py",
+        "tests/test_app.py"
+      ],
       "acceptance_criteria": [
         "Biểu đồ điểm/tâm và bảng U khớp snapshot đang chọn",
         "Thanh chọn từ vòng 0 đến cuối và đường hội tụ",
         "Đổi vòng không chạy lại fit và không làm mất kết quả"
       ],
-      "evidence": [],
+      "evidence": [
+        "python -m pytest -q tests/test_app.py tests/test_history.py PASS: 10 tests. Chạy đơn, bảng U/tâm đúng vòng, Plotly/hội tụ và slider0..cuối; spy chứng minh đổi vòng không fit lại. Lỗi test tooling ban đầu: AppTest dataframe không callable theo key, sửa truy xuất theo schema cột; UI không lỗi. Diff review/check PASS."
+      ],
       "completion_commit": null,
       "completed_at": null,
       "sequence": 21
@@ -874,7 +880,7 @@
     "blocked": "Có trở ngại cụ thể",
     "deferred": "Để phase sau theo phạm vi đã chốt"
   },
-  "workflow_state": "verified_through_UI-003",
+  "workflow_state": "UI-004_EXE",
   "workflow": {
     "wid_limit": 1,
     "stages": [
@@ -891,7 +897,7 @@
       "Có Git commit local, checkpoint và completion_commit thật",
       "Working tree sạch trong scope; handoff có commit hash và status"
     ],
-    "active_task": null,
+    "active_task": "UI-004",
     "legacy_drafts_policy": "Năm file mã nguồn nháp đã xóa theo yêu cầu. Feature tương ứng trở về planned; không tính kiểm tra cũ là nghiệm thu mã mới.",
     "source_reset": {
       "requested": true,
