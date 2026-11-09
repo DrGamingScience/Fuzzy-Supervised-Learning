@@ -2,13 +2,26 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; implementation checkpoint `6606fe57a0be45b7b6f12de6bd30feadcf81b211` (UI-004).
+- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; baseline task `49417c9844c8f9b8503d30e3b603b56d4b79bd12`; working tree sạch trước INIT.
 - Khởi động: `python -m streamlit run app.py`; kiểm tra: `python -m pytest -q`.
-- Đã verified tuần tự đến `UI-004`; không có task đang mở. Phạm vi được giao đến DOC-002, dừng trước LATER-001.
-- Check: python -m pytest -q tests/test_app.py tests/test_history.py PASS: 10 tests. Chạy đơn, bảng U/tâm đúng vòng, Plotly/hội tụ và slider0..cuối; spy chứng minh đổi vòng không fit lại. Lỗi test tooling ban đầu: AppTest dataframe không callable theo key, sửa truy xuất theo schema cột; UI không lỗi. Diff review/check PASS.
-- Blocker: không có; task kế tiếp: UI-005. Không có thay đổi người dùng có sẵn; metadata hậu commit được commit trước chuyển task/handoff.
+- Task duy nhất: `UI-005` — INIT pass, EXE đang làm; phạm vi đã giao đến DOC-002, không làm LATER.
+- Môi trường: Anaconda Python 3.13.9; imports NumPy/SciPy/pandas/sklearn/Streamlit/Plotly đã kiểm tra.
+- Blocker: không có; không có thay đổi người dùng có sẵn.
 
 ## Nhật ký Phiên
+
+### Phiên 029
+
+- Ngày: 2026-11-09T23:25:01+07:00 (Asia/Saigon).
+- Mục tiêu: UI-005 — Chạy đơn, so sánh và tải kết quả. Yêu cầu: thực hiện hết feature đến trước later. Scope/files: app.py, src/ui.py, tests/test_app.py. Không mở task tiếp theo trước khi commit task này. Acceptance criteria giữ nguyên: Chạy một hoặc mọi thuật toán trên cùng điều kiện; Hiển thị metrics và cảnh báo eSFCM; Tải ZIP và phân biệt kết quả cũ khi chỉnh cấu hình.
+- INIT: branch main, HEAD `49417c9844c8f9b8503d30e3b603b56d4b79bd12`, git status sạch; interpreter/dependencies kế thừa ENV-001 đã kiểm tra lại đầu đợt; baseline liên quan PASS ở checkpoint trước (đầu đợt 28 tests). Không có thay đổi người dùng có sẵn.
+- Đã hoàn thành: EXE và acceptance checks PASS; diff đã review trong scope, chờ commit.
+- Xác minh đã chạy: python -m pytest -q tests/test_app.py tests/test_export.py PASS: 7 tests. Chạy đơn/cả5, metrics và cảnh báo eSFCM, tải ZIP, thay epsilon đánh dấu kết quả cũ/giữ ZIP đúng lần chạy, chạy lại xóa stale; diff review/check PASS.
+- Bằng chứng đã ghi lại: chỉ tính tests chạy trên src mới; không dùng kết quả khảo sát cũ thay nghiệm thu.
+- Commit: chờ acceptance tests và review diff.
+- Tệp hoặc artifact đã cập nhật: app.py, src/ui.py, tests/test_app.py.
+- Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi đang mở trong scope; giới hạn ngoài scope giữ nguyên.
+- Bước tốt nhất tiếp theo: hoàn tất EXE và COMMIT của UI-005.
 
 ### Phiên 028
 

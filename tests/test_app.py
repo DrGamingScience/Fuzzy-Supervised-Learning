@@ -75,3 +75,21 @@ def test_snapshot_selection_changes_tables_without_fitting_again():
         np.testing.assert_allclose(centers[['x','y']],result.history[0].centers)
         app.slider[0].set_value(result.n_iter).run()
         assert spy.call_count==1 and not app.exception
+
+
+def test_compare_all_download_warning_and_stale_results():
+    app=AppTest.from_file(str(Path(__file__).resolve().parents[1]/'app.py')).run()
+    app.radio(key='mode').set_value('So sánh cả năm').run()
+    app.button(key='run').click().run(timeout=20)
+    assert not app.exception and len(app.session_state['experiment'].results)==5
+    assert app.session_state['export_bytes'][:2]==b'PK'
+    assert len(app.get('download_button'))==1
+    app.selectbox(key='result_algorithm').select('esfcm').run()
+    assert any('không khớp' in w.value for w in app.warning)
+    saved=app.session_state['export_bytes']
+    app.number_input(key='epsilon').set_value(0.001).run()
+    assert any('lần chạy trước' in w.value for w in app.warning)
+    assert saved==app.session_state['export_bytes']
+    app.button(key='run').click().run(timeout=20)
+    assert not any('lần chạy trước' in w.value for w in app.warning)
+    assert not app.exception

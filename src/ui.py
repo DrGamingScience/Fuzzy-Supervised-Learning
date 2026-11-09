@@ -4,8 +4,49 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
+from dataclasses import asdict
+import hashlib
+import json
 
 from src.metrics import supervision_mask
+from src.experiments import comparison_table
+
+METRIC_NAMES={'silhouette':'Silhouette','ch':'Calinski–Harabasz','db':'Davies–Bouldin',
+              'dunn':'Dunn gốc','pbm':'PBM','ari':'ARI','jaccard':'Jaccard theo cặp'}
+SCOPES={'geometric':'Hình học — toàn bộ','all':'Nhãn — toàn bộ','unsupervised':'Nhãn — chưa giám sát'}
+
+
+def request_signature(X,configs,initial_centers,B,targets,reference):
+    data=dict(X=X.tolist(),configs=[asdict(c) for c in configs],
+              initial_centers=None if initial_centers is None else initial_centers.tolist(),
+              B=B.tolist(),targets=targets.tolist(),reference=reference.tolist())
+    return hashlib.sha256(json.dumps(data,sort_keys=True,allow_nan=False).encode()).hexdigest()
+
+
+def render_metrics(experiment,name):
+    st.subheader('Đánh giá kết quả cuối')
+    st.caption('Nhãn cứng = argmax U. Metrics luôn đánh giá vòng cuối; đổi vòng xem phía trên không tính lại metrics. Tâm hình học tính từ nhãn cứng.')
+    rows=[]
+    for scope,metrics in experiment.reports[name].items():
+        for metric,value in metrics.items():
+            rows.append({'Phạm vi':SCOPES[scope],'Chỉ số':METRIC_NAMES[metric],
+                         'Giá trị':value.value,'Chiều tốt':'Nhỏ hơn ↓' if value.direction=='min' else 'Lớn hơn ↑',
+                         'Trạng thái':value.reason or 'Hợp lệ'})
+    st.dataframe(pd.DataFrame(rows),hide_index=True,width='stretch')
+
+
+def render_comparison(experiment,names):
+    st.subheader('So sánh cùng điều kiện')
+    st.caption('Cùng dữ liệu gốc và tâm đầu. B và M′ không có quy đổi tương đương. Không xếp hạng bằng J giữa các thuật toán.')
+    table=comparison_table(experiment)
+    columns=['algorithm','n_iter','elapsed_seconds','stop_reason','geometric.silhouette','geometric.ch',
+             'geometric.db','geometric.dunn','geometric.pbm','all.ari','all.jaccard','unsupervised.ari','unsupervised.jaccard']
+    table=table[columns].copy(); table['algorithm']=table['algorithm'].map(names)
+    table=table.rename(columns={'algorithm':'Thuật toán','n_iter':'Số vòng','elapsed_seconds':'Giây','stop_reason':'Dừng',
+        **{f'geometric.{key}':label for key,label in METRIC_NAMES.items() if key not in ('ari','jaccard')},
+        'all.ari':'ARI tất cả','all.jaccard':'Jaccard tất cả',
+        'unsupervised.ari':'ARI chưa giám sát','unsupervised.jaccard':'Jaccard chưa giám sát'})
+    st.dataframe(table,hide_index=True,width='stretch')
 
 
 def render_snapshot(experiment, names, revision):
