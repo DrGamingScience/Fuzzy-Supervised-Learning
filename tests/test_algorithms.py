@@ -5,7 +5,7 @@ import numpy as np
 import pytest
 
 from src.algorithms import Config, validate_inputs
-from src.data import demo_initial_centers, load_paper_data
+from src.data import demo_initial_centers, load_paper_data, membership_preset
 from src.algorithms import fit, update_membership
 
 
@@ -70,3 +70,20 @@ def test_fcm_seed_and_zero_distance():
     U=update_membership(X,np.array([[0.,0],[0,0]]),Config())
     np.testing.assert_allclose(U,0.5)
     np.testing.assert_array_equal(fit(X).centers,fit(X).centers)
+
+
+@pytest.mark.parametrize('level,expected', [(0,0.188663),(0.3,0.451669),(0.6,0.693818)])
+def test_ssfcm_paper_and_weighted_centers(level,expected):
+    X,_=load_paper_data(); V=demo_initial_centers(); B=membership_preset(level)
+    c=Config(algorithm='ssfcm')
+    r=fit(X,c,V,B)
+    assert r.membership[8,0]==pytest.approx(expected,abs=1e-6)
+    assert (r.membership>=B).all()
+    np.testing.assert_allclose(r.membership.sum(axis=1),1)
+    initial=update_membership(X,V,c,B)
+    w=(initial-B)**2
+    expected_V=(w.T@X)/w.sum(axis=0)[:,None]
+    one=fit(X,replace(c,max_iter=1),V,B)
+    np.testing.assert_allclose(one.centers,expected_V)
+    if level==0:
+        np.testing.assert_array_equal(r.membership,fit(X,Config(),V).membership)
