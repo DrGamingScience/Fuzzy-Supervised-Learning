@@ -2,13 +2,26 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Thư mục gốc kho lưu trữ: `D:\Downloads\Semi-supervised-learning`; Git branch `main`, baseline ban đầu `4f7fd34` (giữ nguyên hồ sơ/cấu hình có sẵn, chưa kiểm chứng).
-- Đường dẫn khởi động chuẩn: `python -m streamlit run app.py` — entry point tối thiểu đã được kiểm tra.
-- Đường dẫn xác minh chuẩn: `python -m pytest -q`; hồ sơ: `python -m json.tool feature_list.json > $null` (PowerShell).
-- Tính năng chưa hoàn thành có mức ưu tiên cao nhất hiện tại: `CORE-001` planned, chưa được giao; không có task đang mở. DOC-001, ENV-001, INIT-001, DATA-001 verified, có completion_commit/completed_at trong JSON.
-- Sự cố chặn hiện tại: không có. 28 tests PASS; server smoke đã dừng. Entry point chỉ báo sẵn sàng; chưa có thuật toán, metrics, UI dữ liệu hoặc README. Baseline giữ nguyên file có sẵn, không còn thay đổi người dùng ngoài scope cần bàn giao.
+- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; baseline task `e8394943e24b1d6bf1d9537f583a94d180e687eb`; working tree sạch trước INIT.
+- Khởi động: `python -m streamlit run app.py`; kiểm tra: `python -m pytest -q`.
+- Task duy nhất: `CORE-001` — INIT pass, EXE đang làm; phạm vi đã giao đến DOC-002, không làm LATER.
+- Môi trường: Anaconda Python 3.13.9; imports NumPy/SciPy/pandas/sklearn/Streamlit/Plotly đã kiểm tra.
+- Blocker: không có; không có thay đổi người dùng có sẵn.
 
 ## Nhật ký Phiên
+
+### Phiên 011
+
+- Ngày: 2026-11-09T23:08:25+07:00 (Asia/Saigon).
+- Mục tiêu: CORE-001 — Cấu hình và validation đầu vào. Yêu cầu: thực hiện hết feature đến trước later. Scope/files: src/algorithms.py, tests/test_algorithms.py. Không mở task tiếp theo trước khi commit task này. Acceptance criteria giữ nguyên: Kiểm tra shape, số hữu hạn, miền tham số và tổng hàng B; Thông báo lỗi rõ cho cấu hình sai; Tham số không áp dụng không gây hạn chế vô lý cho thuật toán khác.
+- INIT: branch main, HEAD `e8394943e24b1d6bf1d9537f583a94d180e687eb`, git status sạch; interpreter/dependencies kế thừa ENV-001 đã kiểm tra lại đầu đợt; baseline liên quan PASS ở checkpoint trước (đầu đợt 28 tests). Không có thay đổi người dùng có sẵn.
+- Đã hoàn thành: EXE và acceptance checks PASS; diff đã review trong scope, chờ commit.
+- Xác minh đã chạy: python -m pytest -q PASS: 49 tests; shape/finiteness/config/B/targets và tham số không áp dụng; git diff --check PASS.
+- Bằng chứng đã ghi lại: chỉ tính tests chạy trên src mới; không dùng kết quả khảo sát cũ thay nghiệm thu.
+- Commit: chờ acceptance tests và review diff.
+- Tệp hoặc artifact đã cập nhật: src/algorithms.py, tests/test_algorithms.py.
+- Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi đang mở trong scope; giới hạn ngoài scope giữ nguyên.
+- Bước tốt nhất tiếp theo: hoàn tất EXE và COMMIT của CORE-001.
 
 ### Phiên 010
 

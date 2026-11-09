@@ -148,18 +148,23 @@
       "phase": "P1",
       "title": "Cấu hình và validation đầu vào",
       "priority": "must",
-      "status": "planned",
+      "status": "implemented_unverified",
       "passes": false,
       "depends_on": [
         "DATA-001"
       ],
-      "files": [],
+      "files": [
+        "src/algorithms.py",
+        "tests/test_algorithms.py"
+      ],
       "acceptance_criteria": [
         "Kiểm tra shape, số hữu hạn, miền tham số và tổng hàng B",
         "Thông báo lỗi rõ cho cấu hình sai",
         "Tham số không áp dụng không gây hạn chế vô lý cho thuật toán khác"
       ],
-      "evidence": [],
+      "evidence": [
+        "python -m pytest -q PASS: 49 tests; shape/finiteness/config/B/targets và tham số không áp dụng; git diff --check PASS."
+      ],
       "completion_commit": null,
       "completed_at": null,
       "expected_files": [
@@ -788,7 +793,7 @@
     "blocked": "Có trở ngại cụ thể",
     "deferred": "Để phase sau theo phạm vi đã chốt"
   },
-  "workflow_state": "verified_through_DATA-001",
+  "workflow_state": "CORE-001_EXE",
   "workflow": {
     "wid_limit": 1,
     "stages": [
@@ -805,7 +810,7 @@
       "Có Git commit local, checkpoint và completion_commit thật",
       "Working tree sạch trong scope; handoff có commit hash và status"
     ],
-    "active_task": null,
+    "active_task": "CORE-001",
     "legacy_drafts_policy": "Năm file mã nguồn nháp đã xóa theo yêu cầu. Feature tương ứng trở về planned; không tính kiểm tra cũ là nghiệm thu mã mới.",
     "source_reset": {
       "requested": true,
@@ -817,6 +822,7 @@
       "cleanup_verified_at": "2026-11-09T22:56:41+07:00"
     },
     "detailed_policy": "docs/WORKFLOW.md",
-    "next_unassigned_task": "CORE-001"
+    "next_unassigned_task": null,
+    "authorized_scope": "CORE-001 → DOC-002; dừng trước LATER-001 theo yêu cầu mới ngày 09/11/2026"
   }
 }
