@@ -2,11 +2,11 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; baseline task `faf873cfa204d9b4664aa63dd1a8395b6e5e40d5`; working tree sạch trước INIT.
+- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; implementation checkpoint `8450c58a3e8845a7b0621b44d9d25e6f005f487d` (EXP-002).
 - Khởi động: `python -m streamlit run app.py`; kiểm tra: `python -m pytest -q`.
-- Task duy nhất: `EXP-002` — INIT pass, EXE đang làm; phạm vi đã giao đến DOC-002, không làm LATER.
-- Môi trường: Anaconda Python 3.13.9; imports NumPy/SciPy/pandas/sklearn/Streamlit/Plotly đã kiểm tra.
-- Blocker: không có; không có thay đổi người dùng có sẵn.
+- Đã verified tuần tự đến `EXP-002`; không có task đang mở. Phạm vi được giao đến DOC-002, dừng trước LATER-001.
+- Check: python -m pytest -q tests/test_export.py tests/test_experiments.py PASS: 14 tests. Đọc lại ZIP JSON strict và CSV UTF-8 BOM, toàn bộ X/B/targets/U/V/nhãn/config/metrics/warnings/mọi snapshot; undefined là null; diff review/check PASS.
+- Blocker: không có; task kế tiếp: UI-001. Không có thay đổi người dùng có sẵn; metadata hậu commit được commit trước chuyển task/handoff.
 
 ## Nhật ký Phiên
 
@@ -18,10 +18,10 @@
 - Đã hoàn thành: EXE và acceptance checks PASS; diff đã review trong scope, chờ commit.
 - Xác minh đã chạy: python -m pytest -q tests/test_export.py tests/test_experiments.py PASS: 14 tests. Đọc lại ZIP JSON strict và CSV UTF-8 BOM, toàn bộ X/B/targets/U/V/nhãn/config/metrics/warnings/mọi snapshot; undefined là null; diff review/check PASS.
 - Bằng chứng đã ghi lại: chỉ tính tests chạy trên src mới; không dùng kết quả khảo sát cũ thay nghiệm thu.
-- Commit: chờ acceptance tests và review diff.
+- Commit: `8450c58a3e8845a7b0621b44d9d25e6f005f487d` (EXP-002); hồ sơ hậu commit được commit riêng trước task tiếp theo.
 - Tệp hoặc artifact đã cập nhật: src/experiments.py, tests/test_export.py.
 - Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi đang mở trong scope; giới hạn ngoài scope giữ nguyên.
-- Bước tốt nhất tiếp theo: hoàn tất EXE và COMMIT của EXP-002.
+- Bước tốt nhất tiếp theo: UI-001; working tree task sẽ sạch sau commit metadata.
 
 ### Phiên 023
 
