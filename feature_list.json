@@ -1,0 +1,826 @@
+{
+  "schema_version": 4,
+  "project": "Semi-supervised fuzzy clustering demo",
+  "updated_on": "2026-11-09",
+  "display_policy": {
+    "features": "Giữ thứ tự kế hoạch từ đầu: sequence bắt đầu 0 và tăng dần. Không đổi vị trí khi feature hoàn thành.",
+    "completed_at": "Thời điểm hoàn thành thực tế theo ISO 8601; task chưa DONE để null. Không dùng trường này để sắp xếp feature.",
+    "progress": "Đúng mẫu Nhật ký Tiến độ: trạng thái đã xác minh ở đầu, Nhật ký Phiên bên dưới; phiên mới chèn đầu, giữ mọi phiên cũ.",
+    "session_numbering": "Phiên 001, 002... có ID cố định tăng theo thời gian; hiển thị phiên có số lớn nhất trước. Không đổi số hoặc xóa phiên cũ.",
+    "execution": "Thứ tự nhật ký không thay đổi dependency, WID=1 hoặc phạm vi task được giao."
+  },
+  "features": [
+    {
+      "id": "DOC-001",
+      "phase": "P0",
+      "title": "Đặc tả và bộ hồ sơ triển khai",
+      "priority": "must",
+      "status": "blocked",
+      "passes": false,
+      "depends_on": [],
+      "files": [
+        "AGENTS.md",
+        "feature_list.json",
+        "progress.md",
+        "docs/DAC_TA_BAN_DAU.md",
+        "docs/KE_HOACH_TRIEN_KHAI.md",
+        "docs/WORKFLOW.md"
+      ],
+      "acceptance_criteria": [
+        "Preference và phạm vi phase sau đúng phỏng vấn",
+        "AGENTS dưới 100 dòng, trả lời 5 câu hỏi và có lệnh khởi động/check rõ điều kiện",
+        "WID=1, INIT/EXE/COMMIT và Definition of Done rõ ràng",
+        "Feature giữ thứ tự kế hoạch sequence từ 0; progress đúng mẫu Nhật ký Phiên, phiên mới chèn đầu và giữ toàn bộ phiên cũ",
+        "JSON hợp lệ, ID/dependency/trạng thái nhất quán, tiếng Việt UTF-8 đúng",
+        "Reset src đúng yêu cầu, ghi rõ phần dọn dẹp chưa xong và không tự triển khai feature",
+        "Đóng task bằng Git commit/checkpoint thật"
+      ],
+      "evidence": [
+        "2026-11-09: đối chiếu preference với các câu trả lời phỏng vấn; kiểm tra Python qua stdin PASS cho JSON, ID duy nhất, phase/status, passes invariant, file tồn tại, dependency không chu trình và tài liệu không rỗng. Đây là kiểm tra hồ sơ, không phải kiểm chứng mã src hoặc xác nhận người dùng đã duyệt kế hoạch.",
+        "2026-11-09: AGENTS 76 dòng, đủ 5 mục và lệnh chính; kiểm tra bằng Python PASS. Thêm Bàn giao nhanh đầu progress. python -m compileall -q src exit 0, chỉ kiểm tra cú pháp; app.py/tests chưa tồn tại, hướng dẫn đã ghi rõ điều kiện sử dụng.",
+        "09/11/2026: Git báo not a git repository; tài liệu từng pass theo quy tắc cũ nhưng chưa DONE theo chuẩn commit/checkpoint mới.",
+        "09/11/2026: kiểm tra hồ sơ WID=1/INIT/dependency đã pass; không phải bằng chứng mã thuật toán đúng.",
+        "09/11/2026: xóa 5 file src/*.py bằng apply_patch; shell từ chối xóa thư mục/cache, nên chưa ghi src đã xóa hoàn toàn.",
+        "09/11/2026: thêm completed_at và display_policy; 14 feature có mã bị xóa được đưa về planned. Kiểm tra cuối ghi trong progress.",
+        "09/11/2026: sửa theo làm rõ của người dùng: feature không đảo theo hoàn thành; progress chuyển thành Phiên 006 → 001, bảo toàn nguyên văn nội dung 5 mốc nhật ký cũ. Không thay đổi trạng thái nghiệm thu hay tạo commit."
+      ],
+      "completion_commit": null,
+      "completed_at": null,
+      "sequence": 0
+    },
+    {
+      "id": "ENV-001",
+      "phase": "INIT",
+      "title": "INIT: interpreter, dependencies và cấu hình local",
+      "priority": "must",
+      "status": "implemented_unverified",
+      "passes": false,
+      "depends_on": [
+        "DOC-001"
+      ],
+      "files": [
+        "requirements.txt",
+        "requirements-dev.txt",
+        "pyproject.toml",
+        ".streamlit/config.toml",
+        ".gitignore"
+      ],
+      "acceptance_criteria": [
+        "Xác định interpreter/môi trường và có lệnh setup lặp lại được",
+        "Dependencies/imports pass bằng lệnh thực thi, ghi phiên bản và exit code",
+        "Không chạy thuật toán hoặc thêm tính năng để kiểm chứng môi trường",
+        "Phân loại lỗi, ghi log/checkpoint và commit theo Definition of Done"
+      ],
+      "evidence": [
+        "Đã xác nhận các package chính có sẵn và đọc phiên bản trong môi trường hiện tại; chưa kiểm tra cài đặt mới hoặc khởi động app"
+      ],
+      "completion_commit": null,
+      "completed_at": null,
+      "sequence": 1
+    },
+    {
+      "id": "INIT-001",
+      "phase": "INIT",
+      "title": "INIT: smoke test và entry point tối thiểu",
+      "priority": "must",
+      "status": "planned",
+      "passes": false,
+      "depends_on": [
+        "ENV-001"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "Có test môi trường độc lập thuật toán, pytest chạy và thực sự pass",
+        "Entry point Streamlit tối thiểu khởi động/trả trang local/dừng được; không thêm clustering hoặc metrics",
+        "Log baseline và phân loại environment/product/unknown; không sửa expected output để né lỗi",
+        "Commit/checkpoint trước khi EXE DATA/CORE/ALG"
+      ],
+      "evidence": [],
+      "completion_commit": null,
+      "completed_at": null,
+      "sequence": 2
+    },
+    {
+      "id": "DATA-001",
+      "phase": "P1",
+      "title": "Bộ 20 điểm và nhóm tham chiếu",
+      "priority": "must",
+      "status": "planned",
+      "passes": false,
+      "depends_on": [
+        "INIT-001"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "20 tọa độ đúng Table I 2009 / Table 1 2021",
+        "Nhãn hai nhóm 10 điểm tách khỏi X",
+        "Khởi tạo và preset được mô tả đúng nguồn và quy ước ID"
+      ],
+      "evidence": [],
+      "completion_commit": null,
+      "completed_at": null,
+      "expected_files": [
+        "src/data.py"
+      ],
+      "reset_note": "09/11/2026: mã nháp .py đã xóa theo yêu cầu; triển khai lại từ đầu khi được giao task. Cache còn lại không phải mã nguồn hay bằng chứng hoàn thành.",
+      "sequence": 3
+    },
+    {
+      "id": "CORE-001",
+      "phase": "P1",
+      "title": "Cấu hình và validation đầu vào",
+      "priority": "must",
+      "status": "planned",
+      "passes": false,
+      "depends_on": [
+        "DATA-001"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "Kiểm tra shape, số hữu hạn, miền tham số và tổng hàng B",
+        "Thông báo lỗi rõ cho cấu hình sai",
+        "Tham số không áp dụng không gây hạn chế vô lý cho thuật toán khác"
+      ],
+      "evidence": [],
+      "completion_commit": null,
+      "completed_at": null,
+      "expected_files": [
+        "src/algorithms.py"
+      ],
+      "reset_note": "09/11/2026: mã nháp .py đã xóa theo yêu cầu; triển khai lại từ đầu khi được giao task. Cache còn lại không phải mã nguồn hay bằng chứng hoàn thành.",
+      "sequence": 4
+    },
+    {
+      "id": "ALG-001",
+      "phase": "P1",
+      "title": "FCM đối chứng",
+      "priority": "must",
+      "status": "planned",
+      "passes": false,
+      "depends_on": [
+        "CORE-001"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "Cập nhật U và V đúng công thức",
+        "U9,1 gần 0.19 và tâm phù hợp ví dụ 2021",
+        "Hữu hạn, tổng hàng U bằng 1 và hành vi dừng rõ ràng"
+      ],
+      "evidence": [],
+      "completion_commit": null,
+      "completed_at": null,
+      "expected_files": [
+        "src/algorithms.py"
+      ],
+      "reset_note": "09/11/2026: mã nháp .py đã xóa theo yêu cầu; triển khai lại từ đầu khi được giao task. Cache còn lại không phải mã nguồn hay bằng chứng hoàn thành.",
+      "sequence": 5
+    },
+    {
+      "id": "ALG-002",
+      "phase": "P1",
+      "title": "sSFCM m > 1",
+      "priority": "must",
+      "status": "planned",
+      "passes": false,
+      "depends_on": [
+        "ALG-001"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "Cập nhật U có cận dưới B, tâm dùng trọng số |U-B|^m",
+        "B = 0 thu về FCM cùng điều kiện",
+        "U9,1 gần 0.45 / 0.69 với B = 0.3 / 0.6"
+      ],
+      "evidence": [],
+      "completion_commit": null,
+      "completed_at": null,
+      "expected_files": [
+        "src/algorithms.py"
+      ],
+      "reset_note": "09/11/2026: mã nháp .py đã xóa theo yêu cầu; triển khai lại từ đầu khi được giao task. Cache còn lại không phải mã nguồn hay bằng chứng hoàn thành.",
+      "sequence": 6
+    },
+    {
+      "id": "ALG-003",
+      "phase": "P1",
+      "title": "sSFCM m = 1",
+      "priority": "must",
+      "status": "planned",
+      "passes": false,
+      "depends_on": [
+        "ALG-002"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "Nhánh riêng không chia cho m-1",
+        "Phần dư được gán theo cụm gần nhất, quy tắc hòa rõ ràng",
+        "Đối chiếu Table III 2009 và trường hợp B = 0"
+      ],
+      "evidence": [],
+      "completion_commit": null,
+      "completed_at": null,
+      "expected_files": [
+        "src/algorithms.py"
+      ],
+      "reset_note": "09/11/2026: mã nháp .py đã xóa theo yêu cầu; triển khai lại từ đầu khi được giao task. Cache còn lại không phải mã nguồn hay bằng chứng hoàn thành.",
+      "sequence": 7
+    },
+    {
+      "id": "ALG-004",
+      "phase": "P1",
+      "title": "eSFCM entropy",
+      "priority": "must",
+      "status": "planned",
+      "passes": false,
+      "depends_on": [
+        "CORE-001"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "Công thức (14), tâm trọng số U và entropy đúng bài 2009",
+        "Softmax ổn định và quy ước 0 log 0 rõ ràng",
+        "Kiểm tra trực tiếp công thức, báo sai khác bảng thay vì ép khớp bảng"
+      ],
+      "evidence": [],
+      "completion_commit": null,
+      "completed_at": null,
+      "expected_files": [
+        "src/algorithms.py"
+      ],
+      "reset_note": "09/11/2026: mã nháp .py đã xóa theo yêu cầu; triển khai lại từ đầu khi được giao task. Cache còn lại không phải mã nguồn hay bằng chứng hoàn thành.",
+      "sequence": 8
+    },
+    {
+      "id": "ALG-005",
+      "phase": "P1",
+      "title": "sSMC-FCM với M' thủ công",
+      "priority": "must",
+      "status": "planned",
+      "passes": false,
+      "depends_on": [
+        "ALG-001"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "Giải (17)-(20), tâm dùng U^(m_ik)",
+        "Kiểm tra residual/KKT tại các nghiệm cập nhật",
+        "M' = M thu về FCM, M' = 4 / 8 cho U9,1 gần 0.43 / 0.60"
+      ],
+      "evidence": [],
+      "completion_commit": null,
+      "completed_at": null,
+      "expected_files": [
+        "src/algorithms.py"
+      ],
+      "reset_note": "09/11/2026: mã nháp .py đã xóa theo yêu cầu; triển khai lại từ đầu khi được giao task. Cache còn lại không phải mã nguồn hay bằng chứng hoàn thành.",
+      "sequence": 9
+    },
+    {
+      "id": "CORE-002",
+      "phase": "P1",
+      "title": "Trường hợp suy biến và ổn định số",
+      "priority": "must",
+      "status": "planned",
+      "passes": false,
+      "depends_on": [
+        "ALG-001",
+        "ALG-002",
+        "ALG-003",
+        "ALG-004",
+        "ALG-005"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "Kiểm tra điểm trùng tâm, nhiều tâm trùng, điểm trùng và tổng B bằng 1",
+        "Mất trọng số có xử lý và cảnh báo rõ",
+        "Không âm thầm trả NaN/Inf hoặc phá ràng buộc U"
+      ],
+      "evidence": [],
+      "completion_commit": null,
+      "completed_at": null,
+      "expected_files": [
+        "src/algorithms.py"
+      ],
+      "reset_note": "09/11/2026: mã nháp .py đã xóa theo yêu cầu; triển khai lại từ đầu khi được giao task. Cache còn lại không phải mã nguồn hay bằng chứng hoàn thành.",
+      "sequence": 10
+    },
+    {
+      "id": "CORE-003",
+      "phase": "P1",
+      "title": "Snapshot và trạng thái hội tụ",
+      "priority": "must",
+      "status": "planned",
+      "passes": false,
+      "depends_on": [
+        "ALG-001",
+        "ALG-002",
+        "ALG-003",
+        "ALG-004",
+        "ALG-005"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "Snapshot giữ U tính theo chính V được lưu",
+        "Công bố vòng 0 và chuẩn dừng",
+        "Lịch sử không bị sửa sau các vòng sau, có trạng thái đạt epsilon/max_iter"
+      ],
+      "evidence": [],
+      "completion_commit": null,
+      "completed_at": null,
+      "expected_files": [
+        "src/algorithms.py"
+      ],
+      "reset_note": "09/11/2026: mã nháp .py đã xóa theo yêu cầu; triển khai lại từ đầu khi được giao task. Cache còn lại không phải mã nguồn hay bằng chứng hoàn thành.",
+      "sequence": 11
+    },
+    {
+      "id": "TEST-001",
+      "phase": "P1",
+      "title": "Bộ kiểm chứng toán và bảng bài báo",
+      "priority": "must",
+      "status": "planned",
+      "passes": false,
+      "depends_on": [
+        "ALG-001",
+        "ALG-002",
+        "ALG-003",
+        "ALG-004",
+        "ALG-005",
+        "CORE-002",
+        "CORE-003"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "Có tests kiểm chứng đúng công thức, ví dụ, baseline, KKT và trường hợp biên",
+        "Chạy pytest thành công và lưu lệnh/kết quả",
+        "Phân biệt tính thử nghiên cứu với kiểm thử trên mã src"
+      ],
+      "evidence": [],
+      "completion_commit": null,
+      "completed_at": null,
+      "sequence": 12
+    },
+    {
+      "id": "MET-001",
+      "phase": "P2",
+      "title": "Năm metrics hình học",
+      "priority": "must",
+      "status": "planned",
+      "passes": false,
+      "depends_on": [
+        "TEST-001"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "Silhouette, CH, DB, Dunn gốc và PBM đúng định nghĩa",
+        "Tâm từ nhãn cứng và chiều tối ưu đúng",
+        "Có đối chiếu độc lập; báo giá trị không xác định và lý do"
+      ],
+      "evidence": [],
+      "completion_commit": null,
+      "completed_at": null,
+      "expected_files": [
+        "src/metrics.py"
+      ],
+      "reset_note": "09/11/2026: mã nháp .py đã xóa theo yêu cầu; triển khai lại từ đầu khi được giao task. Cache còn lại không phải mã nguồn hay bằng chứng hoàn thành.",
+      "sequence": 13
+    },
+    {
+      "id": "MET-002",
+      "phase": "P2",
+      "title": "ARI và Jaccard theo cặp",
+      "priority": "must",
+      "status": "planned",
+      "passes": false,
+      "depends_on": [
+        "TEST-001"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "Đếm cặp đúng và bất biến theo hoán vị mã cụm",
+        "Đối chiếu số đếm tay và ARI thư viện",
+        "Quy ước phân hoạch suy biến được giải thích"
+      ],
+      "evidence": [],
+      "completion_commit": null,
+      "completed_at": null,
+      "expected_files": [
+        "src/metrics.py"
+      ],
+      "reset_note": "09/11/2026: mã nháp .py đã xóa theo yêu cầu; triển khai lại từ đầu khi được giao task. Cache còn lại không phải mã nguồn hay bằng chứng hoàn thành.",
+      "sequence": 14
+    },
+    {
+      "id": "MET-003",
+      "phase": "P2",
+      "title": "Báo cáo toàn bộ và điểm chưa giám sát",
+      "priority": "must",
+      "status": "planned",
+      "passes": false,
+      "depends_on": [
+        "MET-002"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "Mặt nạ giám sát đúng theo từng thuật toán",
+        "Có ARI/Jaccard cho toàn bộ và chưa giám sát",
+        "Ít hơn hai điểm có trạng thái không xác định"
+      ],
+      "evidence": [],
+      "completion_commit": null,
+      "completed_at": null,
+      "expected_files": [
+        "src/metrics.py",
+        "src/experiments.py"
+      ],
+      "reset_note": "09/11/2026: mã nháp .py đã xóa theo yêu cầu; triển khai lại từ đầu khi được giao task. Cache còn lại không phải mã nguồn hay bằng chứng hoàn thành.",
+      "sequence": 15
+    },
+    {
+      "id": "EXP-001",
+      "phase": "P2",
+      "title": "Chuyển bảng giám sát và bảng so sánh",
+      "priority": "must",
+      "status": "planned",
+      "passes": false,
+      "depends_on": [
+        "MET-001",
+        "MET-002",
+        "MET-003"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "Kiểm tra ID, trùng điểm, miền độ thuộc và dòng tắt",
+        "So sánh cùng dữ liệu/khởi tạo, công bố tham số",
+        "Không dùng J để xếp hạng khác thuật toán"
+      ],
+      "evidence": [],
+      "completion_commit": null,
+      "completed_at": null,
+      "expected_files": [
+        "src/experiments.py"
+      ],
+      "reset_note": "09/11/2026: mã nháp .py đã xóa theo yêu cầu; triển khai lại từ đầu khi được giao task. Cache còn lại không phải mã nguồn hay bằng chứng hoàn thành.",
+      "sequence": 16
+    },
+    {
+      "id": "EXP-002",
+      "phase": "P2",
+      "title": "Xuất dữ liệu và kết quả tái lập",
+      "priority": "must",
+      "status": "planned",
+      "passes": false,
+      "depends_on": [
+        "EXP-001",
+        "CORE-003"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "Xuất cấu hình, dữ liệu, U, tâm, nhãn, metrics, giám sát và mọi snapshot",
+        "Đọc lại ZIP/CSV/JSON và đối chiếu với kết quả gốc",
+        "JSON không có NaN/Inf, CSV đọc được tiếng Việt"
+      ],
+      "evidence": [],
+      "completion_commit": null,
+      "completed_at": null,
+      "expected_files": [
+        "src/experiments.py"
+      ],
+      "reset_note": "09/11/2026: mã nháp .py đã xóa theo yêu cầu; triển khai lại từ đầu khi được giao task. Cache còn lại không phải mã nguồn hay bằng chứng hoàn thành.",
+      "sequence": 17
+    },
+    {
+      "id": "UI-001",
+      "phase": "P3",
+      "title": "Khung UI offline và dữ liệu demo",
+      "priority": "must",
+      "status": "planned",
+      "passes": false,
+      "depends_on": [
+        "INIT-001",
+        "TEST-001"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "UI tiếng Việt đơn giản, xem được 20 điểm và nhóm tham chiếu",
+        "Chạy trên localhost với assets cục bộ",
+        "Không lẫn nhãn tham chiếu vào dữ liệu fit"
+      ],
+      "evidence": [],
+      "completion_commit": null,
+      "completed_at": null,
+      "sequence": 18
+    },
+    {
+      "id": "UI-002",
+      "phase": "P3",
+      "title": "Chọn thuật toán, tham số và preset",
+      "priority": "must",
+      "status": "planned",
+      "passes": false,
+      "depends_on": [
+        "UI-001"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "Chọn được năm thuật toán và tham số phù hợp",
+        "Preset 0 / 0.3 / 0.6, M' = 4 / 8",
+        "Seed/khởi tạo, epsilon và giới hạn vòng rõ ràng"
+      ],
+      "evidence": [],
+      "completion_commit": null,
+      "completed_at": null,
+      "sequence": 19
+    },
+    {
+      "id": "UI-003",
+      "phase": "P3",
+      "title": "Bảng sửa chỉ dẫn giám sát",
+      "priority": "must",
+      "status": "planned",
+      "passes": false,
+      "depends_on": [
+        "UI-002",
+        "EXP-001"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "Sửa/bật/tắt chỉ dẫn theo ID, cụm đích và độ thuộc khi áp dụng",
+        "Lỗi nhập có thông báo, không chạy với dữ liệu sai",
+        "M' và độ thuộc B không bị diễn giải là cùng tham số"
+      ],
+      "evidence": [],
+      "completion_commit": null,
+      "completed_at": null,
+      "sequence": 20
+    },
+    {
+      "id": "UI-004",
+      "phase": "P3",
+      "title": "Biểu đồ, bảng U và chọn vòng lặp",
+      "priority": "must",
+      "status": "planned",
+      "passes": false,
+      "depends_on": [
+        "UI-003",
+        "CORE-003"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "Biểu đồ điểm/tâm và bảng U khớp snapshot đang chọn",
+        "Thanh chọn từ vòng 0 đến cuối và đường hội tụ",
+        "Đổi vòng không chạy lại fit và không làm mất kết quả"
+      ],
+      "evidence": [],
+      "completion_commit": null,
+      "completed_at": null,
+      "sequence": 21
+    },
+    {
+      "id": "UI-005",
+      "phase": "P3",
+      "title": "Chạy đơn, so sánh và tải kết quả",
+      "priority": "must",
+      "status": "planned",
+      "passes": false,
+      "depends_on": [
+        "UI-004",
+        "EXP-002"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "Chạy một hoặc mọi thuật toán trên cùng điều kiện",
+        "Hiển thị metrics và cảnh báo eSFCM",
+        "Tải ZIP và phân biệt kết quả cũ khi chỉnh cấu hình"
+      ],
+      "evidence": [],
+      "completion_commit": null,
+      "completed_at": null,
+      "sequence": 22
+    },
+    {
+      "id": "QA-001",
+      "phase": "P3",
+      "title": "Kiểm tra luồng demo và trạng thái UI",
+      "priority": "must",
+      "status": "planned",
+      "passes": false,
+      "depends_on": [
+        "UI-005"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "Kiểm tra preset → sửa → chạy → chọn vòng → so sánh → xuất",
+        "Không có exception khi thao tác hợp lệ; lỗi nhập được xử lý",
+        "Có bằng chứng AppTest hoặc kiểm tra UI thực tế và lệnh khởi động"
+      ],
+      "evidence": [],
+      "completion_commit": null,
+      "completed_at": null,
+      "sequence": 23
+    },
+    {
+      "id": "DOC-002",
+      "phase": "P3",
+      "title": "README, chú thích và bàn giao",
+      "priority": "must",
+      "status": "planned",
+      "passes": false,
+      "depends_on": [
+        "QA-001"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "README có setup Windows, chạy, kiểm thử và kịch bản demo",
+        "Công thức có nguồn, các giả định/sai khác/giới hạn rõ",
+        "Feature list và progress phản ánh đúng kết quả kiểm chứng"
+      ],
+      "evidence": [],
+      "completion_commit": null,
+      "completed_at": null,
+      "sequence": 24
+    },
+    {
+      "id": "LATER-001",
+      "phase": "P4",
+      "title": "Notebook giải thích và thuyết trình",
+      "priority": "later",
+      "status": "deferred",
+      "passes": false,
+      "depends_on": [
+        "DOC-002"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "Giải thích công thức, ô mã và kết quả tái hiện chạy lại được"
+      ],
+      "evidence": [
+        "Người dùng xác nhận để notebook ở phase sau"
+      ],
+      "completion_commit": null,
+      "completed_at": null,
+      "sequence": 25
+    },
+    {
+      "id": "LATER-002",
+      "phase": "P4",
+      "title": "CSV, dữ liệu lớn và benchmark nhiều seed",
+      "priority": "later",
+      "status": "deferred",
+      "passes": false,
+      "depends_on": [
+        "DOC-002"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "Nạp dữ liệu và preprocessing rõ ràng, không rò nhãn",
+        "Benchmark có seeds, tỷ lệ giám sát, trung bình/độ lệch chuẩn và thời gian"
+      ],
+      "evidence": [
+        "Người dùng chọn bộ hiện tại cho bản đầu, muốn dữ liệu lớn ở bản sau"
+      ],
+      "completion_commit": null,
+      "completed_at": null,
+      "sequence": 26
+    },
+    {
+      "id": "LATER-003",
+      "phase": "P4",
+      "title": "Tự chọn M' theo alpha",
+      "priority": "later",
+      "status": "deferred",
+      "passes": false,
+      "depends_on": [
+        "ALG-005",
+        "DOC-002"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "Cài đặt điều kiện (23), kiểm tra ngưỡng và giải thích phụ thuộc khoảng cách/tâm"
+      ],
+      "evidence": [
+        "Người dùng xác nhận M' nhập tay trước, alpha ở phase sau"
+      ],
+      "completion_commit": null,
+      "completed_at": null,
+      "sequence": 27
+    },
+    {
+      "id": "LATER-004",
+      "phase": "P4",
+      "title": "Metrics mở rộng hướng đến đủ 40 tiêu chí",
+      "priority": "later",
+      "status": "deferred",
+      "passes": false,
+      "depends_on": [
+        "MET-001",
+        "MET-002",
+        "DOC-002"
+      ],
+      "files": [],
+      "acceptance_criteria": [
+        "Danh mục công thức/biến thể, điều kiện xác định và độ phức tạp",
+        "Difference-like có giao thức phù hợp; không tuyên bố tái hiện toàn bài từ vài metric"
+      ],
+      "evidence": [
+        "Người dùng xác nhận nhóm metrics chính trước, mở rộng ở phase sau"
+      ],
+      "completion_commit": null,
+      "completed_at": null,
+      "sequence": 28
+    }
+  ],
+  "phases": [
+    {
+      "id": "P0",
+      "name": "Đặc tả và quản lý triển khai",
+      "scope": "initial"
+    },
+    {
+      "id": "INIT",
+      "name": "Khởi tạo và kiểm chứng môi trường độc lập với execute",
+      "scope": "initial"
+    },
+    {
+      "id": "P1",
+      "name": "Lõi thuật toán và kiểm chứng",
+      "scope": "initial"
+    },
+    {
+      "id": "P2",
+      "name": "Metrics và kết quả thực nghiệm",
+      "scope": "initial"
+    },
+    {
+      "id": "P3",
+      "name": "UI đơn giản và bàn giao demo",
+      "scope": "initial"
+    },
+    {
+      "id": "P4",
+      "name": "Mở rộng sau bản đầu",
+      "scope": "later"
+    }
+  ],
+  "status_definitions": {
+    "planned": "Chưa bắt đầu",
+    "in_progress": "Đang triển khai",
+    "implemented_unverified": "Có mã hoặc tài liệu, chưa đủ bằng chứng nghiệm thu",
+    "verified": "Đạt acceptance criteria, có evidence, completion_commit và completed_at; checkpoint theo Definition of Done.",
+    "blocked": "Có trở ngại cụ thể",
+    "deferred": "Để phase sau theo phạm vi đã chốt"
+  },
+  "workflow_state": "source_text_reset_directory_cleanup_and_commit_pending",
+  "workflow": {
+    "wid_limit": 1,
+    "stages": [
+      "INIT",
+      "EXE",
+      "COMMIT"
+    ],
+    "assignment_policy": "Chỉ task người dùng giao; backlog không tự cấp quyền thực hiện. Chưa đóng task hiện tại không mở task sau.",
+    "initialization_policy": "INIT độc lập: kiểm tra môi trường và entry point tối thiểu trước feature. Không diễn giải lỗi môi trường thành tính năng.",
+    "definition_of_done": [
+      "Acceptance criteria và checks liên quan pass",
+      "Diff đúng scope, giữ thay đổi có sẵn của người dùng",
+      "Feature list và progress đồng bộ, mục hoàn thành mới nhất đặt đầu",
+      "Có Git commit local, checkpoint và completion_commit thật",
+      "Working tree sạch trong scope; handoff có commit hash và status"
+    ],
+    "active_task": {
+      "id": "DOC-001",
+      "assignment": "Sửa progress theo mẫu Nhật ký Phiên, phiên mới chèn đầu và giữ lịch sử; feature giữ thứ tự kế hoạch từ sequence 0.",
+      "stage": "COMMIT",
+      "state": "blocked",
+      "authorized_files": [
+        "AGENTS.md",
+        "docs/WORKFLOW.md",
+        "feature_list.json",
+        "progress.md"
+      ],
+      "baseline_commit": null,
+      "completion_commit": null,
+      "blockers": [
+        "Chưa có Git repo/checkpoint; chưa được giao bootstrap Git.",
+        "Lệnh xóa thư mục/cache qua shell bị policy chặn. Đã xóa 5 file .py bằng apply_patch; src/__pycache__ còn tồn tại."
+      ],
+      "next_action": "Bàn giao hồ sơ đã kiểm tra; chưa tiếp tục backlog. DOC-001 còn thiếu Git/checkpoint và việc dọn cache đã ghi nhận."
+    },
+    "legacy_drafts_policy": "Năm file mã nguồn nháp đã xóa theo yêu cầu. Feature tương ứng trở về planned; không tính kiểm tra cũ là nghiệm thu mã mới.",
+    "source_reset": {
+      "requested": true,
+      "recorded_at": "2026-11-09T22:42:32+07:00",
+      "source_text_files_removed": true,
+      "directory_removed": false,
+      "remaining_files": [
+        "src/__pycache__/__init__.cpython-313.pyc",
+        "src/__pycache__/algorithms.cpython-313.pyc",
+        "src/__pycache__/data.cpython-313.pyc",
+        "src/__pycache__/experiments.cpython-313.pyc",
+        "src/__pycache__/metrics.cpython-313.pyc"
+      ],
+      "status": "partial_directory_cleanup_blocked"
+    },
+    "detailed_policy": "docs/WORKFLOW.md"
+  }
+}
