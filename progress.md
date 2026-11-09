@@ -2,11 +2,11 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; baseline task `825ae998d98bf1a0a971920d9008d8262d4f690e`; working tree sạch trước INIT.
+- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; implementation checkpoint `2926add1ff82c333ed26af3d4a8c2def646bae56` (UI-001).
 - Khởi động: `python -m streamlit run app.py`; kiểm tra: `python -m pytest -q`.
-- Task duy nhất: `UI-001` — INIT pass, EXE đang làm; phạm vi đã giao đến DOC-002, không làm LATER.
-- Môi trường: Anaconda Python 3.13.9; imports NumPy/SciPy/pandas/sklearn/Streamlit/Plotly đã kiểm tra.
-- Blocker: không có; không có thay đổi người dùng có sẵn.
+- Đã verified tuần tự đến `UI-001`; không có task đang mở. Phạm vi được giao đến DOC-002, dừng trước LATER-001.
+- Check: python -m pytest -q tests/test_app.py tests/test_server.py PASS: 2 tests. AppTest hiển thị 20 điểm/ID/nhóm tham chiếu, Plotly assets local; server localhost health/HTML/dừng pass. Nhãn không vào X đã kiểm tra EXP-001. Diff review/check PASS.
+- Blocker: không có; task kế tiếp: UI-002. Không có thay đổi người dùng có sẵn; metadata hậu commit được commit trước chuyển task/handoff.
 
 ## Nhật ký Phiên
 
@@ -18,10 +18,10 @@
 - Đã hoàn thành: EXE và acceptance checks PASS; diff đã review trong scope, chờ commit.
 - Xác minh đã chạy: python -m pytest -q tests/test_app.py tests/test_server.py PASS: 2 tests. AppTest hiển thị 20 điểm/ID/nhóm tham chiếu, Plotly assets local; server localhost health/HTML/dừng pass. Nhãn không vào X đã kiểm tra EXP-001. Diff review/check PASS.
 - Bằng chứng đã ghi lại: chỉ tính tests chạy trên src mới; không dùng kết quả khảo sát cũ thay nghiệm thu.
-- Commit: chờ acceptance tests và review diff.
+- Commit: `2926add1ff82c333ed26af3d4a8c2def646bae56` (UI-001); hồ sơ hậu commit được commit riêng trước task tiếp theo.
 - Tệp hoặc artifact đã cập nhật: app.py, tests/test_app.py.
 - Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi đang mở trong scope; giới hạn ngoài scope giữ nguyên.
-- Bước tốt nhất tiếp theo: hoàn tất EXE và COMMIT của UI-001.
+- Bước tốt nhất tiếp theo: UI-002; working tree task sẽ sạch sau commit metadata.
 
 ### Phiên 024
 
