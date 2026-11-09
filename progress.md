@@ -2,11 +2,11 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; baseline task `0f3912c27ecbe3b2ca0f5218b116d685b6dae665`; working tree sạch trước INIT.
+- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; implementation checkpoint `b644fdddc399857ba8a0c851eadad12f4f54227b` (QA-001).
 - Khởi động: `python -m streamlit run app.py`; kiểm tra: `python -m pytest -q`.
-- Task duy nhất: `QA-001` — INIT pass, EXE đang làm; phạm vi đã giao đến DOC-002, không làm LATER.
-- Môi trường: Anaconda Python 3.13.9; imports NumPy/SciPy/pandas/sklearn/Streamlit/Plotly đã kiểm tra.
-- Blocker: không có; không có thay đổi người dùng có sẵn.
+- Đã verified tuần tự đến `QA-001`; không có task đang mở. Phạm vi được giao đến DOC-002, dừng trước LATER-001.
+- Check: python -m pytest -q PASS: 139 tests, gồm AppTest luồng preset→sửa→chạy→xem vòng→so sánh→đọc ZIP, cả 5 lựa chọn, lỗi ID/B/trùng/Mprime<M và server lifecycle. Đã sửa preset B bị reset khi đổi thuật toán. Tooling: AppTest không giữ data_editor delta qua rerun, test gửi edited_rows cùng sự kiện chạy và đối chiếu B/targets/ZIP; giới hạn ghi docs/QA.md. python tmp/check_records.py và JSON PASS; diff review/check PASS.
+- Blocker: không có; task kế tiếp: DOC-002. Không có thay đổi người dùng có sẵn; metadata hậu commit được commit trước chuyển task/handoff.
 
 ## Nhật ký Phiên
 
@@ -18,10 +18,10 @@
 - Đã hoàn thành: EXE và acceptance checks PASS; diff đã review trong scope, chờ commit.
 - Xác minh đã chạy: python -m pytest -q PASS: 139 tests, gồm AppTest luồng preset→sửa→chạy→xem vòng→so sánh→đọc ZIP, cả 5 lựa chọn, lỗi ID/B/trùng/Mprime<M và server lifecycle. Đã sửa preset B bị reset khi đổi thuật toán. Tooling: AppTest không giữ data_editor delta qua rerun, test gửi edited_rows cùng sự kiện chạy và đối chiếu B/targets/ZIP; giới hạn ghi docs/QA.md. python tmp/check_records.py và JSON PASS; diff review/check PASS.
 - Bằng chứng đã ghi lại: chỉ tính tests chạy trên src mới; không dùng kết quả khảo sát cũ thay nghiệm thu.
-- Commit: chờ acceptance tests và review diff.
+- Commit: `b644fdddc399857ba8a0c851eadad12f4f54227b` (QA-001); hồ sơ hậu commit được commit riêng trước task tiếp theo.
 - Tệp hoặc artifact đã cập nhật: app.py, tests/test_ui_flow.py, docs/QA.md.
 - Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi đang mở trong scope; giới hạn ngoài scope giữ nguyên.
-- Bước tốt nhất tiếp theo: hoàn tất EXE và COMMIT của QA-001.
+- Bước tốt nhất tiếp theo: DOC-002; working tree task sẽ sạch sau commit metadata.
 
 ### Phiên 029
 

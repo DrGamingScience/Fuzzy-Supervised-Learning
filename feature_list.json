@@ -719,8 +719,8 @@
       "phase": "P3",
       "title": "Kiểm tra luồng demo và trạng thái UI",
       "priority": "must",
-      "status": "implemented_unverified",
-      "passes": false,
+      "status": "verified",
+      "passes": true,
       "depends_on": [
         "UI-005"
       ],
@@ -737,8 +737,8 @@
       "evidence": [
         "python -m pytest -q PASS: 139 tests, gồm AppTest luồng preset→sửa→chạy→xem vòng→so sánh→đọc ZIP, cả 5 lựa chọn, lỗi ID/B/trùng/Mprime<M và server lifecycle. Đã sửa preset B bị reset khi đổi thuật toán. Tooling: AppTest không giữ data_editor delta qua rerun, test gửi edited_rows cùng sự kiện chạy và đối chiếu B/targets/ZIP; giới hạn ghi docs/QA.md. python tmp/check_records.py và JSON PASS; diff review/check PASS."
       ],
-      "completion_commit": null,
-      "completed_at": null,
+      "completion_commit": "b644fdddc399857ba8a0c851eadad12f4f54227b",
+      "completed_at": "2026-11-09T23:28:01+07:00",
       "sequence": 23
     },
     {
@@ -892,7 +892,7 @@
     "blocked": "Có trở ngại cụ thể",
     "deferred": "Để phase sau theo phạm vi đã chốt"
   },
-  "workflow_state": "QA-001_EXE",
+  "workflow_state": "verified_through_QA-001",
   "workflow": {
     "wid_limit": 1,
     "stages": [
@@ -909,7 +909,7 @@
       "Có Git commit local, checkpoint và completion_commit thật",
       "Working tree sạch trong scope; handoff có commit hash và status"
     ],
-    "active_task": "QA-001",
+    "active_task": null,
     "legacy_drafts_policy": "Năm file mã nguồn nháp đã xóa theo yêu cầu. Feature tương ứng trở về planned; không tính kiểm tra cũ là nghiệm thu mã mới.",
     "source_reset": {
       "requested": true,
