@@ -583,19 +583,24 @@
       "phase": "P3",
       "title": "Khung UI offline và dữ liệu demo",
       "priority": "must",
-      "status": "planned",
+      "status": "implemented_unverified",
       "passes": false,
       "depends_on": [
         "INIT-001",
         "TEST-001"
       ],
-      "files": [],
+      "files": [
+        "app.py",
+        "tests/test_app.py"
+      ],
       "acceptance_criteria": [
         "UI tiếng Việt đơn giản, xem được 20 điểm và nhóm tham chiếu",
         "Chạy trên localhost với assets cục bộ",
         "Không lẫn nhãn tham chiếu vào dữ liệu fit"
       ],
-      "evidence": [],
+      "evidence": [
+        "python -m pytest -q tests/test_app.py tests/test_server.py PASS: 2 tests. AppTest hiển thị 20 điểm/ID/nhóm tham chiếu, Plotly assets local; server localhost health/HTML/dừng pass. Nhãn không vào X đã kiểm tra EXP-001. Diff review/check PASS."
+      ],
       "completion_commit": null,
       "completed_at": null,
       "sequence": 18
@@ -859,7 +864,7 @@
     "blocked": "Có trở ngại cụ thể",
     "deferred": "Để phase sau theo phạm vi đã chốt"
   },
-  "workflow_state": "verified_through_EXP-002",
+  "workflow_state": "UI-001_EXE",
   "workflow": {
     "wid_limit": 1,
     "stages": [
@@ -876,7 +881,7 @@
       "Có Git commit local, checkpoint và completion_commit thật",
       "Working tree sạch trong scope; handoff có commit hash và status"
     ],
-    "active_task": null,
+    "active_task": "UI-001",
     "legacy_drafts_policy": "Năm file mã nguồn nháp đã xóa theo yêu cầu. Feature tương ứng trở về planned; không tính kiểm tra cũ là nghiệm thu mã mới.",
     "source_reset": {
       "requested": true,
