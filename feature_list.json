@@ -86,8 +86,8 @@
       "phase": "INIT",
       "title": "INIT: smoke test và entry point tối thiểu",
       "priority": "must",
-      "status": "in_progress",
-      "passes": false,
+      "status": "verified",
+      "passes": true,
       "depends_on": [
         "ENV-001"
       ],
@@ -106,8 +106,8 @@
       "evidence": [
         "09/11/2026: python -m pytest -q PASS exit 0, 10 tests (7 imports, numeric/table/chart smoke, AppTest, HTTP server lifecycle). python tmp/check_records.py và git diff --check PASS. Server test dùng port local trống, luôn dừng tiến trình trong finally; không có thuật toán/metrics."
       ],
-      "completion_commit": null,
-      "completed_at": null,
+      "completion_commit": "e00fba79674ee892f8b8a3858febacc377b9de56",
+      "completed_at": "2026-11-09T22:59:18+07:00",
       "sequence": 2
     },
     {
@@ -780,7 +780,7 @@
     "blocked": "Có trở ngại cụ thể",
     "deferred": "Để phase sau theo phạm vi đã chốt"
   },
-  "workflow_state": "INIT-001_COMMIT",
+  "workflow_state": "INIT-001_verified",
   "workflow": {
     "wid_limit": 1,
     "stages": [
@@ -797,25 +797,7 @@
       "Có Git commit local, checkpoint và completion_commit thật",
       "Working tree sạch trong scope; handoff có commit hash và status"
     ],
-    "active_task": {
-      "id": "INIT-001",
-      "assignment": "Tạo smoke tests môi trường độc lập thuật toán và entry point Streamlit chỉ báo sẵn sàng; xác minh chạy/trả trang/dừng.",
-      "stage": "COMMIT",
-      "state": "in_progress",
-      "authorized_files": [
-        "app.py",
-        "tests/test_environment.py",
-        "tests/test_app.py",
-        "tests/test_server.py",
-        "AGENTS.md",
-        "feature_list.json",
-        "progress.md"
-      ],
-      "baseline_commit": "7b08bcc7a5d9c093eca7165904affe088130244f",
-      "completion_commit": null,
-      "blockers": [],
-      "next_action": "INIT PASS: baseline 7b08bcc, status chỉ có hồ sơ task; interpreter/imports/pin/config PASS exit 0. Tạo app và smoke tests."
-    },
+    "active_task": null,
     "legacy_drafts_policy": "Năm file mã nguồn nháp đã xóa theo yêu cầu. Feature tương ứng trở về planned; không tính kiểm tra cũ là nghiệm thu mã mới.",
     "source_reset": {
       "requested": true,

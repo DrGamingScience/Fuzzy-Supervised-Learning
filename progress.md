@@ -5,8 +5,8 @@
 - Thư mục gốc kho lưu trữ: `D:\Downloads\Semi-supervised-learning`; Git branch `main`, baseline ban đầu `4f7fd34` (giữ nguyên hồ sơ/cấu hình có sẵn, chưa kiểm chứng).
 - Đường dẫn khởi động chuẩn: `python -m streamlit run app.py` — entry point tối thiểu đã được kiểm tra.
 - Đường dẫn xác minh chuẩn: `python -m pytest -q`; hồ sơ: `python tmp/check_records.py`.
-- Tính năng chưa hoàn thành có mức ưu tiên cao nhất hiện tại: INIT-001, COMMIT/in_progress.
-- Sự cố chặn hiện tại: Nghiệm thu 10 tests PASS; đang ghi checkpoint trước DATA-001.
+- Tính năng chưa hoàn thành có mức ưu tiên cao nhất hiện tại: Tiếp tục DATA-001: dữ liệu 20 điểm và preset có nguồn..
+- Sự cố chặn hiện tại: INIT-001 verified; không có blocker. Chỉ các task đã verified có bằng chứng nghiệm thu.
 
 ## Nhật ký Phiên
 
@@ -17,10 +17,10 @@
 - Đã hoàn thành: INIT-001: entry point chỉ báo sẵn sàng; smoke dependency, AppTest chạy script thật; subprocess server localhost trả health và HTML, dừng và xác nhận port đã đóng. INIT baseline 7b08bcc/imports/config pass trước EXE.
 - Xác minh đã chạy: 09/11/2026: python -m pytest -q PASS exit 0, 10 tests (7 imports, numeric/table/chart smoke, AppTest, HTTP server lifecycle). python tmp/check_records.py và git diff --check PASS. Server test dùng port local trống, luôn dừng tiến trình trong finally; không có thuật toán/metrics.
 - Bằng chứng đã ghi lại: yêu cầu người dùng “Thực hiện đến hết data-001”; làm DOC → ENV → INIT → DATA tuần tự, không triển khai CORE/ALG/UI.
-- Commit: chờ kiểm tra/commit; baseline `7b08bcc7a5d9c093eca7165904affe088130244f`.
+- Commit: `e00fba79674ee892f8b8a3858febacc377b9de56` (INIT-001); metadata hậu commit được lưu bằng commit riêng trước task tiếp theo/handoff. Working tree sau commit triển khai sạch.
 - Tệp hoặc artifact đã cập nhật: app.py, tests/test_environment.py, tests/test_app.py, tests/test_server.py, AGENTS.md, feature_list.json, progress.md.
 - Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi trong scope; thuật toán/metrics/UI demo chưa triển khai.
-- Bước tốt nhất tiếp theo: hoàn thành INIT rồi EXE, nghiệm thu và commit riêng INIT-001.
+- Bước tốt nhất tiếp theo: Tiếp tục DATA-001: dữ liệu 20 điểm và preset có nguồn.
 
 ### Phiên 008
 
