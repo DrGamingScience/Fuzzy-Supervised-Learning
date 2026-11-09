@@ -98,9 +98,9 @@ Trước khi kết thúc session, cập nhật đúng mẫu `progress.md` và tr
 
 Task chưa đóng vẫn là task duy nhất của phiên sau. Người dùng có thể yêu cầu hủy hoặc đổi ưu tiên; khi đó ghi rõ bàn giao thay đổi dang dở, không âm thầm coi task cũ đã hoàn thành.
 
-## 6. Áp dụng cho hiện trạng
+## 6. Phạm vi giao mới ngày 09/11/2026
 
-- Người dùng giao chỉnh hồ sơ và xóa src để bắt đầu lại. Đã xóa 5 file .py; cache/thư mục còn lại do shell chặn lệnh xóa. Không tự khởi tạo Git, cài môi trường hoặc viết lại src.
-- Kiểm tra thực tế: `git rev-parse --is-inside-work-tree`, `git status --short`, `git log -1` đều báo thư mục chưa là Git repo.
-- `DOC-001` đã từng pass kiểm tra tài liệu theo quy tắc cũ; theo định nghĩa mới vẫn thiếu Git checkpoint nên chưa DONE. Bảo toàn evidence cũ, không diễn giải lại thành đã commit.
-- Bước còn thiếu: dọn cache/thư mục src và Git checkpoint của cùng task. Chưa tự tiếp tục ENV/INIT/CORE/ALG.
+- Yêu cầu mới “Thực hiện đến hết data-001 trong feature” mở phạm vi cho prerequisite: Git baseline, đóng DOC-001, ENV-001, INIT-001 rồi DATA-001, theo WID=1.
+- Baseline `4f7fd34` lưu nguyên văn hồ sơ/cấu hình/PDF có sẵn; không coi baseline là phần mềm đã kiểm chứng. Artifact tmp và cache không được tracking.
+- Kiểm tra đầu phiên: src không còn file/cache. Lệnh xóa đệ quy bị automatic policy chặn; lệnh xóa thư mục rỗng không đệ quy đã thành công. Blocker cũ được giữ nguyên như lịch sử.
+- Không khôi phục bản nháp; DATA-001 viết mới từ bảng nguồn sau ENV/INIT verified. Dừng trước CORE-001.

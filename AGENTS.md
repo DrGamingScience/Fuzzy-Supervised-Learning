@@ -59,7 +59,7 @@ python -m pytest -q tests/test_algorithms.py   # Ví dụ test riêng, khi file 
 
 - Đọc **Trạng thái Đã xác minh Hiện tại** và phiên đầu `progress.md`: task, check, lỗi và bước tiếp.
 - Đọc `feature_list.json` để biết trạng thái và dependency; kiểm tra file thực tế trước khi làm.
-- Mốc hiện tại: đã xóa src/*.py; còn cache/thư mục chưa dọn được; chưa có UI/tests/README.
+- Mốc sau DOC-001: Git đã có baseline; src đã dọn sạch trước triển khai mới. Đọc progress để biết trạng thái task mới nhất.
 - `implemented_unverified` = có mã chưa nghiệm thu; `planned` = chưa làm; `deferred` = phase sau.
 - Chỉ `verified` mới có `passes: true`: đủ acceptance criteria, evidence đã chạy và Git commit/checkpoint.
 - Không suy phần trăm hoàn thành từ số file hoặc số đầu việc; không coi tính thử khảo sát là test src.
@@ -82,6 +82,6 @@ python -m pytest -q tests/test_algorithms.py   # Ví dụ test riêng, khi file 
 - Test fail, thiếu commit/checkpoint hoặc lẫn scope: chưa DONE; giữ task hiện tại, không làm tiếp backlog.
 - Trước đổi phiên cập nhật JSON + trạng thái hiện tại; phiên mới tiếp tục đúng task và stage còn dở.
 - Feature giữ thứ tự kế hoạch sequence từ 0; không đảo theo hoàn thành. Progress chèn phiên mới đầu, giữ mọi phiên cũ.
-- Mốc hiện tại: chưa có Git; chỉ giao chỉnh hồ sơ, không tự bootstrap repo/môi trường hoặc sửa src.
+- Phạm vi được giao ngày 09/11/2026: DOC-001 → ENV-001 → INIT-001 → DATA-001, gồm Git/môi trường tiên quyết; dừng trước CORE-001.
 - Tách lõi/UI; chú thích Việt, nguồn rõ; U hợp lệ, nhãn thật không vào X, snapshot U/V cùng trạng thái.
 - Đúng trọng số từng bài; không ép bảng eSFCM, không so J khác định nghĩa; Jaccard theo cặp, ID UI từ 1.

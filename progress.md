@@ -2,13 +2,25 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Thư mục gốc kho lưu trữ: `D:\Downloads\Semi-supervised-learning` (thư mục dự án; chưa là Git repo theo kiểm tra gần nhất).
-- Đường dẫn khởi động chuẩn: `app.py` — dự kiến dùng `python -m streamlit run app.py`; hiện chưa có entry point, chưa khởi động được ứng dụng.
-- Đường dẫn xác minh chuẩn: kiểm tra hồ sơ hiện tại bằng `python -m json.tool feature_list.json > $null` trong PowerShell; kiểm thử phần mềm dự kiến `python -m pytest -q`, hiện chưa có `tests/`.
-- Tính năng chưa hoàn thành có mức ưu tiên cao nhất hiện tại: `DOC-001`, task duy nhất theo WID=1, stage `COMMIT`, trạng thái `blocked`; chưa chuyển ENV/INIT hoặc thuật toán.
-- Sự cố chặn hiện tại: chưa có Git/checkpoint; reset thư mục src còn cache chưa dọn được do policy. Các kiểm tra hồ sơ không phải bằng chứng thuật toán/ứng dụng hoạt động.
+- Thư mục gốc kho lưu trữ: `D:\Downloads\Semi-supervised-learning`; Git branch `main`, baseline ban đầu `4f7fd34` (giữ nguyên hồ sơ/cấu hình có sẵn, chưa kiểm chứng).
+- Đường dẫn khởi động chuẩn: `app.py` chưa có; chưa chạy được Streamlit.
+- Đường dẫn xác minh chuẩn: Hồ sơ: `python tmp/check_records.py`; chưa có tests phần mềm.
+- Tính năng chưa hoàn thành có mức ưu tiên cao nhất hiện tại: DOC-001, INIT/in_progress.
+- Sự cố chặn hiện tại: Không có blocker ngoài phạm vi hiện được giao.
 
 ## Nhật ký Phiên
+
+### Phiên 007
+
+- Ngày: 09/11/2026 (Asia/Saigon); bắt đầu 2026-11-09T22:55:55+07:00.
+- Mục tiêu: DOC-001 — Đóng hồ sơ, dọn cache bản nháp và Git checkpoint; bootstrap Git là prerequisite được mở bởi yêu cầu đến DATA-001. Phạm vi: AGENTS.md, docs/WORKFLOW.md, feature_list.json, progress.md, src/__pycache__. Tiêu chí: giữ nguyên acceptance_criteria của task trong JSON.
+- Đã hoàn thành: Git baseline 4f7fd34 giữ nguyên file có sẵn; xác nhận src rỗng và xóa thư mục bằng lệnh không đệ quy; mở scope đến DATA-001, giữ nguyên lịch sử.
+- Xác minh đã chạy: 09/11/2026: python tmp/check_records.py PASS; git diff --check PASS; Test-Path src = False sau cleanup. Lệnh xóa đệ quy bị automatic policy chặn; xóa rỗng không đệ quy thành công. Nghiệm thu hồ sơ, không phải thuật toán.
+- Bằng chứng đã ghi lại: yêu cầu người dùng “Thực hiện đến hết data-001”; làm DOC → ENV → INIT → DATA tuần tự, không triển khai CORE/ALG/UI.
+- Commit: chờ kiểm tra/commit; baseline `4f7fd34edcf920ae00a5b250202b719adb170e7d`.
+- Tệp hoặc artifact đã cập nhật: AGENTS.md, docs/WORKFLOW.md, feature_list.json, progress.md, src/__pycache__.
+- Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi trong scope; thuật toán/metrics/UI demo chưa triển khai.
+- Bước tốt nhất tiếp theo: hoàn thành INIT rồi EXE, nghiệm thu và commit riêng DOC-001.
 
 ### Phiên 006
 
