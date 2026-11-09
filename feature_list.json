@@ -115,8 +115,8 @@
       "phase": "P1",
       "title": "Bộ 20 điểm và nhóm tham chiếu",
       "priority": "must",
-      "status": "in_progress",
-      "passes": false,
+      "status": "verified",
+      "passes": true,
       "depends_on": [
         "INIT-001"
       ],
@@ -135,8 +135,8 @@
       "evidence": [
         "09/11/2026: python -m pytest -q tests/test_data.py PASS exit 0 (18 tests); python -m pytest -q PASS exit 0 (28 tests). Hai PDF trang 4 đã render bằng pdftoppm và xem; python tmp/check_pdf_data.py PASS exit 0 sau khi giới hạn đúng vùng bảng, đối chiếu cả 20 tọa độ với fixture và src. python tmp/check_records.py; python -m json.tool feature_list.json; git diff --check PASS."
       ],
-      "completion_commit": null,
-      "completed_at": null,
+      "completion_commit": "95c3b77ae2063b74d6f138ac22d6196739680f7e",
+      "completed_at": "2026-11-09T23:03:48+07:00",
       "expected_files": [
         "src/data.py"
       ],
@@ -788,7 +788,7 @@
     "blocked": "Có trở ngại cụ thể",
     "deferred": "Để phase sau theo phạm vi đã chốt"
   },
-  "workflow_state": "DATA-001_COMMIT",
+  "workflow_state": "verified_through_DATA-001",
   "workflow": {
     "wid_limit": 1,
     "stages": [
@@ -805,26 +805,7 @@
       "Có Git commit local, checkpoint và completion_commit thật",
       "Working tree sạch trong scope; handoff có commit hash và status"
     ],
-    "active_task": {
-      "id": "DATA-001",
-      "assignment": "Viết mới bộ 20 tọa độ, nhãn tham chiếu tách khỏi X, tâm đầu demo và preset đúng nguồn/quy ước ID; không viết thuật toán/UI dữ liệu.",
-      "stage": "COMMIT",
-      "state": "in_progress",
-      "authorized_files": [
-        "src/__init__.py",
-        "src/data.py",
-        "tests/test_data.py",
-        "tests/fixtures/paper_20_points.csv",
-        "docs/DATA.md",
-        "AGENTS.md",
-        "feature_list.json",
-        "progress.md"
-      ],
-      "baseline_commit": "9149f4fb3df0da976fe507753ba36efaf7c35126",
-      "completion_commit": null,
-      "blockers": [],
-      "next_action": "INIT PASS: baseline 9149f4f, dependency INIT verified; imports/config và 10 baseline tests PASS exit 0; Table I 2009 và Table 1 2021 trang 4 đã render/đối chiếu. Viết mới src/data.py và test dữ liệu."
-    },
+    "active_task": null,
     "legacy_drafts_policy": "Năm file mã nguồn nháp đã xóa theo yêu cầu. Feature tương ứng trở về planned; không tính kiểm tra cũ là nghiệm thu mã mới.",
     "source_reset": {
       "requested": true,
@@ -835,6 +816,7 @@
       "status": "complete_before_reimplementation",
       "cleanup_verified_at": "2026-11-09T22:56:41+07:00"
     },
-    "detailed_policy": "docs/WORKFLOW.md"
+    "detailed_policy": "docs/WORKFLOW.md",
+    "next_unassigned_task": "CORE-001"
   }
 }
