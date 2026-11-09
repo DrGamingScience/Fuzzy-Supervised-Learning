@@ -6,6 +6,13 @@ kết quả để kiểm tra lại. Chạy offline sau khi cài đủ dependenci
 
 ## Cài đặt và chạy trên Windows
 
+Để lấy phiên bản này trên laptop, mở PowerShell và chạy (cần Git và Python):
+
+```powershell
+git clone --branch alternate-version --single-branch https://github.com/DrGamingScience/Fuzzy-Supervised-Learning.git
+cd Fuzzy-Supervised-Learning
+```
+
 Mở PowerShell tại thư mục gốc repo. Môi trường đã có đủ dependencies thì dùng
 ngay Python đó; không cần cài lại mỗi phiên. Môi trường riêng mới:
 

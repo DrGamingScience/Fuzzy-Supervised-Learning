@@ -2,13 +2,24 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; implementation checkpoint `cb4fda6c6b64026b542b45c99cfeeb6c84d0e034` (DOC-002).
+- Repo: `D:\Downloads\Semi-supervised-learning`; branch `alternate-version`; implementation checkpoint `cb4fda6c6b64026b542b45c99cfeeb6c84d0e034` (DOC-002).
 - Khởi động: `python -m streamlit run app.py`; kiểm tra: `python -m pytest -q`.
 - Đã verified tuần tự đến `DOC-002`; không có task đang mở. Phạm vi được giao đến DOC-002, dừng trước LATER-001.
 - Check: python -m pytest -o addopts=" -q PASS: 139 tests trong 10.07s. README Python example PASS U9=[0.60449124,0.39550876], links local tồn tại; python tmp/check_records.py PASS (29 features,31 phiên,AGENTS87 dòng,history/dependency/commit); JSON/diff check PASS. README có setup/demo/công thức/giới hạn/sai khác/metrics/export; diff review trong scope.
 - Blocker: không có; task kế tiếp: LATER-001 (deferred, không triển khai). Không có thay đổi người dùng có sẵn; metadata hậu commit được commit trước chuyển task/handoff.
+- Đồng bộ GitHub: task `SYNC-001`, đang chuẩn bị đẩy branch `alternate-version` vào `https://github.com/DrGamingScience/Fuzzy-Supervised-Learning`; không mở feature later.
 
 ## Nhật ký Phiên
+
+### Phiên 032
+
+- Ngày: 2026-11-09T23:44:27+07:00 (Asia/Saigon).
+- Mục tiêu: SYNC-001 — đưa phiên bản hiện tại lên GitHub branch alternate-version để dùng trên laptop, theo yêu cầu người dùng. Scope/files: Git remote/branch, README.md, progress.md và metadata đồng bộ trong feature_list.json. Giữ nguyên mã thuật toán và thứ tự/trạng thái 29 features.
+- Acceptance criteria: branch GitHub chứa đủ mã nguồn, dependencies, cấu hình, tests và tài liệu; README có lệnh clone đúng branch; không đưa cache/output tạm lên; remote hash khớp commit local; working tree sạch. Lệnh nghiệm thu: python -m pytest -q; git diff --check; kiểm tra JSON; git ls-remote --heads origin alternate-version; git status --short.
+- INIT: branch main, HEAD `57be75408cdbbdd5fb2252e808f08dcfe41306c7`, working tree sạch, chưa có remote. Python `D:\Downloads\ANACONDA\python.exe`, imports numpy/scipy/pandas/streamlit/plotly/pytest thành công. python -m pytest -q PASS (toàn bộ 139 tests), git diff --check PASS. GitHub truy cập được, chỉ có branch main tại `701fbe570b550f37d7da937fb91a9eab74553c1e`; alternate-version chưa tồn tại.
+- EXE: tạo branch alternate-version từ baseline local, thêm origin đúng URL người dùng; bổ sung lệnh clone trên laptop. Kiểm tra 40 file tracked: mã, tests, ba PDF và tài liệu; cache/tmp đã ignore, không phát hiện mẫu khóa/token trong file văn bản tracked.
+- Commit: chờ commit và push; sẽ xác minh hash trên GitHub trước khi đóng task.
+- Bước tiếp theo: commit riêng SYNC-001, push branch, đối chiếu remote và ghi checkpoint bàn giao; không thực hiện LATER-001.
 
 ### Phiên 031
 
