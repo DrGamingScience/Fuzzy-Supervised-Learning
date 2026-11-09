@@ -2,11 +2,11 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; baseline task `6d0f436d08bbc2e454cf3a0dd8868cc44c0b6e6d`; working tree sạch trước INIT.
+- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; implementation checkpoint `f0265de86a84d711d8852cdc487cae355e0b9792` (MET-002).
 - Khởi động: `python -m streamlit run app.py`; kiểm tra: `python -m pytest -q`.
-- Task duy nhất: `MET-002` — INIT pass, EXE đang làm; phạm vi đã giao đến DOC-002, không làm LATER.
-- Môi trường: Anaconda Python 3.13.9; imports NumPy/SciPy/pandas/sklearn/Streamlit/Plotly đã kiểm tra.
-- Blocker: không có; không có thay đổi người dùng có sẵn.
+- Đã verified tuần tự đến `MET-002`; không có task đang mở. Phạm vi được giao đến DOC-002, dừng trước LATER-001.
+- Check: python -m pytest -q tests/test_metrics.py PASS: 13 tests. Đếm cặp tay và brute force, ARI sklearn 5 seed, hoán vị mã, Jaccard theo cặp và phân hoạch suy biến; diff review/check PASS.
+- Blocker: không có; task kế tiếp: MET-003. Không có thay đổi người dùng có sẵn; metadata hậu commit được commit trước chuyển task/handoff.
 
 ## Nhật ký Phiên
 
@@ -18,10 +18,10 @@
 - Đã hoàn thành: EXE và acceptance checks PASS; diff đã review trong scope, chờ commit.
 - Xác minh đã chạy: python -m pytest -q tests/test_metrics.py PASS: 13 tests. Đếm cặp tay và brute force, ARI sklearn 5 seed, hoán vị mã, Jaccard theo cặp và phân hoạch suy biến; diff review/check PASS.
 - Bằng chứng đã ghi lại: chỉ tính tests chạy trên src mới; không dùng kết quả khảo sát cũ thay nghiệm thu.
-- Commit: chờ acceptance tests và review diff.
+- Commit: `f0265de86a84d711d8852cdc487cae355e0b9792` (MET-002); hồ sơ hậu commit được commit riêng trước task tiếp theo.
 - Tệp hoặc artifact đã cập nhật: src/metrics.py, tests/test_metrics.py.
 - Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi đang mở trong scope; giới hạn ngoài scope giữ nguyên.
-- Bước tốt nhất tiếp theo: hoàn tất EXE và COMMIT của MET-002.
+- Bước tốt nhất tiếp theo: MET-003; working tree task sẽ sạch sau commit metadata.
 
 ### Phiên 020
 

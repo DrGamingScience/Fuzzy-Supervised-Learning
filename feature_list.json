@@ -459,8 +459,8 @@
       "phase": "P2",
       "title": "ARI và Jaccard theo cặp",
       "priority": "must",
-      "status": "implemented_unverified",
-      "passes": false,
+      "status": "verified",
+      "passes": true,
       "depends_on": [
         "TEST-001"
       ],
@@ -476,8 +476,8 @@
       "evidence": [
         "python -m pytest -q tests/test_metrics.py PASS: 13 tests. Đếm cặp tay và brute force, ARI sklearn 5 seed, hoán vị mã, Jaccard theo cặp và phân hoạch suy biến; diff review/check PASS."
       ],
-      "completion_commit": null,
-      "completed_at": null,
+      "completion_commit": "f0265de86a84d711d8852cdc487cae355e0b9792",
+      "completed_at": "2026-11-09T23:18:36+07:00",
       "expected_files": [
         "src/metrics.py"
       ],
@@ -844,7 +844,7 @@
     "blocked": "Có trở ngại cụ thể",
     "deferred": "Để phase sau theo phạm vi đã chốt"
   },
-  "workflow_state": "MET-002_EXE",
+  "workflow_state": "verified_through_MET-002",
   "workflow": {
     "wid_limit": 1,
     "stages": [
@@ -861,7 +861,7 @@
       "Có Git commit local, checkpoint và completion_commit thật",
       "Working tree sạch trong scope; handoff có commit hash và status"
     ],
-    "active_task": "MET-002",
+    "active_task": null,
     "legacy_drafts_policy": "Năm file mã nguồn nháp đã xóa theo yêu cầu. Feature tương ứng trở về planned; không tính kiểm tra cũ là nghiệm thu mã mới.",
     "source_reset": {
       "requested": true,
