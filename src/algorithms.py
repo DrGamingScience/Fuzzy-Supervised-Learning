@@ -9,6 +9,8 @@ from time import perf_counter
 import numpy as np
 
 ALGORITHMS = ('fcm', 'ssfcm', 'ssfcm1', 'esfcm', 'ssmc')
+ESFCM_WARNING = ('eSFCM theo công thức (14), lambda=1 trên dữ liệu gốc không khớp '
+                 'Tables IV–V 2009; chưa xác định nguyên nhân, không ép khớp bảng.')
 
 
 @dataclass(frozen=True)
@@ -127,6 +129,12 @@ def _fcm_membership(d2, m):
 
 def update_membership(X, V, config, B=None, targets=None):
     d2 = squared_distances(X,V)
+    if config.algorithm == 'esfcm':
+        B = np.zeros_like(d2) if B is None else B
+        # Endo (14): softmax ổn định, luôn có logit 0 ở cụm gần nhất.
+        with np.errstate(over='ignore', under='ignore'):
+            p=np.exp(-config.lambda_*(d2-d2.min(axis=1,keepdims=True)))
+        return B+(1-B.sum(axis=1,keepdims=True))*p/p.sum(axis=1,keepdims=True)
     if config.algorithm in ('ssfcm', 'ssfcm1'):
         # Endo 2009 (6): B là cận dưới; tâm dùng phần dư theo (4).
         B = np.zeros_like(d2) if B is None else B
@@ -142,6 +150,8 @@ def update_membership(X, V, config, B=None, targets=None):
 
 
 def _weights(U, config, B, targets):
+    if config.algorithm == 'esfcm':
+        return U
     if config.algorithm in ('ssfcm', 'ssfcm1'):
         return np.abs(U-B)**(1 if config.algorithm=='ssfcm1' else config.m)
     return U**config.m
@@ -149,6 +159,11 @@ def _weights(U, config, B, targets):
 
 def objective(X, U, V, config, B=None, targets=None):
     value = float(np.sum(_weights(U,config,B,targets)*squared_distances(X,V)))
+    if config.algorithm == 'esfcm':
+        # (9): r log r, quy ước 0 log 0 = 0; nghiệm luôn U >= B.
+        residual=U-(0 if B is None else B)
+        positive=residual>0
+        value += float(np.sum(residual[positive]*np.log(residual[positive]))/config.lambda_)
     if not np.isfinite(value):
         raise ValueError('Hàm mục tiêu vượt miền số thực.')
     return value
@@ -174,6 +189,8 @@ def fit(X, config=Config(), initial_centers=None, B=None, targets=None):
     start=perf_counter()
     X,V,B,targets=validate_inputs(X,config,initial_centers,B,targets)
     warnings=set()
+    if config.algorithm == 'esfcm':
+        warnings.add(ESFCM_WARNING)
     U=update_membership(X,V,config,B,targets)
     reason='max_iter'
     for iteration in range(1,config.max_iter+1):

@@ -6,7 +6,7 @@ import pytest
 
 from src.algorithms import Config, validate_inputs
 from src.data import demo_initial_centers, load_paper_data, membership_preset
-from src.algorithms import fit, update_membership
+from src.algorithms import fit, update_membership, objective
 
 
 @pytest.mark.parametrize('X', [[], [1,2], [[np.nan]], [[np.inf]], np.empty((2,0)), [['x']]])
@@ -106,3 +106,31 @@ def test_ssfcm1_tie_uses_first_cluster():
     X=np.array([[1.,0],[3,0]])
     U=update_membership(X,np.array([[0.,0],[2,0]]),Config(algorithm='ssfcm1',m=1))
     np.testing.assert_array_equal(U,[[1,0],[0,1]])
+
+
+def test_esfcm_formula_entropy_centers_and_reported_discrepancy():
+    X,_=load_paper_data(); V=demo_initial_centers(); B=membership_preset(0.3)
+    c=Config(algorithm='esfcm',lambda_=0.04)
+    d2=((X[:,None]-V)**2).sum(axis=2)
+    p=np.exp(-c.lambda_*d2); p/=p.sum(axis=1,keepdims=True)
+    expected=B+(1-B.sum(axis=1,keepdims=True))*p
+    np.testing.assert_allclose(update_membership(X,V,c,B),expected)
+    one=fit(X,replace(c,max_iter=1),V,B)
+    np.testing.assert_allclose(one.centers,(expected.T@X)/expected.sum(axis=0)[:,None])
+    r=expected-B
+    ent=sum(v*np.log(v) for v in r.flat if v>0)
+    assert objective(X,expected,V,c,B)==pytest.approx((expected*d2).sum()+ent/c.lambda_)
+    # Thay trực tiếp tâm Table V vào (14): U1,2 ~ 1.13e-21, không phải 0.24.
+    table_V=np.array([[4.6,5],[8.33,5]])
+    actual=update_membership(X,table_V,replace(c,lambda_=1))
+    assert actual[0,1]==pytest.approx(1.133e-21,rel=0.005,abs=0)
+    assert any('không khớp' in w for w in one.warnings)
+
+
+def test_esfcm_stable_softmax_and_zero_entropy():
+    X=np.array([[0.,0],[1,1]])
+    c=Config(algorithm='esfcm',lambda_=1e308)
+    B=np.array([[1.,0],[0,1.]])
+    r=fit(X,c,X,B)
+    np.testing.assert_array_equal(r.membership,B)
+    assert r.objective==0

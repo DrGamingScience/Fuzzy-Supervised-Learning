@@ -268,18 +268,23 @@
       "phase": "P1",
       "title": "eSFCM entropy",
       "priority": "must",
-      "status": "planned",
+      "status": "implemented_unverified",
       "passes": false,
       "depends_on": [
         "CORE-001"
       ],
-      "files": [],
+      "files": [
+        "src/algorithms.py",
+        "tests/test_algorithms.py"
+      ],
       "acceptance_criteria": [
         "Công thức (14), tâm trọng số U và entropy đúng bài 2009",
         "Softmax ổn định và quy ước 0 log 0 rõ ràng",
         "Kiểm tra trực tiếp công thức, báo sai khác bảng thay vì ép khớp bảng"
       ],
-      "evidence": [],
+      "evidence": [
+        "python -m pytest -q tests/test_algorithms.py PASS: 32 tests. Công thức (14), tâm U, entropy độc lập, lambda lớn/0 log 0; thay tâm Table V cho U1,2=1.13e-21 thay vì 0.24, cảnh báo minh bạch; diff review/check PASS."
+      ],
       "completion_commit": null,
       "completed_at": null,
       "expected_files": [
@@ -808,7 +813,7 @@
     "blocked": "Có trở ngại cụ thể",
     "deferred": "Để phase sau theo phạm vi đã chốt"
   },
-  "workflow_state": "verified_through_ALG-003",
+  "workflow_state": "ALG-004_EXE",
   "workflow": {
     "wid_limit": 1,
     "stages": [
@@ -825,7 +830,7 @@
       "Có Git commit local, checkpoint và completion_commit thật",
       "Working tree sạch trong scope; handoff có commit hash và status"
     ],
-    "active_task": null,
+    "active_task": "ALG-004",
     "legacy_drafts_policy": "Năm file mã nguồn nháp đã xóa theo yêu cầu. Feature tương ứng trở về planned; không tính kiểm tra cũ là nghiệm thu mã mới.",
     "source_reset": {
       "requested": true,

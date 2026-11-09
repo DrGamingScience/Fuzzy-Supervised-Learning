@@ -2,13 +2,26 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; implementation checkpoint `0f44e19ce8f123bac596e0f7d967973b2a02168a` (ALG-003).
+- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; baseline task `340a7a5dda30fe26655bead645c27ad7ccb6e06f`; working tree sạch trước INIT.
 - Khởi động: `python -m streamlit run app.py`; kiểm tra: `python -m pytest -q`.
-- Đã verified tuần tự đến `ALG-003`; không có task đang mở. Phạm vi được giao đến DOC-002, dừng trước LATER-001.
-- Check: python -m pytest -q tests/test_algorithms.py PASS: 30 tests. Toàn bộ Table III 2009 (20 điểm x 3 case) khớp; nhánh m=1/tie và tâm phần dư kiểm tra độc lập; diff review/check PASS.
-- Blocker: không có; task kế tiếp: ALG-004. Không có thay đổi người dùng có sẵn; metadata hậu commit được commit trước chuyển task/handoff.
+- Task duy nhất: `ALG-004` — INIT pass, EXE đang làm; phạm vi đã giao đến DOC-002, không làm LATER.
+- Môi trường: Anaconda Python 3.13.9; imports NumPy/SciPy/pandas/sklearn/Streamlit/Plotly đã kiểm tra.
+- Blocker: không có; không có thay đổi người dùng có sẵn.
 
 ## Nhật ký Phiên
+
+### Phiên 015
+
+- Ngày: 2026-11-09T23:11:35+07:00 (Asia/Saigon).
+- Mục tiêu: ALG-004 — eSFCM entropy. Yêu cầu: thực hiện hết feature đến trước later. Scope/files: src/algorithms.py, tests/test_algorithms.py. Không mở task tiếp theo trước khi commit task này. Acceptance criteria giữ nguyên: Công thức (14), tâm trọng số U và entropy đúng bài 2009; Softmax ổn định và quy ước 0 log 0 rõ ràng; Kiểm tra trực tiếp công thức, báo sai khác bảng thay vì ép khớp bảng.
+- INIT: branch main, HEAD `340a7a5dda30fe26655bead645c27ad7ccb6e06f`, git status sạch; interpreter/dependencies kế thừa ENV-001 đã kiểm tra lại đầu đợt; baseline liên quan PASS ở checkpoint trước (đầu đợt 28 tests). Không có thay đổi người dùng có sẵn.
+- Đã hoàn thành: EXE và acceptance checks PASS; diff đã review trong scope, chờ commit.
+- Xác minh đã chạy: python -m pytest -q tests/test_algorithms.py PASS: 32 tests. Công thức (14), tâm U, entropy độc lập, lambda lớn/0 log 0; thay tâm Table V cho U1,2=1.13e-21 thay vì 0.24, cảnh báo minh bạch; diff review/check PASS.
+- Bằng chứng đã ghi lại: chỉ tính tests chạy trên src mới; không dùng kết quả khảo sát cũ thay nghiệm thu.
+- Commit: chờ acceptance tests và review diff.
+- Tệp hoặc artifact đã cập nhật: src/algorithms.py, tests/test_algorithms.py.
+- Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi đang mở trong scope; giới hạn ngoài scope giữ nguyên.
+- Bước tốt nhất tiếp theo: hoàn tất EXE và COMMIT của ALG-004.
 
 ### Phiên 014
 
