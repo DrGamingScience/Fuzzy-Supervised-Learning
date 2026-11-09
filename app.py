@@ -1,11 +1,13 @@
 """Demo local tiếng Việt; thuật toán/metrics độc lập trong src."""
 
 import pandas as pd
+import numpy as np
 import plotly.express as px
 import streamlit as st
 
 from src.data import load_paper_data, demo_initial_centers
 from src.algorithms import Config
+from src.experiments import supervision_from_rows
 
 st.set_page_config(page_title="Phân cụm mờ bán giám sát", page_icon="🔬")
 st.title("Phân cụm mờ bán giám sát")
@@ -42,7 +44,7 @@ with st.sidebar:
 
 config=Config(algorithm=algorithm,m=m,m_prime=mp,lambda_=lam,epsilon=epsilon,max_iter=max_iter,seed=seed)
 initial_centers=demo_initial_centers() if init_mode=='Tâm demo cố định' else None
-level=st.session_state.get('level',0.3)
+level=st.session_state.get('level',st.session_state.get('prior_level',0.3))
 
 with st.expander('Dữ liệu và nhóm tham chiếu',expanded=True):
     data=pd.DataFrame(X,columns=['x','y'])
@@ -56,3 +58,29 @@ with st.expander('Dữ liệu và nhóm tham chiếu',expanded=True):
     st.plotly_chart(fig,width='stretch')
     st.dataframe(data.drop(columns='Điểm chú ý'),hide_index=True,width='stretch')
     st.caption('Nhóm tham chiếu chỉ dùng đánh giá; dữ liệu fit chỉ gồm hai tọa độ x, y. ID điểm/cụm hiển thị từ 1.')
+
+st.subheader('Chỉ dẫn giám sát')
+st.caption('Mỗi điểm tối đa một dòng bật. ID và cụm đích từ 1. B chỉ áp dụng cho sSFCM/eSFCM; sSMC-FCM dùng cụm đích và M′. FCM bỏ qua bảng này.')
+reset=st.button('Khôi phục preset',key='reset_supervision')
+if 'supervision_rows' not in st.session_state or st.session_state.get('prior_level')!=level or reset:
+    st.session_state['supervision_rows']=pd.DataFrame([
+        dict(enabled=True,point_id=i,target_cluster=1,membership=level) for i in (9,10)])
+    st.session_state['editor_revision']=st.session_state.get('editor_revision',0)+1
+    st.session_state['prior_level']=level
+editor_key=f"supervision_editor_{st.session_state['editor_revision']}"
+rows=st.data_editor(st.session_state['supervision_rows'],key=editor_key,num_rows='dynamic',
+    hide_index=True,width='stretch',disabled=['membership'] if algorithm=='ssmc' else [],
+    column_config={
+        'enabled':st.column_config.CheckboxColumn('Bật',default=False),
+        'point_id':st.column_config.NumberColumn('ID điểm',min_value=1,max_value=20,step=1,required=True),
+        'target_cluster':st.column_config.NumberColumn('Cụm đích',min_value=1,max_value=2,step=1,required=True),
+        'membership':st.column_config.NumberColumn('B (độ thuộc)',min_value=0.0,max_value=1.0,step=0.1,required=True),
+    })
+supervision_error=None
+B=np.zeros((20,2)); targets=np.full(20,-1,dtype=int)
+if algorithm!='fcm':
+    try:
+        B,targets=supervision_from_rows(rows,20,2,use_membership=algorithm!='ssmc')
+    except ValueError as exc:
+        supervision_error=str(exc)
+        st.error(supervision_error)

@@ -32,3 +32,25 @@ def test_algorithm_controls_and_presets():
     assert 'm' not in [w.key for w in app.number_input]
     app.selectbox(key='algorithm').select('ssfcm1').run()
     assert not app.exception
+
+
+def edit_supervision(app, changes):
+    key=f"supervision_editor_{app.session_state['editor_revision']}"
+    app.session_state[key]={'edited_rows':changes,'added_rows':[],'deleted_rows':[]}
+    app.run()
+    return app
+
+
+def test_supervision_editor_validation_preset_and_disable():
+    app=AppTest.from_file(str(Path(__file__).resolve().parents[1]/'app.py')).run()
+    app.selectbox(key='algorithm').select('ssfcm').run()
+    edit_supervision(app,{0:{'point_id':10}})
+    assert any('trùng' in e.value for e in app.error)
+    app.button(key='reset_supervision').click().run()
+    assert not app.error
+    app.selectbox(key='level').select(0.6).run()
+    assert app.session_state['supervision_rows']['membership'].tolist()==[0.6,0.6]
+    edit_supervision(app,{0:{'enabled':False,'point_id':99}})
+    assert not app.error
+    app.selectbox(key='algorithm').select('fcm').run()
+    assert not app.exception
