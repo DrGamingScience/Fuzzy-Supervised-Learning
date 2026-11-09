@@ -3,12 +3,24 @@
 ## Trạng thái Đã xác minh Hiện tại
 
 - Thư mục gốc kho lưu trữ: `D:\Downloads\Semi-supervised-learning`; Git branch `main`, baseline ban đầu `4f7fd34` (giữ nguyên hồ sơ/cấu hình có sẵn, chưa kiểm chứng).
-- Đường dẫn khởi động chuẩn: `app.py` chưa có; chưa chạy được Streamlit.
-- Đường dẫn xác minh chuẩn: Hồ sơ: `python tmp/check_records.py`; chưa có tests phần mềm.
-- Tính năng chưa hoàn thành có mức ưu tiên cao nhất hiện tại: Tiếp tục INIT-001: smoke test và entry point tối thiểu..
-- Sự cố chặn hiện tại: ENV-001 verified; không có blocker. Chỉ các task đã verified có bằng chứng nghiệm thu.
+- Đường dẫn khởi động chuẩn: `python -m streamlit run app.py` — entry point tối thiểu đã được kiểm tra.
+- Đường dẫn xác minh chuẩn: `python -m pytest -q`; hồ sơ: `python tmp/check_records.py`.
+- Tính năng chưa hoàn thành có mức ưu tiên cao nhất hiện tại: INIT-001, COMMIT/in_progress.
+- Sự cố chặn hiện tại: Nghiệm thu 10 tests PASS; đang ghi checkpoint trước DATA-001.
 
 ## Nhật ký Phiên
+
+### Phiên 009
+
+- Ngày: 09/11/2026 (Asia/Saigon); bắt đầu 2026-11-09T22:57:55+07:00.
+- Mục tiêu: INIT-001 — Tạo smoke tests môi trường độc lập thuật toán và entry point Streamlit chỉ báo sẵn sàng; xác minh chạy/trả trang/dừng. Phạm vi: app.py, tests/test_environment.py, tests/test_app.py, tests/test_server.py, AGENTS.md, feature_list.json, progress.md. Tiêu chí: giữ nguyên acceptance_criteria của task trong JSON.
+- Đã hoàn thành: INIT-001: entry point chỉ báo sẵn sàng; smoke dependency, AppTest chạy script thật; subprocess server localhost trả health và HTML, dừng và xác nhận port đã đóng. INIT baseline 7b08bcc/imports/config pass trước EXE.
+- Xác minh đã chạy: 09/11/2026: python -m pytest -q PASS exit 0, 10 tests (7 imports, numeric/table/chart smoke, AppTest, HTTP server lifecycle). python tmp/check_records.py và git diff --check PASS. Server test dùng port local trống, luôn dừng tiến trình trong finally; không có thuật toán/metrics.
+- Bằng chứng đã ghi lại: yêu cầu người dùng “Thực hiện đến hết data-001”; làm DOC → ENV → INIT → DATA tuần tự, không triển khai CORE/ALG/UI.
+- Commit: chờ kiểm tra/commit; baseline `7b08bcc7a5d9c093eca7165904affe088130244f`.
+- Tệp hoặc artifact đã cập nhật: app.py, tests/test_environment.py, tests/test_app.py, tests/test_server.py, AGENTS.md, feature_list.json, progress.md.
+- Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi trong scope; thuật toán/metrics/UI demo chưa triển khai.
+- Bước tốt nhất tiếp theo: hoàn thành INIT rồi EXE, nghiệm thu và commit riêng INIT-001.
 
 ### Phiên 008
 

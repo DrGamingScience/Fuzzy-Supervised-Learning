@@ -20,8 +20,8 @@ src/data.py          Dự kiến: dữ liệu/preset — mã nháp ĐÃ XÓA
 src/algorithms.py    Dự kiến: lõi 5 thuật toán — mã nháp ĐÃ XÓA
 src/metrics.py       Dự kiến: metrics — mã nháp ĐÃ XÓA
 src/experiments.py   Dự kiến: điều phối/xuất — mã nháp ĐÃ XÓA
-app.py              Entry point Streamlit — CHƯA CÓ
-tests/              Kiểm thử tự động — CHƯA CÓ
+app.py              Entry point Streamlit tối thiểu — chỉ báo sẵn sàng
+tests/              Smoke dependency/AppTest và vòng đời server local
 docs/               Ba PDF, KE_HOACH_TRIEN_KHAI.md, DAC_TA_BAN_DAU.md
 feature_list.json   Feature, phase, dependency, acceptance criteria, evidence
 progress.md         Trạng thái đã xác minh + Nhật ký Phiên; phiên mới nhất trước
@@ -37,20 +37,20 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m streamlit run app.py
 ```
 
-- UI dự kiến: `http://127.0.0.1:8501`; dừng bằng Ctrl+C.
-- **Hiện chưa có `app.py`, nên chưa khởi động được UI.** Không báo đã chạy ứng dụng.
+- UI tối thiểu: `http://127.0.0.1:8501`; dừng bằng Ctrl+C.
+- `app.py` chỉ báo môi trường sẵn sàng; chưa có chức năng phân cụm hay metrics.
 - Nếu không dùng venv, thay `.\.venv\Scripts\python.exe` bằng `python` đúng môi trường.
 
 ## 4. Project check/run như nào?
 
 ```powershell
 python -m json.tool feature_list.json > $null  # Check JSON hiện tại (PowerShell)
-python -m pytest -q                  # Toàn bộ tests, sau khi tạo tests/
-python -m pytest -q tests/test_algorithms.py   # Ví dụ test riêng, khi file tồn tại
+python -m pytest -q                  # Toàn bộ tests hiện có
+python -m pytest -q tests/test_environment.py tests/test_app.py tests/test_server.py
 ```
 
 - Dùng Python của venv nếu đã tạo ở bước 3. Không cài lại dependencies mỗi session.
-- **Chưa có tests/mã src**; `no tests ran`/exit 5 không phải pass. Check JSON không kiểm chứng phần mềm.
+- Tests môi trường không kiểm chứng thuật toán; `no tests ran`/exit 5 không phải pass. Check JSON chỉ kiểm chứng hồ sơ.
 - Thuật toán: đối chiếu bảng bài báo, baseline, ràng buộc U, KKT/residual và trường hợp biên.
 - Metrics: đối chiếu độc lập; export: đọc lại; UI: preset → sửa → chạy → xem vòng → xuất.
 - Chi tiết công thức, dung sai và sai khác eSFCM: `docs/KE_HOACH_TRIEN_KHAI.md`.

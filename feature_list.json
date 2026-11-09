@@ -86,19 +86,26 @@
       "phase": "INIT",
       "title": "INIT: smoke test và entry point tối thiểu",
       "priority": "must",
-      "status": "planned",
+      "status": "in_progress",
       "passes": false,
       "depends_on": [
         "ENV-001"
       ],
-      "files": [],
+      "files": [
+        "app.py",
+        "tests/test_environment.py",
+        "tests/test_app.py",
+        "tests/test_server.py"
+      ],
       "acceptance_criteria": [
         "Có test môi trường độc lập thuật toán, pytest chạy và thực sự pass",
         "Entry point Streamlit tối thiểu khởi động/trả trang local/dừng được; không thêm clustering hoặc metrics",
         "Log baseline và phân loại environment/product/unknown; không sửa expected output để né lỗi",
         "Commit/checkpoint trước khi EXE DATA/CORE/ALG"
       ],
-      "evidence": [],
+      "evidence": [
+        "09/11/2026: python -m pytest -q PASS exit 0, 10 tests (7 imports, numeric/table/chart smoke, AppTest, HTTP server lifecycle). python tmp/check_records.py và git diff --check PASS. Server test dùng port local trống, luôn dừng tiến trình trong finally; không có thuật toán/metrics."
+      ],
       "completion_commit": null,
       "completed_at": null,
       "sequence": 2
@@ -773,7 +780,7 @@
     "blocked": "Có trở ngại cụ thể",
     "deferred": "Để phase sau theo phạm vi đã chốt"
   },
-  "workflow_state": "ENV-001_verified",
+  "workflow_state": "INIT-001_COMMIT",
   "workflow": {
     "wid_limit": 1,
     "stages": [
@@ -790,7 +797,25 @@
       "Có Git commit local, checkpoint và completion_commit thật",
       "Working tree sạch trong scope; handoff có commit hash và status"
     ],
-    "active_task": null,
+    "active_task": {
+      "id": "INIT-001",
+      "assignment": "Tạo smoke tests môi trường độc lập thuật toán và entry point Streamlit chỉ báo sẵn sàng; xác minh chạy/trả trang/dừng.",
+      "stage": "COMMIT",
+      "state": "in_progress",
+      "authorized_files": [
+        "app.py",
+        "tests/test_environment.py",
+        "tests/test_app.py",
+        "tests/test_server.py",
+        "AGENTS.md",
+        "feature_list.json",
+        "progress.md"
+      ],
+      "baseline_commit": "7b08bcc7a5d9c093eca7165904affe088130244f",
+      "completion_commit": null,
+      "blockers": [],
+      "next_action": "INIT PASS: baseline 7b08bcc, status chỉ có hồ sơ task; interpreter/imports/pin/config PASS exit 0. Tạo app và smoke tests."
+    },
     "legacy_drafts_policy": "Năm file mã nguồn nháp đã xóa theo yêu cầu. Feature tương ứng trở về planned; không tính kiểm tra cũ là nghiệm thu mã mới.",
     "source_reset": {
       "requested": true,
