@@ -7,6 +7,8 @@ import pytest
 from src.algorithms import Config, validate_inputs
 from src.data import demo_initial_centers, load_paper_data, membership_preset
 from src.algorithms import fit, update_membership, objective
+from src.algorithms import exponent_matrix
+from src.data import ssmc_preset
 
 
 @pytest.mark.parametrize('X', [[], [1,2], [[np.nan]], [[np.inf]], np.empty((2,0)), [['x']]])
@@ -134,3 +136,32 @@ def test_esfcm_stable_softmax_and_zero_entropy():
     r=fit(X,c,X,B)
     np.testing.assert_array_equal(r.membership,B)
     assert r.objective==0
+
+
+@pytest.mark.parametrize('mp,expected',[(2,0.188663),(4,0.428699),(8,0.604491)])
+def test_ssmc_paper_and_kkt(mp,expected):
+    X,_=load_paper_data(); V=demo_initial_centers(); t=np.array(ssmc_preset(8).targets)
+    c=Config(algorithm='ssmc',m_prime=mp)
+    r=fit(X,c,V,targets=t)
+    assert r.membership[8,0]==pytest.approx(expected,abs=1e-6)
+    U=update_membership(X,V,c,targets=t)
+    powers=exponent_matrix(U.shape,c,t)
+    d2=((X[:,None]-V)**2).sum(axis=2)
+    gradients=powers*U**(powers-1)*d2
+    np.testing.assert_allclose(gradients[:,0],gradients[:,1],rtol=1e-10,atol=1e-10)
+    one=fit(X,replace(c,max_iter=1),V,targets=t)
+    w=U**powers
+    np.testing.assert_allclose(one.centers,w.T@X/w.sum(axis=0)[:,None])
+    if mp==2:
+        np.testing.assert_array_equal(r.membership,fit(X,Config(),V).membership)
+
+
+def test_ssmc_three_clusters_kkt_and_unsupervised_baseline():
+    X=np.array([[1.,2],[3,4],[8,7],[2,9]])
+    V=np.array([[0.,0],[5,3],[7,10]])
+    c=Config(algorithm='ssmc',n_clusters=3,m=1.7,m_prime=7.2)
+    t=np.array([0,1,2,-1]); U=update_membership(X,V,c,targets=t)
+    powers=exponent_matrix(U.shape,c,t)
+    gradients=powers*U**(powers-1)*((X[:,None]-V)**2).sum(axis=2)
+    np.testing.assert_allclose(gradients,np.repeat(gradients[:,0,None],3,axis=1),rtol=1e-10)
+    np.testing.assert_allclose(U[-1],update_membership(X,V,replace(c,algorithm='fcm'))[-1])

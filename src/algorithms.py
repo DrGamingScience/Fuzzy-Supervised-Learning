@@ -7,6 +7,8 @@ from dataclasses import dataclass
 from time import perf_counter
 
 import numpy as np
+from scipy.optimize import brentq
+from scipy.special import expit, logsumexp
 
 ALGORITHMS = ('fcm', 'ssfcm', 'ssfcm1', 'esfcm', 'ssmc')
 ESFCM_WARNING = ('eSFCM theo công thức (14), lambda=1 trên dữ liệu gốc không khớp '
@@ -144,9 +146,53 @@ def update_membership(X, V, config, B=None, targets=None):
         else:
             base=_fcm_membership(d2,config.m)
         return B+(1-B.sum(axis=1,keepdims=True))*base
+    if config.algorithm == 'ssmc':
+        U=_fcm_membership(d2,config.m)
+        if targets is not None and config.m_prime != config.m:
+            for i in np.flatnonzero(np.asarray(targets)>=0):
+                U[i]=_ssmc_row(d2[i],int(targets[i]),config)
+        return U
     if config.algorithm != 'fcm':
         raise NotImplementedError(config.algorithm)
     return _fcm_membership(d2,config.m)
+
+
+def _ssmc_row(d2, k, config):
+    """(17)–(20), giải (19) trong tọa độ logit của U_k.
+
+    μ_j=(1/(M d_j²))^(1/(M-1)), S=sum_{j!=k} μ_j.
+    Với q=μ_k/(μ_k+S): q^(M'-1)/(1-q)^(M-1)=1/(M' d_k² S^(M-1)).
+    Hàm log đơn điệu, Brent có khoảng chặn; không ép nhãn sau phân cụm.
+    """
+    zero=d2==0
+    if zero.any():
+        return zero.astype(float)/zero.sum()
+    logs=np.log(d2)-np.log(d2.min())  # (17) khoảng cách bình phương chuẩn hóa
+    other=np.arange(len(d2))!=k
+    log_mu=-(np.log(config.m)+logs[other])/(config.m-1)
+    log_S=logsumexp(log_mu)
+    constant=np.log(config.m_prime)+logs[k]+(config.m-1)*log_S
+    def equation(z):
+        return (-(config.m_prime-1)*np.logaddexp(0,-z)
+                +(config.m-1)*np.logaddexp(0,z)+constant)
+    bound=abs(constant)/min(config.m-1,config.m_prime-1)+2
+    if not np.isfinite(bound):
+        raise ValueError('Không lập được khoảng chặn nghiệm; tham số quá cực đoan.')
+    z=brentq(equation,-bound,bound,xtol=config.root_tol,rtol=4*np.finfo(float).eps,maxiter=200)
+    if abs(equation(z)) > max(1e-9,config.root_tol*max(config.m,config.m_prime)*4):
+        raise ArithmeticError('Residual nghiệm sSMC vượt dung sai.')
+    U=np.empty(len(d2))
+    U[k]=expit(z)
+    U[other]=expit(-z)*np.exp(log_mu-log_S)
+    return U/U.sum()
+
+
+def exponent_matrix(shape, config, targets):
+    powers=np.full(shape,config.m,dtype=float)
+    if targets is not None:
+        rows=np.flatnonzero(np.asarray(targets)>=0)
+        powers[rows,np.asarray(targets)[rows]]=config.m_prime
+    return powers
 
 
 def _weights(U, config, B, targets):
@@ -154,6 +200,8 @@ def _weights(U, config, B, targets):
         return U
     if config.algorithm in ('ssfcm', 'ssfcm1'):
         return np.abs(U-B)**(1 if config.algorithm=='ssfcm1' else config.m)
+    if config.algorithm == 'ssmc':
+        return U**exponent_matrix(U.shape,config,targets)
     return U**config.m
 
 
