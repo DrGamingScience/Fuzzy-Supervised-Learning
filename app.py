@@ -30,7 +30,9 @@ with st.sidebar:
         m=1.0
         st.caption('m = 1: phần dư vào cụm gần nhất; hòa chọn cụm ID nhỏ nhất.')
     if compare or algorithm in ('ssfcm','ssfcm1','esfcm'):
-        st.selectbox('Preset B cho ID 9, 10 → cụm 1',[0.0,0.3,0.6],index=1,key='level')
+        levels=[0.0,0.3,0.6]
+        st.selectbox('Preset B cho ID 9, 10 → cụm 1',levels,
+                     index=levels.index(st.session_state.get('prior_level',0.3)),key='level')
         st.caption('B là cận dưới độ thuộc; B = 0 nghĩa là không có chỉ dẫn ở ô đó.')
     if compare or algorithm=='esfcm':
         lam=st.number_input('lambda',min_value=0.000001,value=1.0,step=0.1,key='lambda')

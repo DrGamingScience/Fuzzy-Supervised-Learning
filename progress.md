@@ -2,13 +2,26 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; implementation checkpoint `55992c2c175974f3c6387b7f5653e4d75d77062f` (UI-005).
+- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; baseline task `0f3912c27ecbe3b2ca0f5218b116d685b6dae665`; working tree sạch trước INIT.
 - Khởi động: `python -m streamlit run app.py`; kiểm tra: `python -m pytest -q`.
-- Đã verified tuần tự đến `UI-005`; không có task đang mở. Phạm vi được giao đến DOC-002, dừng trước LATER-001.
-- Check: python -m pytest -q tests/test_app.py tests/test_export.py PASS: 7 tests. Chạy đơn/cả5, metrics và cảnh báo eSFCM, tải ZIP, thay epsilon đánh dấu kết quả cũ/giữ ZIP đúng lần chạy, chạy lại xóa stale; diff review/check PASS.
-- Blocker: không có; task kế tiếp: QA-001. Không có thay đổi người dùng có sẵn; metadata hậu commit được commit trước chuyển task/handoff.
+- Task duy nhất: `QA-001` — INIT pass, EXE đang làm; phạm vi đã giao đến DOC-002, không làm LATER.
+- Môi trường: Anaconda Python 3.13.9; imports NumPy/SciPy/pandas/sklearn/Streamlit/Plotly đã kiểm tra.
+- Blocker: không có; không có thay đổi người dùng có sẵn.
 
 ## Nhật ký Phiên
+
+### Phiên 030
+
+- Ngày: 2026-11-09T23:26:09+07:00 (Asia/Saigon).
+- Mục tiêu: QA-001 — Kiểm tra luồng demo và trạng thái UI. Yêu cầu: thực hiện hết feature đến trước later. Scope/files: app.py, tests/test_ui_flow.py, docs/QA.md. Không mở task tiếp theo trước khi commit task này. Acceptance criteria giữ nguyên: Kiểm tra preset → sửa → chạy → chọn vòng → so sánh → xuất; Không có exception khi thao tác hợp lệ; lỗi nhập được xử lý; Có bằng chứng AppTest hoặc kiểm tra UI thực tế và lệnh khởi động.
+- INIT: branch main, HEAD `0f3912c27ecbe3b2ca0f5218b116d685b6dae665`, git status sạch; interpreter/dependencies kế thừa ENV-001 đã kiểm tra lại đầu đợt; baseline liên quan PASS ở checkpoint trước (đầu đợt 28 tests). Không có thay đổi người dùng có sẵn.
+- Đã hoàn thành: EXE và acceptance checks PASS; diff đã review trong scope, chờ commit.
+- Xác minh đã chạy: python -m pytest -q PASS: 139 tests, gồm AppTest luồng preset→sửa→chạy→xem vòng→so sánh→đọc ZIP, cả 5 lựa chọn, lỗi ID/B/trùng/Mprime<M và server lifecycle. Đã sửa preset B bị reset khi đổi thuật toán. Tooling: AppTest không giữ data_editor delta qua rerun, test gửi edited_rows cùng sự kiện chạy và đối chiếu B/targets/ZIP; giới hạn ghi docs/QA.md. python tmp/check_records.py và JSON PASS; diff review/check PASS.
+- Bằng chứng đã ghi lại: chỉ tính tests chạy trên src mới; không dùng kết quả khảo sát cũ thay nghiệm thu.
+- Commit: chờ acceptance tests và review diff.
+- Tệp hoặc artifact đã cập nhật: app.py, tests/test_ui_flow.py, docs/QA.md.
+- Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi đang mở trong scope; giới hạn ngoài scope giữ nguyên.
+- Bước tốt nhất tiếp theo: hoàn tất EXE và COMMIT của QA-001.
 
 ### Phiên 029
 
