@@ -2,13 +2,26 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; implementation checkpoint `2926add1ff82c333ed26af3d4a8c2def646bae56` (UI-001).
+- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; baseline task `b3478a9ec394cb3798386bf377eabfed07d0b2bb`; working tree sạch trước INIT.
 - Khởi động: `python -m streamlit run app.py`; kiểm tra: `python -m pytest -q`.
-- Đã verified tuần tự đến `UI-001`; không có task đang mở. Phạm vi được giao đến DOC-002, dừng trước LATER-001.
-- Check: python -m pytest -q tests/test_app.py tests/test_server.py PASS: 2 tests. AppTest hiển thị 20 điểm/ID/nhóm tham chiếu, Plotly assets local; server localhost health/HTML/dừng pass. Nhãn không vào X đã kiểm tra EXP-001. Diff review/check PASS.
-- Blocker: không có; task kế tiếp: UI-002. Không có thay đổi người dùng có sẵn; metadata hậu commit được commit trước chuyển task/handoff.
+- Task duy nhất: `UI-002` — INIT pass, EXE đang làm; phạm vi đã giao đến DOC-002, không làm LATER.
+- Môi trường: Anaconda Python 3.13.9; imports NumPy/SciPy/pandas/sklearn/Streamlit/Plotly đã kiểm tra.
+- Blocker: không có; không có thay đổi người dùng có sẵn.
 
 ## Nhật ký Phiên
+
+### Phiên 026
+
+- Ngày: 2026-11-09T23:22:00+07:00 (Asia/Saigon).
+- Mục tiêu: UI-002 — Chọn thuật toán, tham số và preset. Yêu cầu: thực hiện hết feature đến trước later. Scope/files: app.py, tests/test_app.py. Không mở task tiếp theo trước khi commit task này. Acceptance criteria giữ nguyên: Chọn được năm thuật toán và tham số phù hợp; Preset 0 / 0.3 / 0.6, M' = 4 / 8; Seed/khởi tạo, epsilon và giới hạn vòng rõ ràng.
+- INIT: branch main, HEAD `b3478a9ec394cb3798386bf377eabfed07d0b2bb`, git status sạch; interpreter/dependencies kế thừa ENV-001 đã kiểm tra lại đầu đợt; baseline liên quan PASS ở checkpoint trước (đầu đợt 28 tests). Không có thay đổi người dùng có sẵn.
+- Đã hoàn thành: EXE và acceptance checks PASS; diff đã review trong scope, chờ commit.
+- Xác minh đã chạy: python -m pytest -q tests/test_app.py PASS: 2 AppTests, chọn 5 thuật toán, preset B và Mprime8, tham số theo thuật toán, seed/tâm đầu/epsilon/max_iter rõ; diff review/check PASS.
+- Bằng chứng đã ghi lại: chỉ tính tests chạy trên src mới; không dùng kết quả khảo sát cũ thay nghiệm thu.
+- Commit: chờ acceptance tests và review diff.
+- Tệp hoặc artifact đã cập nhật: app.py, tests/test_app.py.
+- Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi đang mở trong scope; giới hạn ngoài scope giữ nguyên.
+- Bước tốt nhất tiếp theo: hoàn tất EXE và COMMIT của UI-002.
 
 ### Phiên 025
 
