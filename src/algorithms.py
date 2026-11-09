@@ -127,18 +127,23 @@ def _fcm_membership(d2, m):
 
 def update_membership(X, V, config, B=None, targets=None):
     d2 = squared_distances(X,V)
-    if config.algorithm == 'ssfcm':
+    if config.algorithm in ('ssfcm', 'ssfcm1'):
         # Endo 2009 (6): B là cận dưới; tâm dùng phần dư theo (4).
         B = np.zeros_like(d2) if B is None else B
-        return B+(1-B.sum(axis=1,keepdims=True))*_fcm_membership(d2,config.m)
+        if config.algorithm == 'ssfcm1':
+            # (8): hòa chọn cụm có chỉ số nhỏ nhất, không chia cho m-1.
+            base=np.eye(d2.shape[1])[d2.argmin(axis=1)]
+        else:
+            base=_fcm_membership(d2,config.m)
+        return B+(1-B.sum(axis=1,keepdims=True))*base
     if config.algorithm != 'fcm':
         raise NotImplementedError(config.algorithm)
     return _fcm_membership(d2,config.m)
 
 
 def _weights(U, config, B, targets):
-    if config.algorithm == 'ssfcm':
-        return np.abs(U-B)**config.m
+    if config.algorithm in ('ssfcm', 'ssfcm1'):
+        return np.abs(U-B)**(1 if config.algorithm=='ssfcm1' else config.m)
     return U**config.m
 
 

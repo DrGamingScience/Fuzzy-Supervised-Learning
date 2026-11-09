@@ -2,13 +2,26 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; implementation checkpoint `6e34ccade2f6bd7049aaeb47dd77456541959242` (ALG-002).
+- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; baseline task `40adc5f34a84cc0fc4b05c7a940f84eb166ba641`; working tree sạch trước INIT.
 - Khởi động: `python -m streamlit run app.py`; kiểm tra: `python -m pytest -q`.
-- Đã verified tuần tự đến `ALG-002`; không có task đang mở. Phạm vi được giao đến DOC-002, dừng trước LATER-001.
-- Check: python -m pytest -q tests/test_algorithms.py PASS: 26 tests; U9=0.451669/0.693818, B=0 trùng FCM, đối chiếu độc lập tâm trọng số phần dư; diff review/check PASS.
-- Blocker: không có; task kế tiếp: ALG-003. Không có thay đổi người dùng có sẵn; metadata hậu commit được commit trước chuyển task/handoff.
+- Task duy nhất: `ALG-003` — INIT pass, EXE đang làm; phạm vi đã giao đến DOC-002, không làm LATER.
+- Môi trường: Anaconda Python 3.13.9; imports NumPy/SciPy/pandas/sklearn/Streamlit/Plotly đã kiểm tra.
+- Blocker: không có; không có thay đổi người dùng có sẵn.
 
 ## Nhật ký Phiên
+
+### Phiên 014
+
+- Ngày: 2026-11-09T23:11:25+07:00 (Asia/Saigon).
+- Mục tiêu: ALG-003 — sSFCM m = 1. Yêu cầu: thực hiện hết feature đến trước later. Scope/files: src/algorithms.py, tests/test_algorithms.py. Không mở task tiếp theo trước khi commit task này. Acceptance criteria giữ nguyên: Nhánh riêng không chia cho m-1; Phần dư được gán theo cụm gần nhất, quy tắc hòa rõ ràng; Đối chiếu Table III 2009 và trường hợp B = 0.
+- INIT: branch main, HEAD `40adc5f34a84cc0fc4b05c7a940f84eb166ba641`, git status sạch; interpreter/dependencies kế thừa ENV-001 đã kiểm tra lại đầu đợt; baseline liên quan PASS ở checkpoint trước (đầu đợt 28 tests). Không có thay đổi người dùng có sẵn.
+- Đã hoàn thành: EXE và acceptance checks PASS; diff đã review trong scope, chờ commit.
+- Xác minh đã chạy: python -m pytest -q tests/test_algorithms.py PASS: 30 tests. Toàn bộ Table III 2009 (20 điểm x 3 case) khớp; nhánh m=1/tie và tâm phần dư kiểm tra độc lập; diff review/check PASS.
+- Bằng chứng đã ghi lại: chỉ tính tests chạy trên src mới; không dùng kết quả khảo sát cũ thay nghiệm thu.
+- Commit: chờ acceptance tests và review diff.
+- Tệp hoặc artifact đã cập nhật: src/algorithms.py, tests/test_algorithms.py.
+- Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi đang mở trong scope; giới hạn ngoài scope giữ nguyên.
+- Bước tốt nhất tiếp theo: hoàn tất EXE và COMMIT của ALG-003.
 
 ### Phiên 013
 

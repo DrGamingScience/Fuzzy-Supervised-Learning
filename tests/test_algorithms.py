@@ -87,3 +87,22 @@ def test_ssfcm_paper_and_weighted_centers(level,expected):
     np.testing.assert_allclose(one.centers,expected_V)
     if level==0:
         np.testing.assert_array_equal(r.membership,fit(X,Config(),V).membership)
+
+
+@pytest.mark.parametrize('level',[0,0.3,0.6])
+def test_ssfcm1_full_table_iii(level):
+    X,_=load_paper_data(); c=Config(algorithm='ssfcm1',m=1)
+    B=membership_preset(level)
+    r=fit(X,c,demo_initial_centers(),B)
+    # Table III 2009, trang PDF 6: ID 1–8 → 1; 9,10 → (B,1-B); 11–20 → 2.
+    expected=np.zeros((20,2)); expected[:8,0]=1
+    expected[8:10]=[level,1-level]; expected[10:,1]=1
+    np.testing.assert_array_equal(r.membership,expected)
+    w=np.abs(expected-B)
+    np.testing.assert_allclose(r.centers,(w.T@X)/w.sum(axis=0)[:,None])
+
+
+def test_ssfcm1_tie_uses_first_cluster():
+    X=np.array([[1.,0],[3,0]])
+    U=update_membership(X,np.array([[0.,0],[2,0]]),Config(algorithm='ssfcm1',m=1))
+    np.testing.assert_array_equal(U,[[1,0],[0,1]])
