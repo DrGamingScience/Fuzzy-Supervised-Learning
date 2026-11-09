@@ -2,11 +2,11 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; baseline task `e8394943e24b1d6bf1d9537f583a94d180e687eb`; working tree sạch trước INIT.
+- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; implementation checkpoint `10286ef9e60c09b6b68cc87750c5536280d9bdef` (CORE-001).
 - Khởi động: `python -m streamlit run app.py`; kiểm tra: `python -m pytest -q`.
-- Task duy nhất: `CORE-001` — INIT pass, EXE đang làm; phạm vi đã giao đến DOC-002, không làm LATER.
-- Môi trường: Anaconda Python 3.13.9; imports NumPy/SciPy/pandas/sklearn/Streamlit/Plotly đã kiểm tra.
-- Blocker: không có; không có thay đổi người dùng có sẵn.
+- Đã verified tuần tự đến `CORE-001`; không có task đang mở. Phạm vi được giao đến DOC-002, dừng trước LATER-001.
+- Check: python -m pytest -q PASS: 49 tests; shape/finiteness/config/B/targets và tham số không áp dụng; git diff --check PASS.
+- Blocker: không có; task kế tiếp: ALG-001. Không có thay đổi người dùng có sẵn; metadata hậu commit được commit trước chuyển task/handoff.
 
 ## Nhật ký Phiên
 
@@ -18,10 +18,10 @@
 - Đã hoàn thành: EXE và acceptance checks PASS; diff đã review trong scope, chờ commit.
 - Xác minh đã chạy: python -m pytest -q PASS: 49 tests; shape/finiteness/config/B/targets và tham số không áp dụng; git diff --check PASS.
 - Bằng chứng đã ghi lại: chỉ tính tests chạy trên src mới; không dùng kết quả khảo sát cũ thay nghiệm thu.
-- Commit: chờ acceptance tests và review diff.
+- Commit: `10286ef9e60c09b6b68cc87750c5536280d9bdef` (CORE-001); hồ sơ hậu commit được commit riêng trước task tiếp theo.
 - Tệp hoặc artifact đã cập nhật: src/algorithms.py, tests/test_algorithms.py.
 - Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi đang mở trong scope; giới hạn ngoài scope giữ nguyên.
-- Bước tốt nhất tiếp theo: hoàn tất EXE và COMMIT của CORE-001.
+- Bước tốt nhất tiếp theo: ALG-001; working tree task sẽ sạch sau commit metadata.
 
 ### Phiên 010
 

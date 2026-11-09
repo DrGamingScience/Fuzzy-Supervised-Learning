@@ -148,8 +148,8 @@
       "phase": "P1",
       "title": "Cấu hình và validation đầu vào",
       "priority": "must",
-      "status": "implemented_unverified",
-      "passes": false,
+      "status": "verified",
+      "passes": true,
       "depends_on": [
         "DATA-001"
       ],
@@ -165,8 +165,8 @@
       "evidence": [
         "python -m pytest -q PASS: 49 tests; shape/finiteness/config/B/targets và tham số không áp dụng; git diff --check PASS."
       ],
-      "completion_commit": null,
-      "completed_at": null,
+      "completion_commit": "10286ef9e60c09b6b68cc87750c5536280d9bdef",
+      "completed_at": "2026-11-09T23:09:19+07:00",
       "expected_files": [
         "src/algorithms.py"
       ],
@@ -793,7 +793,7 @@
     "blocked": "Có trở ngại cụ thể",
     "deferred": "Để phase sau theo phạm vi đã chốt"
   },
-  "workflow_state": "CORE-001_EXE",
+  "workflow_state": "verified_through_CORE-001",
   "workflow": {
     "wid_limit": 1,
     "stages": [
@@ -810,7 +810,7 @@
       "Có Git commit local, checkpoint và completion_commit thật",
       "Working tree sạch trong scope; handoff có commit hash và status"
     ],
-    "active_task": "CORE-001",
+    "active_task": null,
     "legacy_drafts_policy": "Năm file mã nguồn nháp đã xóa theo yêu cầu. Feature tương ứng trở về planned; không tính kiểm tra cũ là nghiệm thu mã mới.",
     "source_reset": {
       "requested": true,
