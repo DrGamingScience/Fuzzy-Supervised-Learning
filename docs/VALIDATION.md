@@ -30,3 +30,8 @@ in U1=0.11. Thay trực tiếp tâm nguồn `(2.735,5),(9.200,5)` vào (15) cho
 0.10452027; hội tụ src cho 0.10451687, làm tròn 0.10. Hai hàng này được
 kiểm tra bằng test sai khác riêng, giữ nguyên fixture 0.11 và dung sai 0.005
 cho các hàng còn lại; không sửa thuật toán hay nới dung sai cả bảng.
+
+Nghiệm thu tích hợp ngày 09/11/2026: `python -m pytest -q` — 139 tests PASS.
+Nhóm metrics đối chiếu Silhouette/CH/DB và ARI với sklearn, Dunn/PBM và cặp
+Jaccard với ví dụ tính tay; export đọc lại strict JSON, CSV BOM và mọi snapshot.
+Luồng AppTest và giới hạn editor được mô tả trong `docs/QA.md`.

@@ -746,18 +746,26 @@
       "phase": "P3",
       "title": "README, chú thích và bàn giao",
       "priority": "must",
-      "status": "planned",
+      "status": "implemented_unverified",
       "passes": false,
       "depends_on": [
         "QA-001"
       ],
-      "files": [],
+      "files": [
+        "README.md",
+        "AGENTS.md",
+        "docs/WORKFLOW.md",
+        "docs/VALIDATION.md",
+        "docs/QA.md"
+      ],
       "acceptance_criteria": [
         "README có setup Windows, chạy, kiểm thử và kịch bản demo",
         "Công thức có nguồn, các giả định/sai khác/giới hạn rõ",
         "Feature list và progress phản ánh đúng kết quả kiểm chứng"
       ],
-      "evidence": [],
+      "evidence": [
+        "python -m pytest -o addopts=\" -q PASS: 139 tests trong 10.07s. README Python example PASS U9=[0.60449124,0.39550876], links local tồn tại; python tmp/check_records.py PASS (29 features,31 phiên,AGENTS87 dòng,history/dependency/commit); JSON/diff check PASS. README có setup/demo/công thức/giới hạn/sai khác/metrics/export; diff review trong scope."
+      ],
       "completion_commit": null,
       "completed_at": null,
       "sequence": 24
@@ -892,7 +900,7 @@
     "blocked": "Có trở ngại cụ thể",
     "deferred": "Để phase sau theo phạm vi đã chốt"
   },
-  "workflow_state": "verified_through_QA-001",
+  "workflow_state": "DOC-002_EXE",
   "workflow": {
     "wid_limit": 1,
     "stages": [
@@ -909,7 +917,7 @@
       "Có Git commit local, checkpoint và completion_commit thật",
       "Working tree sạch trong scope; handoff có commit hash và status"
     ],
-    "active_task": null,
+    "active_task": "DOC-002",
     "legacy_drafts_policy": "Năm file mã nguồn nháp đã xóa theo yêu cầu. Feature tương ứng trở về planned; không tính kiểm tra cũ là nghiệm thu mã mới.",
     "source_reset": {
       "requested": true,

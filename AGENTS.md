@@ -17,11 +17,11 @@ Quy trình chi tiết và Definition of Done: `docs/WORKFLOW.md`; giữ AGENTS d
 
 ```text
 src/data.py          Bộ 20 điểm, nhãn riêng, tâm đầu và preset — viết mới DATA-001
-src/algorithms.py    Dự kiến: lõi 5 thuật toán — mã nháp ĐÃ XÓA
-src/metrics.py       Dự kiến: metrics — mã nháp ĐÃ XÓA
-src/experiments.py   Dự kiến: điều phối/xuất — mã nháp ĐÃ XÓA
-app.py              Entry point Streamlit tối thiểu — chỉ báo sẵn sàng
-tests/              Dữ liệu/preset + smoke dependency/AppTest/server local
+src/algorithms.py    Lõi 5 thuật toán, validation, biên số và snapshot — viết mới
+src/metrics.py       Năm metrics hình học, ARI/Jaccard và hai phạm vi đánh giá
+src/experiments.py   Điều phối cùng điều kiện, chỉ dẫn ID và xuất ZIP
+app.py + src/ui.py   Demo Streamlit tiếng Việt, bảng giám sát, xem vòng, so sánh
+tests/              Công thức/bảng/KKT/biên/metrics/export/AppTest/server local
 docs/               Ba PDF, KE_HOACH_TRIEN_KHAI.md, DAC_TA_BAN_DAU.md
 feature_list.json   Feature, phase, dependency, acceptance criteria, evidence
 progress.md         Trạng thái đã xác minh + Nhật ký Phiên; phiên mới nhất trước
@@ -37,8 +37,8 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m streamlit run app.py
 ```
 
-- UI tối thiểu: `http://127.0.0.1:8501`; dừng bằng Ctrl+C.
-- `app.py` chỉ báo môi trường sẵn sàng; chưa có chức năng phân cụm hay metrics.
+- UI: `http://127.0.0.1:8501`; dừng bằng Ctrl+C; xem README cho kịch bản demo.
+- `app.py` chạy đơn/cả năm, sửa giám sát, xem snapshot/metrics và tải ZIP.
 - Nếu không dùng venv, thay `.\.venv\Scripts\python.exe` bằng `python` đúng môi trường.
 
 ## 4. Project check/run như nào?
@@ -59,7 +59,7 @@ python -m pytest -q tests/test_data.py  # Kiểm tra riêng DATA-001
 
 - Đọc **Trạng thái Đã xác minh Hiện tại** và phiên đầu `progress.md`: task, check, lỗi và bước tiếp.
 - Đọc `feature_list.json` để biết trạng thái và dependency; kiểm tra file thực tế trước khi làm.
-- Mốc hiện tại: DOC/ENV/INIT/DATA-001 đã nghiệm thu; src/data.py viết mới. Task kế tiếp CORE-001 chưa được giao; README chưa có.
+- Bản đầu đã có đủ lõi/metrics/export/UI/QA; đọc JSON và progress để biết checkpoint nghiệm thu chính xác. README có setup/demo/giới hạn nguồn.
 - `implemented_unverified` = có mã chưa nghiệm thu; `planned` = chưa làm; `deferred` = phase sau.
 - Chỉ `verified` mới có `passes: true`: đủ acceptance criteria, evidence đã chạy và Git commit/checkpoint.
 - Không suy phần trăm hoàn thành từ số file hoặc số đầu việc; không coi tính thử khảo sát là test src.
@@ -82,6 +82,6 @@ python -m pytest -q tests/test_data.py  # Kiểm tra riêng DATA-001
 - Test fail, thiếu commit/checkpoint hoặc lẫn scope: chưa DONE; giữ task hiện tại, không làm tiếp backlog.
 - Trước đổi phiên cập nhật JSON + trạng thái hiện tại; phiên mới tiếp tục đúng task và stage còn dở.
 - Feature giữ thứ tự kế hoạch sequence từ 0; không đảo theo hoàn thành. Progress chèn phiên mới đầu, giữ mọi phiên cũ.
-- Phạm vi được giao ngày 09/11/2026: DOC-001 → ENV-001 → INIT-001 → DATA-001, gồm Git/môi trường tiên quyết; dừng trước CORE-001.
+- Phạm vi mới được giao ngày 09/11/2026: thực hiện hết feature trước later, tuần tự CORE-001 → DOC-002; dừng trước LATER-001. Phạm vi cũ đến DATA-001 đã đóng.
 - Tách lõi/UI; chú thích Việt, nguồn rõ; U hợp lệ, nhãn thật không vào X, snapshot U/V cùng trạng thái.
 - Đúng trọng số từng bài; không ép bảng eSFCM, không so J khác định nghĩa; Jaccard theo cặp, ID UI từ 1.

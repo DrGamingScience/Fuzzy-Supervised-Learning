@@ -2,13 +2,26 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; implementation checkpoint `b644fdddc399857ba8a0c851eadad12f4f54227b` (QA-001).
+- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; baseline task `397025111a467a5cd4b1e2bb0ba9377ec21d28fe`; working tree sạch trước INIT.
 - Khởi động: `python -m streamlit run app.py`; kiểm tra: `python -m pytest -q`.
-- Đã verified tuần tự đến `QA-001`; không có task đang mở. Phạm vi được giao đến DOC-002, dừng trước LATER-001.
-- Check: python -m pytest -q PASS: 139 tests, gồm AppTest luồng preset→sửa→chạy→xem vòng→so sánh→đọc ZIP, cả 5 lựa chọn, lỗi ID/B/trùng/Mprime<M và server lifecycle. Đã sửa preset B bị reset khi đổi thuật toán. Tooling: AppTest không giữ data_editor delta qua rerun, test gửi edited_rows cùng sự kiện chạy và đối chiếu B/targets/ZIP; giới hạn ghi docs/QA.md. python tmp/check_records.py và JSON PASS; diff review/check PASS.
-- Blocker: không có; task kế tiếp: DOC-002. Không có thay đổi người dùng có sẵn; metadata hậu commit được commit trước chuyển task/handoff.
+- Task duy nhất: `DOC-002` — INIT pass, EXE đang làm; phạm vi đã giao đến DOC-002, không làm LATER.
+- Môi trường: Anaconda Python 3.13.9; imports NumPy/SciPy/pandas/sklearn/Streamlit/Plotly đã kiểm tra.
+- Blocker: không có; không có thay đổi người dùng có sẵn.
 
 ## Nhật ký Phiên
+
+### Phiên 031
+
+- Ngày: 2026-11-09T23:28:02+07:00 (Asia/Saigon).
+- Mục tiêu: DOC-002 — README, chú thích và bàn giao. Yêu cầu: thực hiện hết feature đến trước later. Scope/files: README.md, AGENTS.md, docs/WORKFLOW.md, docs/VALIDATION.md, docs/QA.md. Không mở task tiếp theo trước khi commit task này. Acceptance criteria giữ nguyên: README có setup Windows, chạy, kiểm thử và kịch bản demo; Công thức có nguồn, các giả định/sai khác/giới hạn rõ; Feature list và progress phản ánh đúng kết quả kiểm chứng.
+- INIT: branch main, HEAD `397025111a467a5cd4b1e2bb0ba9377ec21d28fe`, git status sạch; interpreter/dependencies kế thừa ENV-001 đã kiểm tra lại đầu đợt; baseline liên quan PASS ở checkpoint trước (đầu đợt 28 tests). Không có thay đổi người dùng có sẵn.
+- Đã hoàn thành: EXE và acceptance checks PASS; diff đã review trong scope, chờ commit.
+- Xác minh đã chạy: python -m pytest -o addopts=" -q PASS: 139 tests trong 10.07s. README Python example PASS U9=[0.60449124,0.39550876], links local tồn tại; python tmp/check_records.py PASS (29 features,31 phiên,AGENTS87 dòng,history/dependency/commit); JSON/diff check PASS. README có setup/demo/công thức/giới hạn/sai khác/metrics/export; diff review trong scope.
+- Bằng chứng đã ghi lại: chỉ tính tests chạy trên src mới; không dùng kết quả khảo sát cũ thay nghiệm thu.
+- Commit: chờ acceptance tests và review diff.
+- Tệp hoặc artifact đã cập nhật: README.md, AGENTS.md, docs/WORKFLOW.md, docs/VALIDATION.md, docs/QA.md.
+- Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi đang mở trong scope; giới hạn ngoài scope giữ nguyên.
+- Bước tốt nhất tiếp theo: hoàn tất EXE và COMMIT của DOC-002.
 
 ### Phiên 030
 

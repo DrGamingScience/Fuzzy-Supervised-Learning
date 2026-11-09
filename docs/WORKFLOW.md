@@ -104,3 +104,14 @@ Task chưa đóng vẫn là task duy nhất của phiên sau. Người dùng có
 - Baseline `4f7fd34` lưu nguyên văn hồ sơ/cấu hình/PDF có sẵn; không coi baseline là phần mềm đã kiểm chứng. Artifact tmp và cache không được tracking.
 - Kiểm tra đầu phiên: src không còn file/cache. Lệnh xóa đệ quy bị automatic policy chặn; lệnh xóa thư mục rỗng không đệ quy đã thành công. Blocker cũ được giữ nguyên như lịch sử.
 - Không khôi phục bản nháp; DATA-001 viết mới từ bảng nguồn sau ENV/INIT verified. Dừng trước CORE-001.
+
+## 7. Phạm vi tiếp theo ngày 09/11/2026
+
+- Yêu cầu mới “thực hiện heeta feature cho đến trước later” được hiểu là thực hiện
+  hết các feature trước nhóm `priority: later`: CORE-001 đến DOC-002.
+- Quyền thực hiện mới thay giới hạn cũ dừng trước CORE-001; giữ nguyên WID=1,
+  INIT → EXE → COMMIT và thứ tự sequence. Không khôi phục bản nháp.
+- Mỗi task có commit triển khai và commit hồ sơ verified sau đó. Task sau chỉ
+  được mở khi task trước đã đủ acceptance/evidence và working tree sạch.
+- LATER-001..004 giữ deferred/passes=false; không triển khai notebook, dữ liệu
+  lớn/CSV, benchmark, alpha hoặc metrics mở rộng trong đợt này.
