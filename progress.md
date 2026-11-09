@@ -2,11 +2,11 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; baseline task `8a0dbcf02e5d27e0b3bf84978c315bef184ed5e0`; working tree sạch trước INIT.
+- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; implementation checkpoint `15288fbcf92cc8b1e8e5d10c0900e4abbcb1ffb7` (TEST-001).
 - Khởi động: `python -m streamlit run app.py`; kiểm tra: `python -m pytest -q`.
-- Task duy nhất: `TEST-001` — INIT pass, EXE đang làm; phạm vi đã giao đến DOC-002, không làm LATER.
-- Môi trường: Anaconda Python 3.13.9; imports NumPy/SciPy/pandas/sklearn/Streamlit/Plotly đã kiểm tra.
-- Blocker: không có; không có thay đổi người dùng có sẵn.
+- Đã verified tuần tự đến `TEST-001`; không có task đang mở. Phạm vi được giao đến DOC-002, dừng trước LATER-001.
+- Check: python -m pytest -q PASS: 94 tests. Bảng nguồn 20 điểm, Table III, SLSQP độc lập cả 5 mục tiêu, KKT/biên/history. Phát hiện sai khác Table 3 Mprime=4 ID17/19: 0.11 in, 0.10452027 theo (15) tại tâm nguồn; giữ fixture và test sai khác riêng, không nới tolerance. Diff review/check PASS.
+- Blocker: không có; task kế tiếp: MET-001. Không có thay đổi người dùng có sẵn; metadata hậu commit được commit trước chuyển task/handoff.
 
 ## Nhật ký Phiên
 
@@ -18,10 +18,10 @@
 - Đã hoàn thành: EXE và acceptance checks PASS; diff đã review trong scope, chờ commit.
 - Xác minh đã chạy: python -m pytest -q PASS: 94 tests. Bảng nguồn 20 điểm, Table III, SLSQP độc lập cả 5 mục tiêu, KKT/biên/history. Phát hiện sai khác Table 3 Mprime=4 ID17/19: 0.11 in, 0.10452027 theo (15) tại tâm nguồn; giữ fixture và test sai khác riêng, không nới tolerance. Diff review/check PASS.
 - Bằng chứng đã ghi lại: chỉ tính tests chạy trên src mới; không dùng kết quả khảo sát cũ thay nghiệm thu.
-- Commit: chờ acceptance tests và review diff.
+- Commit: `15288fbcf92cc8b1e8e5d10c0900e4abbcb1ffb7` (TEST-001); hồ sơ hậu commit được commit riêng trước task tiếp theo.
 - Tệp hoặc artifact đã cập nhật: tests/test_paper.py, tests/fixtures/paper_memberships.csv, docs/VALIDATION.md.
 - Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi đang mở trong scope; giới hạn ngoài scope giữ nguyên.
-- Bước tốt nhất tiếp theo: hoàn tất EXE và COMMIT của TEST-001.
+- Bước tốt nhất tiếp theo: MET-001; working tree task sẽ sạch sau commit metadata.
 
 ### Phiên 018
 

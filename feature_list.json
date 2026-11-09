@@ -396,8 +396,8 @@
       "phase": "P1",
       "title": "Bộ kiểm chứng toán và bảng bài báo",
       "priority": "must",
-      "status": "implemented_unverified",
-      "passes": false,
+      "status": "verified",
+      "passes": true,
       "depends_on": [
         "ALG-001",
         "ALG-002",
@@ -420,8 +420,8 @@
       "evidence": [
         "python -m pytest -q PASS: 94 tests. Bảng nguồn 20 điểm, Table III, SLSQP độc lập cả 5 mục tiêu, KKT/biên/history. Phát hiện sai khác Table 3 Mprime=4 ID17/19: 0.11 in, 0.10452027 theo (15) tại tâm nguồn; giữ fixture và test sai khác riêng, không nới tolerance. Diff review/check PASS."
       ],
-      "completion_commit": null,
-      "completed_at": null,
+      "completion_commit": "15288fbcf92cc8b1e8e5d10c0900e4abbcb1ffb7",
+      "completed_at": "2026-11-09T23:16:22+07:00",
       "sequence": 12
     },
     {
@@ -834,7 +834,7 @@
     "blocked": "Có trở ngại cụ thể",
     "deferred": "Để phase sau theo phạm vi đã chốt"
   },
-  "workflow_state": "TEST-001_EXE",
+  "workflow_state": "verified_through_TEST-001",
   "workflow": {
     "wid_limit": 1,
     "stages": [
@@ -851,7 +851,7 @@
       "Có Git commit local, checkpoint và completion_commit thật",
       "Working tree sạch trong scope; handoff có commit hash và status"
     ],
-    "active_task": "TEST-001",
+    "active_task": null,
     "legacy_drafts_policy": "Năm file mã nguồn nháp đã xóa theo yêu cầu. Feature tương ứng trở về planned; không tính kiểm tra cũ là nghiệm thu mã mới.",
     "source_reset": {
       "requested": true,
