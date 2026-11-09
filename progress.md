@@ -2,11 +2,11 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; baseline task `397025111a467a5cd4b1e2bb0ba9377ec21d28fe`; working tree sạch trước INIT.
+- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; implementation checkpoint `cb4fda6c6b64026b542b45c99cfeeb6c84d0e034` (DOC-002).
 - Khởi động: `python -m streamlit run app.py`; kiểm tra: `python -m pytest -q`.
-- Task duy nhất: `DOC-002` — INIT pass, EXE đang làm; phạm vi đã giao đến DOC-002, không làm LATER.
-- Môi trường: Anaconda Python 3.13.9; imports NumPy/SciPy/pandas/sklearn/Streamlit/Plotly đã kiểm tra.
-- Blocker: không có; không có thay đổi người dùng có sẵn.
+- Đã verified tuần tự đến `DOC-002`; không có task đang mở. Phạm vi được giao đến DOC-002, dừng trước LATER-001.
+- Check: python -m pytest -o addopts=" -q PASS: 139 tests trong 10.07s. README Python example PASS U9=[0.60449124,0.39550876], links local tồn tại; python tmp/check_records.py PASS (29 features,31 phiên,AGENTS87 dòng,history/dependency/commit); JSON/diff check PASS. README có setup/demo/công thức/giới hạn/sai khác/metrics/export; diff review trong scope.
+- Blocker: không có; task kế tiếp: LATER-001 (deferred, không triển khai). Không có thay đổi người dùng có sẵn; metadata hậu commit được commit trước chuyển task/handoff.
 
 ## Nhật ký Phiên
 
@@ -18,10 +18,10 @@
 - Đã hoàn thành: EXE và acceptance checks PASS; diff đã review trong scope, chờ commit.
 - Xác minh đã chạy: python -m pytest -o addopts=" -q PASS: 139 tests trong 10.07s. README Python example PASS U9=[0.60449124,0.39550876], links local tồn tại; python tmp/check_records.py PASS (29 features,31 phiên,AGENTS87 dòng,history/dependency/commit); JSON/diff check PASS. README có setup/demo/công thức/giới hạn/sai khác/metrics/export; diff review trong scope.
 - Bằng chứng đã ghi lại: chỉ tính tests chạy trên src mới; không dùng kết quả khảo sát cũ thay nghiệm thu.
-- Commit: chờ acceptance tests và review diff.
+- Commit: `cb4fda6c6b64026b542b45c99cfeeb6c84d0e034` (DOC-002); hồ sơ hậu commit được commit riêng trước task tiếp theo.
 - Tệp hoặc artifact đã cập nhật: README.md, AGENTS.md, docs/WORKFLOW.md, docs/VALIDATION.md, docs/QA.md.
 - Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi đang mở trong scope; giới hạn ngoài scope giữ nguyên.
-- Bước tốt nhất tiếp theo: hoàn tất EXE và COMMIT của DOC-002.
+- Bước tốt nhất tiếp theo: LATER-001 (deferred, không triển khai); working tree task sẽ sạch sau commit metadata.
 
 ### Phiên 030
 
