@@ -2,13 +2,26 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; implementation checkpoint `64313e538d8429df3390c6e593aa99404d3008a4` (CORE-003).
+- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; baseline task `8a0dbcf02e5d27e0b3bf84978c315bef184ed5e0`; working tree sạch trước INIT.
 - Khởi động: `python -m streamlit run app.py`; kiểm tra: `python -m pytest -q`.
-- Đã verified tuần tự đến `CORE-003`; không có task đang mở. Phạm vi được giao đến DOC-002, dừng trước LATER-001.
-- Check: python -m pytest -q tests/test_algorithms.py tests/test_numerics.py tests/test_history.py PASS: 55 tests. Mọi snapshot 0..cuối của 5 thuật toán có U(V), J đúng, J không tăng, shift và epsilon/max_iter rõ; bản sao chỉ đọc không bị vòng sau sửa; diff review/check PASS.
-- Blocker: không có; task kế tiếp: TEST-001. Không có thay đổi người dùng có sẵn; metadata hậu commit được commit trước chuyển task/handoff.
+- Task duy nhất: `TEST-001` — INIT pass, EXE đang làm; phạm vi đã giao đến DOC-002, không làm LATER.
+- Môi trường: Anaconda Python 3.13.9; imports NumPy/SciPy/pandas/sklearn/Streamlit/Plotly đã kiểm tra.
+- Blocker: không có; không có thay đổi người dùng có sẵn.
 
 ## Nhật ký Phiên
+
+### Phiên 019
+
+- Ngày: 2026-11-09T23:14:40+07:00 (Asia/Saigon).
+- Mục tiêu: TEST-001 — Bộ kiểm chứng toán và bảng bài báo. Yêu cầu: thực hiện hết feature đến trước later. Scope/files: tests/test_paper.py, tests/fixtures/paper_memberships.csv, docs/VALIDATION.md. Không mở task tiếp theo trước khi commit task này. Acceptance criteria giữ nguyên: Có tests kiểm chứng đúng công thức, ví dụ, baseline, KKT và trường hợp biên; Chạy pytest thành công và lưu lệnh/kết quả; Phân biệt tính thử nghiên cứu với kiểm thử trên mã src.
+- INIT: branch main, HEAD `8a0dbcf02e5d27e0b3bf84978c315bef184ed5e0`, git status sạch; interpreter/dependencies kế thừa ENV-001 đã kiểm tra lại đầu đợt; baseline liên quan PASS ở checkpoint trước (đầu đợt 28 tests). Không có thay đổi người dùng có sẵn.
+- Đã hoàn thành: EXE và acceptance checks PASS; diff đã review trong scope, chờ commit.
+- Xác minh đã chạy: python -m pytest -q PASS: 94 tests. Bảng nguồn 20 điểm, Table III, SLSQP độc lập cả 5 mục tiêu, KKT/biên/history. Phát hiện sai khác Table 3 Mprime=4 ID17/19: 0.11 in, 0.10452027 theo (15) tại tâm nguồn; giữ fixture và test sai khác riêng, không nới tolerance. Diff review/check PASS.
+- Bằng chứng đã ghi lại: chỉ tính tests chạy trên src mới; không dùng kết quả khảo sát cũ thay nghiệm thu.
+- Commit: chờ acceptance tests và review diff.
+- Tệp hoặc artifact đã cập nhật: tests/test_paper.py, tests/fixtures/paper_memberships.csv, docs/VALIDATION.md.
+- Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi đang mở trong scope; giới hạn ngoài scope giữ nguyên.
+- Bước tốt nhất tiếp theo: hoàn tất EXE và COMMIT của TEST-001.
 
 ### Phiên 018
 
