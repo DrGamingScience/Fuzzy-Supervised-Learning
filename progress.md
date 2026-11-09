@@ -5,10 +5,22 @@
 - Thư mục gốc kho lưu trữ: `D:\Downloads\Semi-supervised-learning`; Git branch `main`, baseline ban đầu `4f7fd34` (giữ nguyên hồ sơ/cấu hình có sẵn, chưa kiểm chứng).
 - Đường dẫn khởi động chuẩn: `app.py` chưa có; chưa chạy được Streamlit.
 - Đường dẫn xác minh chuẩn: Hồ sơ: `python tmp/check_records.py`; chưa có tests phần mềm.
-- Tính năng chưa hoàn thành có mức ưu tiên cao nhất hiện tại: Tiếp tục ENV-001 theo yêu cầu đến DATA-001..
-- Sự cố chặn hiện tại: DOC-001 verified; không có blocker. Chỉ các task đã verified có bằng chứng nghiệm thu.
+- Tính năng chưa hoàn thành có mức ưu tiên cao nhất hiện tại: ENV-001, INIT/in_progress.
+- Sự cố chặn hiện tại: Không có blocker ngoài phạm vi hiện được giao.
 
 ## Nhật ký Phiên
+
+### Phiên 008
+
+- Ngày: 09/11/2026 (Asia/Saigon); bắt đầu 2026-11-09T22:56:57+07:00.
+- Mục tiêu: ENV-001 — Xác minh interpreter/dependencies/config local, ghi setup lặp lại được; không chạy thuật toán. Phạm vi: requirements.txt, requirements-dev.txt, pyproject.toml, .streamlit/config.toml, .gitignore, docs/ENVIRONMENT.md, feature_list.json, progress.md. Tiêu chí: giữ nguyên acceptance_criteria của task trong JSON.
+- Đã hoàn thành: ENV-001: tái sử dụng Anaconda Python 3.13.9, import đúng pin runtime; cấu hình localhost và pytest hợp lệ; docs/ENVIRONMENT.md có setup lặp lại được.
+- Xác minh đã chạy: 09/11/2026: python tmp/check_environment.py PASS exit 0: NumPy 2.3.5, SciPy 1.16.3, pandas 2.3.3, sklearn 1.7.2, Streamlit 1.51.0, Plotly 6.3.0, pytest 8.4.2; python -m pip check PASS exit 0; python -m pip install --dry-run -r requirements-dev.txt PASS exit 0 (already satisfied); python tmp/check_records.py và git diff --check PASS.
+- Bằng chứng đã ghi lại: yêu cầu người dùng “Thực hiện đến hết data-001”; làm DOC → ENV → INIT → DATA tuần tự, không triển khai CORE/ALG/UI.
+- Commit: chờ kiểm tra/commit; baseline `977b9dcf789851f76ff3c9bdb8ab9c5489206213`.
+- Tệp hoặc artifact đã cập nhật: requirements.txt, requirements-dev.txt, pyproject.toml, .streamlit/config.toml, .gitignore, docs/ENVIRONMENT.md, feature_list.json, progress.md.
+- Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không kiểm chứng cài đặt venv mới; chưa có entry point/tests ở task ENV. Không có lỗi môi trường đang mở.
+- Bước tốt nhất tiếp theo: hoàn thành INIT rồi EXE, nghiệm thu và commit riêng ENV-001.
 
 ### Phiên 007
 
