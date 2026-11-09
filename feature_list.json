@@ -238,8 +238,8 @@
       "phase": "P1",
       "title": "sSFCM m = 1",
       "priority": "must",
-      "status": "implemented_unverified",
-      "passes": false,
+      "status": "verified",
+      "passes": true,
       "depends_on": [
         "ALG-002"
       ],
@@ -255,8 +255,8 @@
       "evidence": [
         "python -m pytest -q tests/test_algorithms.py PASS: 30 tests. Toàn bộ Table III 2009 (20 điểm x 3 case) khớp; nhánh m=1/tie và tâm phần dư kiểm tra độc lập; diff review/check PASS."
       ],
-      "completion_commit": null,
-      "completed_at": null,
+      "completion_commit": "0f44e19ce8f123bac596e0f7d967973b2a02168a",
+      "completed_at": "2026-11-09T23:11:35+07:00",
       "expected_files": [
         "src/algorithms.py"
       ],
@@ -808,7 +808,7 @@
     "blocked": "Có trở ngại cụ thể",
     "deferred": "Để phase sau theo phạm vi đã chốt"
   },
-  "workflow_state": "ALG-003_EXE",
+  "workflow_state": "verified_through_ALG-003",
   "workflow": {
     "wid_limit": 1,
     "stages": [
@@ -825,7 +825,7 @@
       "Có Git commit local, checkpoint và completion_commit thật",
       "Working tree sạch trong scope; handoff có commit hash và status"
     ],
-    "active_task": "ALG-003",
+    "active_task": null,
     "legacy_drafts_policy": "Năm file mã nguồn nháp đã xóa theo yêu cầu. Feature tương ứng trở về planned; không tính kiểm tra cũ là nghiệm thu mã mới.",
     "source_reset": {
       "requested": true,
