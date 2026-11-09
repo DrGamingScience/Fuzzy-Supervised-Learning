@@ -2,13 +2,26 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; implementation checkpoint `a026a1462d535d708ccbd599936bac8234870a2b` (CORE-002).
+- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; baseline task `7016448698800632909d0f46efb3c230164ac600`; working tree sạch trước INIT.
 - Khởi động: `python -m streamlit run app.py`; kiểm tra: `python -m pytest -q`.
-- Đã verified tuần tự đến `CORE-002`; không có task đang mở. Phạm vi được giao đến DOC-002, dừng trước LATER-001.
-- Check: python -m pytest -q tests/test_algorithms.py tests/test_numerics.py PASS: 49 tests. Trùng điểm/tâm, B tổng 1, cụm mất trọng số cảnh báo, exponent=10000/20000 tính log, scale overflow/underflow báo lỗi rõ. Test ban đầu bỏ sót entropy âm eSFCM khi khoảng cách=0; sửa kỳ vọng theo (9): -4 log 2, không đổi công thức. Diff review/check PASS.
-- Blocker: không có; task kế tiếp: CORE-003. Không có thay đổi người dùng có sẵn; metadata hậu commit được commit trước chuyển task/handoff.
+- Task duy nhất: `CORE-003` — INIT pass, EXE đang làm; phạm vi đã giao đến DOC-002, không làm LATER.
+- Môi trường: Anaconda Python 3.13.9; imports NumPy/SciPy/pandas/sklearn/Streamlit/Plotly đã kiểm tra.
+- Blocker: không có; không có thay đổi người dùng có sẵn.
 
 ## Nhật ký Phiên
+
+### Phiên 018
+
+- Ngày: 2026-11-09T23:14:23+07:00 (Asia/Saigon).
+- Mục tiêu: CORE-003 — Snapshot và trạng thái hội tụ. Yêu cầu: thực hiện hết feature đến trước later. Scope/files: src/algorithms.py, tests/test_history.py. Không mở task tiếp theo trước khi commit task này. Acceptance criteria giữ nguyên: Snapshot giữ U tính theo chính V được lưu; Công bố vòng 0 và chuẩn dừng; Lịch sử không bị sửa sau các vòng sau, có trạng thái đạt epsilon/max_iter.
+- INIT: branch main, HEAD `7016448698800632909d0f46efb3c230164ac600`, git status sạch; interpreter/dependencies kế thừa ENV-001 đã kiểm tra lại đầu đợt; baseline liên quan PASS ở checkpoint trước (đầu đợt 28 tests). Không có thay đổi người dùng có sẵn.
+- Đã hoàn thành: EXE và acceptance checks PASS; diff đã review trong scope, chờ commit.
+- Xác minh đã chạy: python -m pytest -q tests/test_algorithms.py tests/test_numerics.py tests/test_history.py PASS: 55 tests. Mọi snapshot 0..cuối của 5 thuật toán có U(V), J đúng, J không tăng, shift và epsilon/max_iter rõ; bản sao chỉ đọc không bị vòng sau sửa; diff review/check PASS.
+- Bằng chứng đã ghi lại: chỉ tính tests chạy trên src mới; không dùng kết quả khảo sát cũ thay nghiệm thu.
+- Commit: chờ acceptance tests và review diff.
+- Tệp hoặc artifact đã cập nhật: src/algorithms.py, tests/test_history.py.
+- Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi đang mở trong scope; giới hạn ngoài scope giữ nguyên.
+- Bước tốt nhất tiếp theo: hoàn tất EXE và COMMIT của CORE-003.
 
 ### Phiên 017
 

@@ -91,6 +91,15 @@ def validate_inputs(X, config=Config(), initial_centers=None, B=None, targets=No
     return X, V, prior, labels
 
 
+@dataclass(frozen=True)
+class Snapshot:
+    iteration: int
+    membership: np.ndarray
+    centers: np.ndarray
+    objective: float
+    center_shift: float
+
+
 @dataclass
 class Result:
     config: Config
@@ -101,6 +110,7 @@ class Result:
     stop_reason: str
     elapsed_seconds: float
     warnings: tuple[str, ...] = ()
+    history: tuple[Snapshot, ...] = ()
 
     @property
     def labels(self):
@@ -259,6 +269,13 @@ def _check_membership(U):
         raise ArithmeticError('U không hữu hạn hoặc vi phạm ràng buộc simplex.')
 
 
+def _snapshot(iteration, X, U, V, config, B, targets, shift):
+    """Bản sao chỉ đọc; vòng 0 = U(V khởi tạo), shift = 0."""
+    saved_U=U.copy(); saved_V=V.copy()
+    saved_U.setflags(write=False); saved_V.setflags(write=False)
+    return Snapshot(iteration,saved_U,saved_V,objective(X,U,V,config,B,targets),shift)
+
+
 def fit(X, config=Config(), initial_centers=None, B=None, targets=None):
     """Dừng khi max_k ||V_k mới - V_k cũ||₂ <= epsilon, hoặc max_iter.
 
@@ -271,6 +288,7 @@ def fit(X, config=Config(), initial_centers=None, B=None, targets=None):
         warnings.add(ESFCM_WARNING)
     U=update_membership(X,V,config,B,targets)
     _check_membership(U)
+    history=[_snapshot(0,X,U,V,config,B,targets,0.0)]
     reason='max_iter'
     for iteration in range(1,config.max_iter+1):
         new=_centers(X,_center_weights(U,config,B,targets,warnings),V,warnings)
@@ -280,8 +298,9 @@ def fit(X, config=Config(), initial_centers=None, B=None, targets=None):
         V=new
         U=update_membership(X,V,config,B,targets)
         _check_membership(U)
+        history.append(_snapshot(iteration,X,U,V,config,B,targets,shift))
         if shift <= config.epsilon:
             reason='epsilon'
             break
     return Result(config,U.copy(),V.copy(),objective(X,U,V,config,B,targets),
-                  iteration,reason,perf_counter()-start,tuple(sorted(warnings)))
+                  iteration,reason,perf_counter()-start,tuple(sorted(warnings)),tuple(history))
