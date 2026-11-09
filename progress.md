@@ -2,11 +2,11 @@
 
 ## Trạng thái Đã xác minh Hiện tại
 
-- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; baseline task `4385c81635392a968749faaa91287f4ceaddc17d`; working tree sạch trước INIT.
+- Repo: `D:\Downloads\Semi-supervised-learning`; branch `main`; implementation checkpoint `6606fe57a0be45b7b6f12de6bd30feadcf81b211` (UI-004).
 - Khởi động: `python -m streamlit run app.py`; kiểm tra: `python -m pytest -q`.
-- Task duy nhất: `UI-004` — INIT pass, EXE đang làm; phạm vi đã giao đến DOC-002, không làm LATER.
-- Môi trường: Anaconda Python 3.13.9; imports NumPy/SciPy/pandas/sklearn/Streamlit/Plotly đã kiểm tra.
-- Blocker: không có; không có thay đổi người dùng có sẵn.
+- Đã verified tuần tự đến `UI-004`; không có task đang mở. Phạm vi được giao đến DOC-002, dừng trước LATER-001.
+- Check: python -m pytest -q tests/test_app.py tests/test_history.py PASS: 10 tests. Chạy đơn, bảng U/tâm đúng vòng, Plotly/hội tụ và slider0..cuối; spy chứng minh đổi vòng không fit lại. Lỗi test tooling ban đầu: AppTest dataframe không callable theo key, sửa truy xuất theo schema cột; UI không lỗi. Diff review/check PASS.
+- Blocker: không có; task kế tiếp: UI-005. Không có thay đổi người dùng có sẵn; metadata hậu commit được commit trước chuyển task/handoff.
 
 ## Nhật ký Phiên
 
@@ -18,10 +18,10 @@
 - Đã hoàn thành: EXE và acceptance checks PASS; diff đã review trong scope, chờ commit.
 - Xác minh đã chạy: python -m pytest -q tests/test_app.py tests/test_history.py PASS: 10 tests. Chạy đơn, bảng U/tâm đúng vòng, Plotly/hội tụ và slider0..cuối; spy chứng minh đổi vòng không fit lại. Lỗi test tooling ban đầu: AppTest dataframe không callable theo key, sửa truy xuất theo schema cột; UI không lỗi. Diff review/check PASS.
 - Bằng chứng đã ghi lại: chỉ tính tests chạy trên src mới; không dùng kết quả khảo sát cũ thay nghiệm thu.
-- Commit: chờ acceptance tests và review diff.
+- Commit: `6606fe57a0be45b7b6f12de6bd30feadcf81b211` (UI-004); hồ sơ hậu commit được commit riêng trước task tiếp theo.
 - Tệp hoặc artifact đã cập nhật: app.py, src/ui.py, tests/test_app.py.
 - Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Không có lỗi đang mở trong scope; giới hạn ngoài scope giữ nguyên.
-- Bước tốt nhất tiếp theo: hoàn tất EXE và COMMIT của UI-004.
+- Bước tốt nhất tiếp theo: UI-005; working tree task sẽ sạch sau commit metadata.
 
 ### Phiên 027
 
