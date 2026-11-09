@@ -4,6 +4,7 @@ from sklearn.metrics import silhouette_score, calinski_harabasz_score, davies_bo
 
 from src.metrics import geometric_metrics
 from src.metrics import pair_counts, external_metrics
+from src.metrics import supervision_mask, metric_report
 from sklearn.metrics import adjusted_rand_score
 
 
@@ -76,3 +77,24 @@ def test_degenerate_external_conventions():
         assert r['ari'].value==r['jaccard'].value==1
     for labels in [[],[0]]:
         assert all(v.value is None and v.reason for v in external_metrics(labels,labels).values())
+
+
+@pytest.mark.parametrize('algorithm',['fcm','ssfcm','ssfcm1','esfcm','ssmc'])
+def test_report_full_and_unseen_masks(algorithm):
+    X=np.arange(8,dtype=float).reshape(4,2); y=np.array([0,0,1,1]); predicted=[1,0,1,1]
+    B=np.array([[0.3,0],[0,0],[0,0],[0,0]])
+    mask=supervision_mask(algorithm,4,B=B,targets=np.array([0,-1,-1,-1]))
+    assert mask.tolist()==([False]*4 if algorithm=='fcm' else [True,False,False,False])
+    r=metric_report(X,predicted,y,mask)
+    assert r['all']==external_metrics(y,predicted)
+    assert r['unsupervised']==external_metrics(y[~mask],np.array(predicted)[~mask])
+
+
+def test_missing_reference_and_too_few_unseen():
+    X=np.array([[0.],[1.],[3.]])
+    r=metric_report(X,[0,0,1])
+    assert all(v.value is None and v.reason for v in r['all'].values())
+    for mask in [np.array([True]*3),np.array([True,True,False])]:
+        r=metric_report(X,[0,0,1],[0,0,1],mask)
+        assert all(v.value is None and v.reason for v in r['unsupervised'].values())
+    with pytest.raises(ValueError): metric_report(X,[0,0,1],supervised=[0,0,1])

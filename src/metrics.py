@@ -112,3 +112,40 @@ def external_metrics(reference, predicted):
     # Hai tập cặp cùng cụm đều rỗng: Jaccard=1 theo quy ước tập rỗng bằng nhau.
     jaccard=a/(a+b+c) if a+b+c else 1.0
     return dict(ari=_metric(ari),jaccard=_metric(jaccard))
+
+
+def supervision_mask(algorithm, n, B=None, targets=None):
+    """Điểm đã cung cấp chỉ dẫn cho thuật toán đang xét (không dùng nhãn thật).
+
+    FCM không dùng chỉ dẫn. sS/eS: hàng B có phần tử dương. sSMC: có cụm đích,
+    kể cả khi M'=M; thông tin đã tiết lộ vẫn loại khỏi tập chưa giám sát.
+    """
+    if algorithm=='fcm':
+        return np.zeros(n,dtype=bool)
+    if algorithm in ('ssfcm','ssfcm1','esfcm'):
+        if B is None: return np.zeros(n,dtype=bool)
+        B=np.asarray(B)
+        if B.ndim!=2 or len(B)!=n or not np.isfinite(B).all() or (B<0).any() or (B.sum(axis=1)>1).any():
+            raise ValueError('B không hợp lệ cho mặt nạ giám sát.')
+        return (B>0).any(axis=1)
+    if algorithm=='ssmc':
+        if targets is None: return np.zeros(n,dtype=bool)
+        targets=np.asarray(targets)
+        if targets.shape!=(n,) or targets.dtype.kind not in 'iu' or (targets < -1).any():
+            raise ValueError('Cụm đích không hợp lệ cho mặt nạ giám sát.')
+        return targets>=0
+    raise ValueError('Thuật toán không hợp lệ cho mặt nạ giám sát.')
+
+
+def metric_report(X, predicted, reference=None, supervised=None):
+    predicted=_labels(predicted,len(X))
+    mask=np.zeros(len(X),dtype=bool) if supervised is None else np.asarray(supervised)
+    if mask.shape!=(len(X),) or mask.dtype.kind!='b':
+        raise ValueError('Mặt nạ giám sát phải là vector bool có cùng số điểm.')
+    geometric=geometric_metrics(X,predicted)
+    if reference is None:
+        missing={name:Metric(None,'max','Không có nhãn tham chiếu.') for name in ('ari','jaccard')}
+        return dict(geometric=geometric,all=missing.copy(),unsupervised=missing.copy())
+    reference=_labels(reference,len(X))
+    return dict(geometric=geometric,all=external_metrics(reference,predicted),
+                unsupervised=external_metrics(reference[~mask],predicted[~mask]))
