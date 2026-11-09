@@ -4,11 +4,23 @@
 
 - Thư mục gốc kho lưu trữ: `D:\Downloads\Semi-supervised-learning`; Git branch `main`, baseline ban đầu `4f7fd34` (giữ nguyên hồ sơ/cấu hình có sẵn, chưa kiểm chứng).
 - Đường dẫn khởi động chuẩn: `python -m streamlit run app.py` — entry point tối thiểu đã được kiểm tra.
-- Đường dẫn xác minh chuẩn: `python -m pytest -q`; hồ sơ: `python tmp/check_records.py`.
-- Tính năng chưa hoàn thành có mức ưu tiên cao nhất hiện tại: Tiếp tục DATA-001: dữ liệu 20 điểm và preset có nguồn..
-- Sự cố chặn hiện tại: INIT-001 verified; không có blocker. Chỉ các task đã verified có bằng chứng nghiệm thu.
+- Đường dẫn xác minh chuẩn: `python -m pytest -q`; hồ sơ: `python -m json.tool feature_list.json > $null` (PowerShell).
+- Tính năng chưa hoàn thành có mức ưu tiên cao nhất hiện tại: DATA-001, COMMIT/in_progress; CORE-001 chưa được giao.
+- Sự cố chặn hiện tại: Nghiệm thu 28 tests và hai bảng nguồn PASS; đang chốt Git/checkpoint.
 
 ## Nhật ký Phiên
+
+### Phiên 010
+
+- Ngày: 09/11/2026 (Asia/Saigon); bắt đầu 2026-11-09T22:59:18+07:00.
+- Mục tiêu: DATA-001 — Viết mới bộ 20 tọa độ, nhãn tham chiếu tách khỏi X, tâm đầu demo và preset đúng nguồn/quy ước ID; không viết thuật toán/UI dữ liệu. Phạm vi: src/__init__.py, src/data.py, tests/test_data.py, tests/fixtures/paper_20_points.csv, docs/DATA.md, AGENTS.md, feature_list.json, progress.md. Tiêu chí: giữ nguyên acceptance_criteria của task trong JSON.
+- Đã hoàn thành: DATA-001: viết mới đủ 20 tọa độ nguồn; X (20,2) và nhãn tham chiếu (20,) tách riêng, hai nhóm 10 điểm; tâm đầu cố định của demo, preset B 0/0.3/0.6 và M' 2/4/8 với ID 9,10 → cụm 1; bản sao độc lập và tài liệu nguồn/ID. INIT baseline 9149f4f và 10 regression tests PASS trước EXE.
+- Xác minh đã chạy: 09/11/2026: python -m pytest -q tests/test_data.py PASS exit 0 (18 tests); python -m pytest -q PASS exit 0 (28 tests). Hai PDF trang 4 đã render bằng pdftoppm và xem; python tmp/check_pdf_data.py PASS exit 0 sau khi giới hạn đúng vùng bảng, đối chiếu cả 20 tọa độ với fixture và src. python tmp/check_records.py; python -m json.tool feature_list.json; git diff --check PASS.
+- Bằng chứng đã ghi lại: yêu cầu người dùng “Thực hiện đến hết data-001”; làm DOC → ENV → INIT → DATA tuần tự, không triển khai CORE/ALG/UI.
+- Commit: chờ kiểm tra/commit; baseline `9149f4fb3df0da976fe507753ba36efaf7c35126`.
+- Tệp hoặc artifact đã cập nhật: src/__init__.py, src/data.py, tests/test_data.py, tests/fixtures/paper_20_points.csv, docs/DATA.md, AGENTS.md, feature_list.json, progress.md.
+- Rủi ro đã biết hoặc vấn đề chưa được giải quyết: Lỗi tooling tái hiện bằng python tmp/check_pdf_data.py bản đầu: pypdf layout không bắt được tọa độ; PyMuPDF đọc được nhưng parser ban đầu lấy cả Table 2 (U). Phân loại environment/tooling, đã sửa reader/vùng trích xuất, không đổi dữ liệu/expected/test để né lỗi. Không có lỗi sản phẩm đang mở; chưa triển khai CORE/ALG/UI dữ liệu.
+- Bước tốt nhất tiếp theo: hoàn thành INIT rồi EXE, nghiệm thu và commit riêng DATA-001.
 
 ### Phiên 009
 

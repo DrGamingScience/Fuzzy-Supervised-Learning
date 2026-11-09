@@ -16,12 +16,12 @@ Quy trình chi tiết và Definition of Done: `docs/WORKFLOW.md`; giữ AGENTS d
 ## 2. Project cấu trúc như nào?
 
 ```text
-src/data.py          Dự kiến: dữ liệu/preset — mã nháp ĐÃ XÓA
+src/data.py          Bộ 20 điểm, nhãn riêng, tâm đầu và preset — viết mới DATA-001
 src/algorithms.py    Dự kiến: lõi 5 thuật toán — mã nháp ĐÃ XÓA
 src/metrics.py       Dự kiến: metrics — mã nháp ĐÃ XÓA
 src/experiments.py   Dự kiến: điều phối/xuất — mã nháp ĐÃ XÓA
 app.py              Entry point Streamlit tối thiểu — chỉ báo sẵn sàng
-tests/              Smoke dependency/AppTest và vòng đời server local
+tests/              Dữ liệu/preset + smoke dependency/AppTest/server local
 docs/               Ba PDF, KE_HOACH_TRIEN_KHAI.md, DAC_TA_BAN_DAU.md
 feature_list.json   Feature, phase, dependency, acceptance criteria, evidence
 progress.md         Trạng thái đã xác minh + Nhật ký Phiên; phiên mới nhất trước
@@ -46,7 +46,7 @@ python -m venv .venv
 ```powershell
 python -m json.tool feature_list.json > $null  # Check JSON hiện tại (PowerShell)
 python -m pytest -q                  # Toàn bộ tests hiện có
-python -m pytest -q tests/test_environment.py tests/test_app.py tests/test_server.py
+python -m pytest -q tests/test_data.py  # Kiểm tra riêng DATA-001
 ```
 
 - Dùng Python của venv nếu đã tạo ở bước 3. Không cài lại dependencies mỗi session.
@@ -59,7 +59,7 @@ python -m pytest -q tests/test_environment.py tests/test_app.py tests/test_serve
 
 - Đọc **Trạng thái Đã xác minh Hiện tại** và phiên đầu `progress.md`: task, check, lỗi và bước tiếp.
 - Đọc `feature_list.json` để biết trạng thái và dependency; kiểm tra file thực tế trước khi làm.
-- Mốc sau DOC-001: Git đã có baseline; src đã dọn sạch trước triển khai mới. Đọc progress để biết trạng thái task mới nhất.
+- Mốc hiện tại: DOC/ENV/INIT/DATA-001 đã nghiệm thu; src/data.py viết mới. Task kế tiếp CORE-001 chưa được giao; README chưa có.
 - `implemented_unverified` = có mã chưa nghiệm thu; `planned` = chưa làm; `deferred` = phase sau.
 - Chỉ `verified` mới có `passes: true`: đủ acceptance criteria, evidence đã chạy và Git commit/checkpoint.
 - Không suy phần trăm hoàn thành từ số file hoặc số đầu việc; không coi tính thử khảo sát là test src.
